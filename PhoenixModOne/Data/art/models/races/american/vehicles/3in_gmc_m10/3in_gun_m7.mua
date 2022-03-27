@@ -1,0 +1,23 @@
+Markers =  
+{
+	Marker000 =  
+	{
+		destructibleBuildingPanelID = -1,
+		loadingSlotTypeID = -1,
+		name = "bone_al_m10_wolverine_turret",
+		subtype = "",
+		transform_m00 = 1,
+		transform_m01 = 0.00000,
+		transform_m02 = 0.00000,
+		transform_m10 = 0.00000,
+		transform_m11 = 0.00000,
+		transform_m12 = -1,
+		transform_m20 = -0.00000,
+		transform_m21 = 1,
+		transform_m22 = 0.00000,
+		transform_m30 = 0.02120,
+		transform_m31 = 2.83450,
+		transform_m32 = -0.16775,
+		type = "",
+	},
+}

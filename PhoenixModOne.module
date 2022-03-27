@@ -1,0 +1,329 @@
+;; //////////////////////////////////////////////////////////////////
+;; File : PhoenixModOne.module
+;; Desc : PhoenixModOne Mod descriptor file.
+;; 
+;; (c) 2008 Relic Entertainment Inc.
+;; 
+
+[global]
+
+UIName = PhoenixModOne
+Description = PhoenixModOne
+DllName = WW2Mod
+ModVersion = 1.0
+ModFolder = PhoenixModOne\Data
+LocFolder = PhoenixModOne\Locale
+ScenarioPackFolder = WW2\Scenarios
+SpeechManagerCache = SpeechManagerCoH.cache
+
+[game]
+PlayerDropBehavior = aitakeover
+
+[attrib:common]
+folder = PhoenixModOne\DataAttrib
+archive.01 = ww2\Archives\AttribArchive
+
+[preview:common]
+folder = coh\DataPreview
+
+[movies:common]
+folder = WW2\Movies
+
+[movies:common:01]
+folder = Engine\Movies
+
+[movies:common:02]
+folder = DLC1\Movies
+
+[movies:common:03]
+folder = DLC2\Movies
+
+[movies:common:04]
+folder = DLC3\Movies
+
+[data:common:01]
+folder = PhoenixModOne\Data
+archive.01 = WW2\Archives\WW2Data
+archive.02 = WW2\Archives\WW2Art
+archive.03 = WW2\Archives\WW2Sound
+archive.04 = WW2\Archives\WW2ArtAmbient
+archive.05 = WW2\Archives\OFSPData
+
+[data:common:02]
+folder = CoH\Engine\Data
+archive.01 = Engine\Archives\Engine
+
+[data:common:03]
+folder = RelicOnline\Data
+archive.01 = RelicOnline\Archives\RelicOnline
+
+[data:sound_low]
+folder = CoH\DataSoundLow
+archive.01 = WW2\Archives\WW2SoundLow
+
+[data:sound_high]
+folder = CoH\DataSoundHigh
+archive.01 = WW2\Archives\WW2SoundHigh
+
+[data:art_low]
+folder = CoH\DataArtLow
+archive.01 = WW2\Archives\WW2ArtLow
+
+[data:art_high]
+folder = CoH\DataArtHigh
+archive.01 = WW2\Archives\WW2ArtHigh
+
+[locale:english]
+folder.01 = PhoenixModOne\Locale\English
+folder.03 = RelicOnline\Locale\English
+
+[locale:english:01]
+folder.01 = Engine\Locale\English
+
+[data:english:01]
+folder = CoH\Locale\English\Data
+archive.01 = WW2\Archives\WW2Locale-English
+
+[data:english:02]
+folder = CoH\DataSoundEnglish
+archive.01 = WW2\Archives\WW2SoundSpeechEnglish
+archive.02 = WW2\Archives\WW2AlliesSpeechEnglish
+archive.03 = WW2\Archives\WW2AxisSpeechEnglish
+archive.04 = WW2\Archives\WW2SoundNISEnglish
+archive.05 = WW2\Archives\OFCoreSpeechEnglish
+archive.06 = WW2\Archives\OFFullSpeechEnglish
+
+[data:english:03]
+folder = Engine\Locale\English\Data
+archive.01 = Engine\Archives\EngineEnglish
+
+[locale:german]
+folder.01 = PhoenixModOne\Locale\German
+folder.02 = RelicOnline\Locale\German
+
+[data:german:01]
+folder = CoH\Locale\German\Data
+archive.01 = WW2\Archives\WW2Locale-German
+
+[data:german:02]
+folder = CoH\DataSoundGerman
+archive.01 = WW2\Archives\WW2SoundSpeechGerman
+archive.02 = WW2\Archives\WW2AlliesSpeechGerman
+archive.03 = WW2\Archives\WW2AxisSpeechGerman
+archive.04 = WW2\Archives\WW2SoundNISGerman
+archive.05 = WW2\Archives\OFCoreSpeechGerman
+archive.06 = WW2\Archives\OFFullSpeechGerman
+
+[data:german:03]
+folder = CoH\Engine\Locale\German\Data
+archive.01 = Engine\Archives\EngineGerman
+
+[locale:french]
+folder.01 = PhoenixModOne\Locale\French
+folder.02 = RelicOnline\Locale\French
+
+[data:french:01]
+folder = CoH\Locale\French\Data
+archive.01 = WW2\Archives\WW2Locale-French
+
+[data:french:02]
+folder = CoH\DataSoundFrench
+archive.01 = WW2\Archives\WW2SoundSpeechFrench
+archive.02 = WW2\Archives\WW2AlliesSpeechFrench
+archive.03 = WW2\Archives\WW2AxisSpeechFrench
+archive.04 = WW2\Archives\WW2SoundNISFrench
+archive.05 = WW2\Archives\OFCoreSpeechFrench
+archive.06 = WW2\Archives\OFFullSpeechFrench
+
+[data:french:03]
+folder = CoH\Engine\Locale\French\Data
+archive.01 = Engine\Archives\EngineFrench
+
+[locale:spanish]
+folder.01 = PhoenixModOne\Locale\Spanish
+folder.02 = RelicOnline\Locale\Spanish
+
+[data:spanish:01]
+folder = CoH\Locale\Spanish\Data
+archive.01 = WW2\Archives\WW2Locale-Spanish
+
+[data:spanish:02]
+folder = CoH\DataSoundSpanish
+archive.01 = WW2\Archives\WW2SoundSpeechSpanish
+archive.02 = WW2\Archives\WW2AlliesSpeechSpanish
+archive.03 = WW2\Archives\WW2AxisSpeechSpanish
+archive.04 = WW2\Archives\WW2SoundNISSpanish
+archive.05 = WW2\Archives\OFCoreSpeechSpanish
+archive.06 = WW2\Archives\OFFullSpeechSpanish
+
+[data:spanish:03]
+folder = CoH\Engine\Locale\Spanish\Data
+archive.01 = Engine\Archives\EngineSpanish
+
+[locale:russian]
+folder.01 = PhoenixModOne\Locale\Russian
+folder.02 = RelicOnline\Locale\Russian
+
+[data:russian:01]
+folder = CoH\Locale\Russian\Data
+archive.01 = WW2\Archives\WW2Locale-Russian
+
+[data:russian:02]
+folder = CoH\DataSoundRussian
+archive.01 = WW2\Archives\WW2SoundSpeechRussian
+archive.02 = WW2\Archives\WW2AlliesSpeechRussian
+archive.03 = WW2\Archives\WW2AxisSpeechRussian
+archive.04 = WW2\Archives\WW2SoundNISRussian
+archive.05 = WW2\Archives\OFCoreSpeechRussian
+archive.06 = WW2\Archives\OFFullSpeechRussian
+
+[data:russian:03]
+folder = CoH\Engine\Locale\Russian\Data
+archive.01 = Engine\Archives\EngineRussian
+
+[data:italian:01]
+folder = CoH\Locale\Italian\Data
+archive.01 = WW2\Archives\WW2Locale-Italian
+
+[locale:italian]
+folder.01 = PhoenixModOne\Locale\Italian
+folder.02 = RelicOnline\Locale\Italian
+
+[data:italian:02]
+folder = CoH\DataSoundEnglish
+archive.01 = WW2\Archives\WW2SoundSpeechEnglish
+archive.02 = WW2\Archives\WW2AlliesSpeechEnglish
+archive.03 = WW2\Archives\WW2AxisSpeechEnglish
+archive.04 = WW2\Archives\WW2SoundNISEnglish
+archive.05 = WW2\Archives\OFCoreSpeechEnglish
+archive.06 = WW2\Archives\OFFullSpeechEnglish
+
+[data:italian:03]
+folder = CoH\Engine\Locale\Italian\Data
+archive.01 = Engine\Archives\EngineItalian
+
+[locale:czech]
+folder.01 = PhoenixModOne\Locale\Czech
+folder.02 = RelicOnline\Locale\Czech
+
+[data:czech:01]
+folder = CoH\Locale\Czech\Data
+archive.01 = WW2\Archives\WW2Locale-Czech
+
+[data:czech:02]
+folder = CoH\DataSoundEnglish
+archive.01 = WW2\Archives\WW2SoundSpeechEnglish
+archive.02 = WW2\Archives\WW2AlliesSpeechEnglish
+archive.03 = WW2\Archives\WW2AxisSpeechEnglish
+archive.04 = WW2\Archives\WW2SoundNISEnglish
+archive.05 = WW2\Archives\OFCoreSpeechEnglish
+archive.06 = WW2\Archives\OFFullSpeechEnglish
+
+[data:czech:03]
+folder = CoH\Engine\Locale\Czech\Data
+archive.01 = Engine\Archives\EngineCzech
+
+[locale:polish]
+folder.01 = PhoenixModOne\Locale\Polish
+folder.02 = RelicOnline\Locale\Polish
+
+[data:polish:01]
+folder = CoH\Locale\Polish\Data
+archive.01 = WW2\Archives\WW2Locale-Polish
+
+[data:polish:02]
+folder = CoH\DataSoundEnglish
+archive.01 = WW2\Archives\WW2SoundSpeechEnglish
+archive.02 = WW2\Archives\WW2AlliesSpeechEnglish
+archive.03 = WW2\Archives\WW2AxisSpeechEnglish
+archive.04 = WW2\Archives\WW2SoundNISEnglish
+archive.05 = WW2\Archives\OFCoreSpeechEnglish
+archive.06 = WW2\Archives\OFFullSpeechEnglish
+
+[data:polish:03]
+folder = CoH\Engine\Locale\Polish\Data
+archive.01 = Engine\Archives\EnginePolish
+
+[locale:chinesetrad]
+folder.01 = PhoenixModOne\Locale\ChineseTrad
+folder.02 = RelicOnline\Locale\ChineseTrad
+
+[data:chinesetrad:01]
+folder = CoH\Locale\ChineseTrad\Data
+archive.01 = WW2\Archives\WW2Locale-ChineseTrad
+
+[data:chinesetrad:02]
+folder = CoH\DataSoundEnglish
+archive.01 = WW2\Archives\WW2SoundSpeechEnglish
+archive.02 = WW2\Archives\WW2AlliesSpeechEnglish
+archive.03 = WW2\Archives\WW2AxisSpeechEnglish
+archive.04 = WW2\Archives\WW2SoundNISEnglish
+archive.05 = WW2\Archives\OFCoreSpeechEnglish
+archive.06 = WW2\Archives\OFFullSpeechEnglish
+
+[data:chinesetrad:03]
+folder = CoH\Engine\Locale\ChineseTrad\Data
+archive.01 = Engine\Archives\EngineChineseTrad
+
+[locale:japanese]
+folder.01 = PhoenixModOne\Locale\Japanese
+folder.02 = RelicOnline\Locale\Japanese
+
+[data:japanese:01]
+folder = CoH\Locale\Japanese\Data
+archive.01 = WW2\Archives\WW2Locale-Japanese
+
+[data:japanese:02]
+folder = CoH\DataSoundEnglish
+archive.01 = WW2\Archives\WW2SoundSpeechEnglish
+archive.02 = WW2\Archives\WW2AlliesSpeechEnglish
+archive.03 = WW2\Archives\WW2AxisSpeechEnglish
+archive.04 = WW2\Archives\WW2SoundNISEnglish
+archive.05 = WW2\Archives\OFCoreSpeechEnglish
+archive.06 = WW2\Archives\OFFullSpeechEnglish
+
+[data:japanese:03]
+folder = CoH\Engine\Locale\Japanese\Data
+archive.01 = Engine\Archives\EngineJapanese
+
+[locale:korean]
+folder.01 = PhoenixModOne\Locale\Korean
+folder.02 = RelicOnline\Locale\Korean
+
+[data:korean:01]
+folder = CoH\Locale\Korean\Data
+archive.01 = WW2\Archives\WW2Locale-Korean
+
+[data:korean:02]
+folder = CoH\DataSoundEnglish
+archive.01 = WW2\Archives\WW2SoundSpeechEnglish
+archive.02 = WW2\Archives\WW2AlliesSpeechEnglish
+archive.03 = WW2\Archives\WW2AxisSpeechEnglish
+archive.04 = WW2\Archives\WW2SoundNISEnglish
+archive.05 = WW2\Archives\OFCoreSpeechEnglish
+archive.06 = WW2\Archives\OFFullSpeechEnglish
+
+[data:korean:03]
+folder = CoH\Engine\Locale\Korean\Data
+archive.01 = Engine\Archives\EngineKorean
+
+[locale:chineseenglish]
+folder.01 = PhoenixModOne\Locale\ChineseEnglish
+folder.02 = RelicOnline\Locale\ChineseEnglish
+
+[data:chineseenglish:01]
+folder = CoH\Locale\ChineseEnglish\Data
+archive.01 = WW2\Archives\WW2Locale-ChineseEnglish
+
+[data:chineseenglish:02]
+folder = CoH\DataSoundEnglish
+archive.01 = WW2\Archives\WW2SoundSpeechEnglish
+archive.02 = WW2\Archives\WW2AlliesSpeechEnglish
+archive.03 = WW2\Archives\WW2AxisSpeechEnglish
+archive.04 = WW2\Archives\WW2SoundNISEnglish
+archive.05 = WW2\Archives\OFCoreSpeechEnglish
+archive.06 = WW2\Archives\OFFullSpeechEnglish
+
+[data:chineseenglish:03]
+folder = CoH\Engine\Locale\ChineseEnglish\Data
+archive.01 = Engine\Archives\ChineseEnglish

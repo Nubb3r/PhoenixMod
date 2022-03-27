@@ -1,0 +1,104 @@
+;; //////////////////////////////////////////////////////////////////
+;; File    : RelicCOH.module
+;; Desc    : RelicCOH Mod descriptor file.
+;; 
+;; (c) 2008 Relic Entertainment Inc.
+;; 
+
+[global]
+
+Parent = PhoenixModOne
+UIName = $1080
+Description = Company of Heroes
+DllName = WW2Mod
+ModVersion = 1.0
+LocFolder = DLC3\Locale
+SpeechManagerCache = SpeechManagerDLC3.cache
+
+[game]
+PlayerDropBehavior = aitakeover
+
+[movies:common]
+folder = DLC3\Movies
+
+[data:common]
+folder = DLC3\Data
+archive.01 = DLC3\Archives\DLC3Data
+
+[data:art_low]
+folder = DLC3\DataArtLow
+archive.01 = DLC3\Archives\DLC3ArtLow
+
+[data:art_high]
+folder = DLC3\DataArtHigh
+archive.01 = DLC3\Archives\DLC3ArtHigh
+
+[locale:English]
+folder.01 = DLC3\Locale\English
+
+[data:english:01]
+folder = DLC3\DataSoundEnglish
+archive.01 = DLC3\Archives\DLC3SoundSpeechEnglish
+
+[locale:german]
+
+[data:german:01]
+folder = DLC3\DataSoundGerman
+archive.01 = DLC3\Archives\DLC3SoundSpeechGerman
+
+[locale:french]
+
+[data:french:01]
+folder = DLC3\DataSoundFrench
+archive.01 = DLC3\Archives\DLC3SoundSpeechFrench
+
+[locale:spanish]
+
+[data:spanish:01]
+folder = DLC3\DataSoundSpanish
+archive.01 = DLC3\Archives\DLC3SoundSpeechSpanish
+
+[locale:russian]
+
+[data:russian:01]
+folder = DLC3\DataSoundRussian
+archive.01 = DLC3\Archives\DLC3SoundSpeechRussian
+
+[locale:italian]
+
+[data:italian:01]
+folder = DLC3\DataSoundEnglish
+archive.01 = DLC3\Archives\DLC3SoundSpeechEnglish
+
+[locale:czech]
+
+[data:czech:01]
+folder = DLC3\DataSoundEnglish
+archive.01 = DLC3\Archives\DLC3SoundSpeechEnglish
+
+[locale:polish]
+
+[data:polish:01]
+folder = DLC3\DataSoundEnglish
+archive.01 = DLC3\Archives\DLC3SoundSpeechEnglish
+
+[locale:chinesetrad]
+
+[data:chinesetrad:01]
+folder = DLC3\DataSoundEnglish
+archive.01 = DLC3\Archives\DLC3SoundSpeechEnglish
+
+[locale:japanese]
+
+[data:japanese:01]
+folder = DLC3\DataSoundEnglish
+archive.01 = DLC3\Archives\DLC3SoundSpeechEnglish
+
+[locale:korean]
+
+[data:korean:01]
+folder = DLC3\DataSoundEnglish
+archive.01 = DLC3\Archives\DLC3SoundSpeechEnglish
+
+
+
