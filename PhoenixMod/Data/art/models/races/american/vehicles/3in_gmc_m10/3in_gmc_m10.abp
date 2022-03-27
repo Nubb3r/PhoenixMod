@@ -1,0 +1,25 @@
+model =
+{
+	"3in_GMC_M10",
+	
+	"3in_Gun_M7",
+}
+
+simvis_attributes =
+{
+	vehicle_physics					= 1,
+
+	vehicle_width					= 3.2,
+	vehicle_length					= 4.5,	
+	vehicle_nr_wheels				= 4,
+	vehicle_spring_constant			= 0.1,	-- 0 to 1 
+	vehicle_damper_constant			= 0.2,	-- 0 to 1
+	vehicle_wheel_travel			= 0.4,	-- the distance from flat ground and the wheel anchor
+	vehicle_acceleration_factor		= 0.1,	-- sensitivity to change in velocity
+	vehicle_gravity					= 1,	-- normal earth gravity = 1
+	vehicle_debug_render			= 0,	-- 0 = no, 1 = yes
+	vehicle_smoothness				= 2,	-- the higher the smoother (minimum 1, 0 = turned off)
+	vehicle_render_offsetX			= 0,	-- x offset of rendered model from wheel base center
+	vehicle_render_offsetY			= 0,	-- y offset
+	vehicle_render_offsetZ			= -0.3,	-- z offset
+}

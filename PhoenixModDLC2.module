@@ -1,0 +1,104 @@
+;; //////////////////////////////////////////////////////////////////
+;; File    : RelicCOH.module
+;; Desc    : RelicCOH Mod descriptor file.
+;; 
+;; (c) 2008 Relic Entertainment Inc.
+;; 
+
+[global]
+
+Parent = PhoenixMod
+UIName = $1080
+Description = Company of Heroes
+DllName = WW2Mod
+ModVersion = 1.0
+LocFolder = DLC2\Locale
+SpeechManagerCache = SpeechManagerDLC2.cache
+
+[game]
+PlayerDropBehavior = aitakeover
+
+[movies:common]
+folder = DLC2\Movies
+
+[data:common]
+folder = DLC2\Data
+archive.01 = DLC2\Archives\DLC2Data
+
+[data:art_low]
+folder = DLC2\DataArtLow
+archive.01 = DLC2\Archives\DLC2ArtLow
+
+[data:art_high]
+folder = DLC2\DataArtHigh
+archive.01 = DLC2\Archives\DLC2ArtHigh
+
+[locale:English]
+folder.01 = DLC2\Locale\English
+
+[data:english:01]
+folder = DLC2\DataSoundEnglish
+archive.01 = DLC2\Archives\DLC2SoundSpeechEnglish
+
+[locale:german]
+
+[data:german:01]
+folder = DLC2\DataSoundGerman
+archive.01 = DLC2\Archives\DLC2SoundSpeechGerman
+
+[locale:french]
+
+[data:french:01]
+folder = DLC2\DataSoundFrench
+archive.01 = DLC2\Archives\DLC2SoundSpeechFrench
+
+[locale:spanish]
+
+[data:spanish:01]
+folder = DLC2\DataSoundSpanish
+archive.01 = DLC2\Archives\DLC2SoundSpeechSpanish
+
+[locale:russian]
+
+[data:russian:01]
+folder = DLC2\DataSoundRussian
+archive.01 = DLC2\Archives\DLC2SoundSpeechRussian
+
+[locale:italian]
+
+[data:italian:01]
+folder = DLC2\DataSoundEnglish
+archive.01 = DLC2\Archives\DLC2SoundSpeechEnglish
+
+[locale:czech]
+
+[data:czech:01]
+folder = DLC2\DataSoundEnglish
+archive.01 = DLC2\Archives\DLC2SoundSpeechEnglish
+
+[locale:polish]
+
+[data:polish:01]
+folder = DLC2\DataSoundEnglish
+archive.01 = DLC2\Archives\DLC2SoundSpeechEnglish
+
+[locale:chinesetrad]
+
+[data:chinesetrad:01]
+folder = DLC2\DataSoundEnglish
+archive.01 = DLC2\Archives\DLC2SoundSpeechEnglish
+
+[locale:japanese]
+
+[data:japanese:01]
+folder = DLC2\DataSoundEnglish
+archive.01 = DLC2\Archives\DLC2SoundSpeechEnglish
+
+[locale:korean]
+
+[data:korean:01]
+folder = DLC2\DataSoundEnglish
+archive.01 = DLC2\Archives\DLC2SoundSpeechEnglish
+
+
+
