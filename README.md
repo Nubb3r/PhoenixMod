@@ -55,4 +55,4 @@ How to install:
 7. Done! Now you can start the game with the mod by using the new shortcut on your desktop
 
 
-Each time there is a new version, you need to delete the files you have put there and repeat steps 1-4
+Each time there is a new version, you need to delete the files you have put copied from the ZIP files to the CoH directory and repeat steps 1-4
