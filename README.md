@@ -17,7 +17,7 @@ How to install:
 
 
 3. Scroll down and click "Source code (zip)"
-![grafik](https://user-images.githubusercontent.com/12478713/160440423-1151b8ef-5124-42df-a275-ab015042ed44.png)
+![grafik](https://user-images.githubusercontent.com/12478713/160566242-a15be233-beb7-40fa-90de-d57dfcb2e5f6.png)
 
 
 ---
