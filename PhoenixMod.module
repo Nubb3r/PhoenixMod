@@ -42,6 +42,10 @@ folder = DLC2\Movies
 folder = DLC3\Movies
 
 [data:common:01]
+folder = CoH\Data
+;archive.01 = WW2\Archives\WW2Data_KeyDefaults
+
+[data:common:02]
 folder = PhoenixMod\Data
 archive.01 = WW2\Archives\WW2Data
 archive.02 = WW2\Archives\WW2Art
@@ -49,11 +53,11 @@ archive.03 = WW2\Archives\WW2Sound
 archive.04 = WW2\Archives\WW2ArtAmbient
 archive.05 = WW2\Archives\OFSPData
 
-[data:common:02]
+[data:common:03]
 folder = CoH\Engine\Data
 archive.01 = Engine\Archives\Engine
 
-[data:common:03]
+[data:common:04]
 folder = RelicOnline\Data
 archive.01 = RelicOnline\Archives\RelicOnline
 
