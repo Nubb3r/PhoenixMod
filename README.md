@@ -34,7 +34,7 @@ How to install (including gridkeys instructions at the end):
 ---
 
 
-5. Find the new shortcut on your desktop, right click on it, and in the field "Target" add "-mod phoenixmod -dev" to the end of the line. 
+5. Find the new shortcut on your desktop, right click on it, and in the field "Target" add "-mod phoenixmod -dev" to the end of the line with a space after the quotes. 
    I have also added some other stuff. Here are my launch options if you are interested:
    -mod phoenixmod -dev -nomovies -window -fullwindow -forceactive -lockMouse -novsync -notriplebuffer -refresh 144
    
