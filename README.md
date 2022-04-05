@@ -1,6 +1,6 @@
 # PhoenixMod
 
-How to install:
+How to install (including gridkeys instructions at the end):
 
 1. Click on releases
 
@@ -56,3 +56,38 @@ How to install:
 
 
 Each time there is a new version, you need to delete the files you have copied from the ZIP files to the CoH directory and repeat steps 1-4
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+
+
+# GridKeys
+You can use gridkeys in the following manner:
+
+1. If you don't already have the WW2Data_KeyDefaults.sga in your "Company of Heroes Relaunch\WW2\Archives" directory,
+   download it from [here](https://github.com/Nubb3r/PhoenixMod/files/8417378/WW2Data_KeyDefaults.zip) (or [here](https://github.com/Nubb3r/PhoenixMod/files/8417617/WW2Data_KeyDefaults_de.zip) for german keyboard layout) and put it there:
+   
+![grafik](https://user-images.githubusercontent.com/12478713/161741018-b3a25ffc-bee1-4249-95a4-ffb77d7e0509.png)
+
+   
+2. Go into the PhoenixMod.module in the main CoH directory and delete the semicolon in line 46. You will have to do this each time you redownload/update the Mod
+
+![grafik](https://user-images.githubusercontent.com/12478713/161740515-9f49f85c-1be4-4557-9af0-c0668b81d48c.png)
+
+
+
+
+
