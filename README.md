@@ -1,6 +1,6 @@
 # PhoenixMod
 
-How to install (including gridkeys instructions at the end):
+How to install (including GridKeys instructions at the end). WARNING: Skin/sound packs might not work, long term fix planned
 
 1. Click on releases and select the newest available version
 
