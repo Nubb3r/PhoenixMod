@@ -2,17 +2,17 @@
 
 How to install (including GridKeys instructions at the end). WARNING: Skin/sound packs might not work, long term fix planned
 
-1. Click on releases and select the newest available version. Scroll down to "Assets" and only download the ZIP file containing the most recent release number.
+1. Click on releases and select the newest available version.
 
-![grafik](https://user-images.githubusercontent.com/12478713/199226058-54e25979-539b-43c1-87cd-9eb355e0de8d.png)
+![grafik](https://user-images.githubusercontent.com/12478713/199226650-6fb97bb0-e4fe-4dea-8d32-b468d543a256.png)
 
 
 ---
 
 
-2. Scroll down and click "Source code (zip)"
+2. Scroll down to "Assets" and download the ZIP file containing the most recent release number.
 
-![grafik](https://user-images.githubusercontent.com/12478713/160566242-a15be233-beb7-40fa-90de-d57dfcb2e5f6.png)
+![grafik](https://user-images.githubusercontent.com/12478713/199226802-6641748a-ee52-419f-9f24-933ef321a4f4.png)
 
 
 ---
