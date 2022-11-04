@@ -10,7 +10,7 @@ How to install (including GridKeys instructions at the end). WARNING: Skin/sound
 ---
 
 
-2. Scroll down to "Assets" and download the ZIP file with a time stamp
+2. Scroll down to "Assets" and download the ZIP file with a timestamp
 
 ![grafik](https://user-images.githubusercontent.com/12478713/199998668-1a21d72d-5dc4-46d1-b616-d0b6bfb13fdc.png)
 
