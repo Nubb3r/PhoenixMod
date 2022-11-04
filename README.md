@@ -10,9 +10,9 @@ How to install (including GridKeys instructions at the end). WARNING: Skin/sound
 ---
 
 
-2. Scroll down to "Assets" and download the ZIP file containing the most recent release number.
+2. Scroll down to "Assets" and download the ZIP file with a time stamp
 
-![grafik](https://user-images.githubusercontent.com/12478713/199226802-6641748a-ee52-419f-9f24-933ef321a4f4.png)
+![grafik](https://user-images.githubusercontent.com/12478713/199998668-1a21d72d-5dc4-46d1-b616-d0b6bfb13fdc.png)
 
 
 ---
@@ -34,11 +34,11 @@ How to install (including GridKeys instructions at the end). WARNING: Skin/sound
 ---
 
 
-5. Find the new shortcut on your desktop, right click on it, and in the field "Target" add "-mod phoenixmod -dev" to the end of the line with a space after the quotes. 
-   I have also added some other stuff. Here are my launch options if you are interested:
-   -mod phoenixmod -dev -nomovies -window -fullwindow -forceactive -lockMouse -novsync -notriplebuffer -refresh 144
+5. Find the new shortcut on your desktop, right click -> "properties". A new window opens.<br>
+In this new window, go to "Target" (or "Ziel" in German) and add "-mod phoenixmod -dev" with a space after the quotes.
+
    
-![grafik](https://user-images.githubusercontent.com/12478713/160442715-4cb9f91e-d228-4ca6-97a2-b0f8a2e4ca72.png)
+![grafik](https://user-images.githubusercontent.com/12478713/200003634-db392825-e72f-402d-b698-f9e3541d6952.png)
 
 
 ---
