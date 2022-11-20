@@ -35,7 +35,9 @@ How to install (including GridKeys instructions at the end). WARNING: Skin/sound
 
 
 5. Find the new shortcut on your desktop, right click -> "properties". A new window opens.<br>
-In this new window, go to "Target" (or "Ziel" in German) and add "-mod phoenixmod -dev" with a space after the quotes.
+In this new window, go to "Target" (or "Ziel" in German) and add 
+-mod phoenixmod -dev
+with a space after the quotes.
 
    
 ![grafik](https://user-images.githubusercontent.com/12478713/200003634-db392825-e72f-402d-b698-f9e3541d6952.png)
