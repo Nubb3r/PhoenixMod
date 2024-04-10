@@ -6,7 +6,7 @@ If you don't know what EliteMod is/was: Basically, long after CoH's support has 
 a player named 12ocky started fixing all the bugs and game breaking issues. What begun as a humble project however, 
 has crept up in scope so much that there was a very big difference to normal CoH1 in terms of balance.
 Eventually, with the downward trend of interest in EliteMod and CoH1 in general, devleopment stopped in September 2016.
-These scope creep is still a threat for PhoenixMod and I will try my best to mitigate them. In terms of activity of CoH1, 
+Scope creep is still a threat for PhoenixMod and I will try my best to mitigate it. In terms of activity of CoH1, 
 I think CoH1 is as dead as it gets. Especially since CoH3 released and is being actively supported (yet).
 The CoH1 ladder is becoming completely irrelevant due to the game being riddled by cheaters and bug abusers.
 So why not start something new? Something that may rise from the ashes of CoH1.
