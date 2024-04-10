@@ -1,6 +1,20 @@
 # PhoenixMod
 
-How to install (including GridKeys instructions at the end). WARNING: Skin/sound packs might not work, long term fix planned
+## What is PhoenixMod?
+Imagine EliteMod, but no crazy stuff, and it will be supported by me as long as I am around.
+If you don't know what EliteMod is/was: Basically, long after CoH's support has been officially stopped,
+a player named 12ocky started fixing all the bugs and game breaking issues. What begun as a humble project however, 
+has crept up in scope so much that there was a very big difference to normal CoH1 in terms of balance.
+Eventually, with the downward trend of interest in EliteMod and CoH1 in general, devleopment stopped in September 2016.
+These issues still remain a threat for PhoenixMod and I will try my best to mitigate them.
+
+## What changes are planned / is there a development roadmap?
+Here is the project board where the work is for the mod is being organized:
+https://trello.com/b/lxvh5AI0/phoenixmod
+Check the "General Information" card on there for more details.
+
+
+## How to install (including GridKeys instructions at the end). WARNING: Skin/sound packs might not work, long term fix planned
 
 1. Click on releases and select the newest available version.
 
