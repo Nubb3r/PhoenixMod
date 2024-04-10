@@ -12,7 +12,7 @@ The CoH1 ladder is becoming completely irrelevant due to the game being riddled 
 So why not start something new? Something that may rise from the ashes of CoH1.
 
 ## What changes are planned / is there a development roadmap?
-Here is the project board where the work is for the mod is being organized:
+Here is the project board where the work for the mod is being organized:
 https://trello.com/b/lxvh5AI0/phoenixmod
 Check the "General Information" card on there for more details.
 
