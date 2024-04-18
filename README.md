@@ -24,7 +24,7 @@ Yes, and you can fund them here:
 
 ## How to install (including GridKeys instructions at the end). 
 
-WARNING: Skin/sound packs cause problems, I recommend you uninstall them. There is a long term fix planned.
+0. Uninstall any skin/sound packs, because they have caused many problems until now. There is a long term fix planned.
 
 
 ### Downloading the correct ZIP file
