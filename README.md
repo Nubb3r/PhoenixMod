@@ -22,14 +22,16 @@ Yes, and you can fund them here:
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/M4M8X1O2A)
 
 
-## How to install (including GridKeys instructions at the end). WARNING: Skin/sound packs cause problems, I recommend you uninstall them. There is a long term fix planned.
+## How to install (including GridKeys instructions at the end). 
 
-1. Click on releases and select the newest available version.
+WARNING: Skin/sound packs cause problems, I recommend you uninstall them. There is a long term fix planned.
+
+
+### Downloading the correct ZIP file
+
+1. Click on releases and select the NEWEST available version.
 
 ![grafik](https://user-images.githubusercontent.com/12478713/199226650-6fb97bb0-e4fe-4dea-8d32-b468d543a256.png)
-
-
----
 
 
 2. Scroll down to "Assets" and download the ZIP file with a timestamp
@@ -40,7 +42,17 @@ Yes, and you can fund them here:
 ---
 
 
-3. Unpack content to your main CoH directory ("Company of Heroes Relaunch")
+### Finding your main CoH directory
+
+3. Find your main CoH directory ("Company of Heroes Relaunch") by going to the Steam Library, right clicking on CoH, and selecting "properties"
+
+![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/c48f9951-46ba-47a3-bedd-8a1fde19860a)
+
+4. After selecting "properties", a new window will open, where you click on "installed files" and then onto "browse". Now, a new window opens. This is the main directory of your CoH installation.
+
+![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/9b74b189-2370-4ef6-8466-cc76a4b92b46)
+
+5. Unpack the content of the ZIP file into this directory directly, by selecting ALL the files from the ZIP, and dragging them over to the CoH directory.
 
 ![grafik](https://user-images.githubusercontent.com/12478713/160441247-29245530-a4fb-4f99-a89e-f7ad41d78b72.png)
 
@@ -48,7 +60,7 @@ Yes, and you can fund them here:
 ---
 
 
-4. Find your RelicCoH.exe in your main CoH directory, right click, send to desktop
+5. Find your RelicCoH.exe in your main CoH directory, right click on it, and select "send to desktop"
 
 ![grafik](https://user-images.githubusercontent.com/12478713/160441611-e84c3e7d-2100-4a3d-9f23-d4a707afbe14.png)
 
@@ -56,7 +68,7 @@ Yes, and you can fund them here:
 ---
 
 
-5. Find the new shortcut on your desktop, right click -> "properties". A new window opens.<br>
+6. Find the new shortcut on your desktop, right click -> "properties". A new window opens.<br>
 In this new window, go to "Target" (or "Ziel" in German) and add<br>
 -mod phoenixmod -dev<br>
 with a space after the quotes.
@@ -68,7 +80,7 @@ with a space after the quotes.
 ---
 
 
-6. Done! Now you can start the game with the mod by using the new shortcut on your desktop
+7. Done! Now you can start the game with the mod by using the new shortcut on your desktop
 
 
 Each time there is a new version, you need to delete the files you have copied from the ZIP files to the CoH directory and repeat steps 1-4
@@ -102,8 +114,6 @@ You can use gridkeys in the following manner:
 2. Go into the PhoenixMod.module in the main CoH directory and delete the semicolon in line 46. You will have to do this each time you redownload/update the Mod
 
 ![grafik](https://user-images.githubusercontent.com/12478713/161740515-9f49f85c-1be4-4557-9af0-c0668b81d48c.png)
-
-
 
 
 
