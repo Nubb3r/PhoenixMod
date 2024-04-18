@@ -29,9 +29,9 @@ Yes, and you can fund them here:
 
 ### Downloading the correct ZIP file
 
-1. Click on releases and select the NEWEST available version.
+1. Click on releases and select the LATEST available version.
 
-![grafik](https://user-images.githubusercontent.com/12478713/199226650-6fb97bb0-e4fe-4dea-8d32-b468d543a256.png)
+![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/77069660-4ac3-4b3d-bdcf-2429895c5878)
 
 
 2. Scroll down to "Assets" and download the ZIP file with a timestamp
