@@ -31,7 +31,7 @@ Yes, and you can fund them here:
 
 1. Click on releases and select the LATEST available version.
 
-![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/77069660-4ac3-4b3d-bdcf-2429895c5878)
+![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/9ae5df69-ed13-4bb8-9d13-8f8a058fe081)
 
 
 2. Scroll down to "Assets" and download the EXE file
@@ -52,9 +52,9 @@ Yes, and you can fund them here:
 
 ![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/9b74b189-2370-4ef6-8466-cc76a4b92b46)
 
-5. Unpack the content of the ZIP file into this directory directly, by selecting ALL the files from the ZIP, and dragging them over to the CoH directory.
+5. Put the EXE file into this directory directly and double click it. Confirm by selecting "Extract". If Windows asks you to replace things now, it means you have had a previous installation of PhoenixMod. Stop and delete all PhoenixMod files (except the EXE) from your CoH main folder, just to be safe, and repeat this step.
 
-![grafik](https://user-images.githubusercontent.com/12478713/160441247-29245530-a4fb-4f99-a89e-f7ad41d78b72.png)
+![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/e9e1dfa7-e09a-45c0-91a9-0fbdec1078cf)
 
 
 ---
