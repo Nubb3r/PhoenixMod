@@ -22,7 +22,7 @@ Yes, and you can fund them here:
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/M4M8X1O2A)
 
 
-## How to install (including GridKeys instructions at the end). WARNING: Skin/sound packs might not work, long term fix planned
+## How to install (including GridKeys instructions at the end). WARNING: Skin/sound packs cause problems, I recommend you uninstall them. There is a long term fix planned.
 
 1. Click on releases and select the newest available version.
 
