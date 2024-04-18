@@ -42,7 +42,7 @@ Yes, and you can fund them here:
    
 ![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/9b74b189-2370-4ef6-8466-cc76a4b92b46)
 ---
-7. Put the EXE file into this directory directly and double click it. Confirm by selecting "Extract". If Windows asks you to replace things now, it means you have had a previous installation of PhoenixMod. In this case, to be safe, stop and delete all PhoenixMod files (except the EXE) from your CoH main folder, and repeat this step.
+5. Put the EXE file into this directory directly and double click it. Confirm by selecting "Extract". If Windows asks you to replace things now, it means you have had a previous installation of PhoenixMod. In this case, to be safe, stop and delete all PhoenixMod files (except the EXE) from your CoH main folder, and repeat this step.
    
 ![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/e9e1dfa7-e09a-45c0-91a9-0fbdec1078cf)
 ---
