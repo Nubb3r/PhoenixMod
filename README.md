@@ -34,9 +34,9 @@ Yes, and you can fund them here:
 ![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/77069660-4ac3-4b3d-bdcf-2429895c5878)
 
 
-2. Scroll down to "Assets" and download the ZIP file with a timestamp
+2. Scroll down to "Assets" and download the EXE file
 
-![grafik](https://user-images.githubusercontent.com/12478713/199998668-1a21d72d-5dc4-46d1-b616-d0b6bfb13fdc.png)
+![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/fb483517-985e-4ce1-86da-06b1d98daf17)
 
 
 ---
