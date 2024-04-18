@@ -27,14 +27,14 @@ Yes, and you can fund them here:
 0. Uninstall any skin/sound packs, because they have caused many problems until now. There is a long term fix planned.
 
 
-### Downloading the correct ZIP file
+### Downloading the correct file
 
 1. Click on releases and select the LATEST available version.
 
 ![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/9ae5df69-ed13-4bb8-9d13-8f8a058fe081)
 
 
-2. Scroll down to "Assets" and download the EXE file
+2. Scroll down to "Assets" and download the EXE file. This is just .7z archive. You can double check this by renaming the file to .7z
 
 ![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/fb483517-985e-4ce1-86da-06b1d98daf17)
 
@@ -52,7 +52,7 @@ Yes, and you can fund them here:
 
 ![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/9b74b189-2370-4ef6-8466-cc76a4b92b46)
 
-5. Put the EXE file into this directory directly and double click it. Confirm by selecting "Extract". If Windows asks you to replace things now, it means you have had a previous installation of PhoenixMod. Stop and delete all PhoenixMod files (except the EXE) from your CoH main folder, just to be safe, and repeat this step.
+5. Put the EXE file into this directory directly and double click it. Confirm by selecting "Extract". If Windows asks you to replace things now, it means you have had a previous installation of PhoenixMod. In this case, to be safe, stop and delete all PhoenixMod files (except the EXE) from your CoH main folder, and repeat this step.
 
 ![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/e9e1dfa7-e09a-45c0-91a9-0fbdec1078cf)
 
