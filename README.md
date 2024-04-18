@@ -83,7 +83,7 @@ with a space after the quotes.
 8. Done! Now you can start the game with the mod by using the new shortcut on your desktop
 
 
-Each time there is a new version, you need to delete the files you have copied from the ZIP files to the CoH directory and repeat only steps 1-5
+Each time there is a new version, you need to delete all the PhoenixMod files from the CoH directory and repeat steps 1-5
 
 
 
