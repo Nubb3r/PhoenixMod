@@ -25,79 +25,33 @@ Yes, and you can fund them here:
 ## How to install (including GridKeys instructions at the end). 
 
 0. Uninstall any skin/sound packs, because they have caused many problems until now. There is a long term fix planned.
-
-
-### Downloading the correct file
-
+---
 1. Click on releases and select the LATEST available version.
-
 ![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/9ae5df69-ed13-4bb8-9d13-8f8a058fe081)
-
-
+---
 2. Scroll down to "Assets" and download the EXE file. This is just .7z archive. You can double check this by renaming the file to .7z
-
 ![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/fb483517-985e-4ce1-86da-06b1d98daf17)
-
-
 ---
-
-
-### Finding your main CoH directory
-
 3. Find your main CoH directory ("Company of Heroes Relaunch") by going to the Steam Library, right clicking on CoH, and selecting "properties"
-
 ![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/c48f9951-46ba-47a3-bedd-8a1fde19860a)
-
 4. After selecting "properties", a new window will open, where you click on "installed files" and then onto "browse". Now, a new window opens. This is the main directory of your CoH installation.
-
 ![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/9b74b189-2370-4ef6-8466-cc76a4b92b46)
-
 5. Put the EXE file into this directory directly and double click it. Confirm by selecting "Extract". If Windows asks you to replace things now, it means you have had a previous installation of PhoenixMod. In this case, to be safe, stop and delete all PhoenixMod files (except the EXE) from your CoH main folder, and repeat this step.
-
 ![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/e9e1dfa7-e09a-45c0-91a9-0fbdec1078cf)
-
-
 ---
-
-
 6. Find your RelicCoH.exe in your main CoH directory, right click on it, and select "send to desktop"
-
 ![grafik](https://user-images.githubusercontent.com/12478713/160441611-e84c3e7d-2100-4a3d-9f23-d4a707afbe14.png)
-
-
 ---
-
-
 7. Find the new shortcut on your desktop, right click -> "properties". A new window opens.<br>
 In this new window, go to "Target" (or "Ziel" in German) and add<br>
 -mod phoenixmod -dev<br>
 with a space after the quotes.
-
-   
 ![grafik](https://user-images.githubusercontent.com/12478713/200003634-db392825-e72f-402d-b698-f9e3541d6952.png)
-
-
 ---
-
-
 8. Done! Now you can start the game with the mod by using the new shortcut on your desktop
 
 
 Each time there is a new version, you need to delete all the PhoenixMod files from the CoH directory and repeat steps 1-5
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ---
 
