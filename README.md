@@ -16,6 +16,10 @@ Here is the project board where the work for the mod is being organized:
 https://trello.com/b/lxvh5AI0/phoenixmod
 Check the "General Information" card on there for more details.
 
+## Will there be tournaments on this mod?
+Yes, and you can fund them here:
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/M4M8X1O2A)
+
 
 ## How to install (including GridKeys instructions at the end). WARNING: Skin/sound packs might not work, long term fix planned
 
