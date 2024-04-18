@@ -60,7 +60,7 @@ WARNING: Skin/sound packs cause problems, I recommend you uninstall them. There 
 ---
 
 
-5. Find your RelicCoH.exe in your main CoH directory, right click on it, and select "send to desktop"
+6. Find your RelicCoH.exe in your main CoH directory, right click on it, and select "send to desktop"
 
 ![grafik](https://user-images.githubusercontent.com/12478713/160441611-e84c3e7d-2100-4a3d-9f23-d4a707afbe14.png)
 
@@ -68,7 +68,7 @@ WARNING: Skin/sound packs cause problems, I recommend you uninstall them. There 
 ---
 
 
-6. Find the new shortcut on your desktop, right click -> "properties". A new window opens.<br>
+7. Find the new shortcut on your desktop, right click -> "properties". A new window opens.<br>
 In this new window, go to "Target" (or "Ziel" in German) and add<br>
 -mod phoenixmod -dev<br>
 with a space after the quotes.
@@ -80,10 +80,10 @@ with a space after the quotes.
 ---
 
 
-7. Done! Now you can start the game with the mod by using the new shortcut on your desktop
+8. Done! Now you can start the game with the mod by using the new shortcut on your desktop
 
 
-Each time there is a new version, you need to delete the files you have copied from the ZIP files to the CoH directory and repeat steps 1-4
+Each time there is a new version, you need to delete the files you have copied from the ZIP files to the CoH directory and repeat only steps 1-5
 
 
 
