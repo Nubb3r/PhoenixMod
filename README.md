@@ -57,7 +57,7 @@ with a space after the quotes.
 
 ![grafik](https://user-images.githubusercontent.com/12478713/200003634-db392825-e72f-402d-b698-f9e3541d6952.png)
 ---
-8. Done! Now you can start the game with the mod by using the new shortcut on your desktop
+8. Done! Now you can start the game with the mod by using the new shortcut on your desktop. <br>
 Each time there is a new version, you need to delete all the PhoenixMod files from the CoH directory and repeat steps 1-5
 ---
 # GridKeys
