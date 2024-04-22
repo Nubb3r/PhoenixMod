@@ -32,7 +32,8 @@ Yes, and you can fund them here:
 ---
 2. Scroll down to "Assets" and download the ZIP file.
    
-![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/fb483517-985e-4ce1-86da-06b1d98daf17)
+![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/18778d9b-13d7-4aca-b1ed-37d8ed9a9416)
+
 ---
 3. Find your main CoH directory ("Company of Heroes Relaunch") by going to the Steam Library, right clicking on CoH, and selecting "properties"
 
@@ -44,7 +45,8 @@ Yes, and you can fund them here:
 ---
 5. Put the ZIP file into this directory directly and right click it and select "extract here". If Windows asks you to replace things now, it means you have had a previous installation of PhoenixMod. In this case, to be safe, stop and delete all PhoenixMod files (except the EXE) from your CoH main folder, and repeat this step.
    
-![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/b2fa74b5-6d9d-485f-a375-1e3d55a2d20c)
+![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/e7e877e8-4d15-47a9-abb3-e7ea4b52596a)
+
 
 ---
 6. Find your RelicCoH.exe in your main CoH directory, right click on it, and select "send to desktop"
