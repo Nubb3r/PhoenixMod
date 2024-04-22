@@ -44,7 +44,8 @@ Yes, and you can fund them here:
 ---
 5. Put the ZIP file into this directory directly and right click it and select "extract here". If Windows asks you to replace things now, it means you have had a previous installation of PhoenixMod. In this case, to be safe, stop and delete all PhoenixMod files (except the EXE) from your CoH main folder, and repeat this step.
    
-![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/e9e1dfa7-e09a-45c0-91a9-0fbdec1078cf)
+![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/b2fa74b5-6d9d-485f-a375-1e3d55a2d20c)
+
 ---
 6. Find your RelicCoH.exe in your main CoH directory, right click on it, and select "send to desktop"
    
