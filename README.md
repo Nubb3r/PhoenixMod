@@ -47,7 +47,7 @@ Yes, and you can fund them here:
 
 ![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/e7e877e8-4d15-47a9-abb3-e7ea4b52596a)
 
-6. After you clicked "extract all", a new window opens, where you need to delete the highlightes segment, and confirm.
+6. After you clicked "extract all", a new window opens, where you need to delete the highlighted segment, and confirm.
 
 ![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/4e525c4e-ae84-40ba-aae1-c19dc85dd5e7)
 ---
