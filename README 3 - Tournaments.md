@@ -1,5 +1,6 @@
+# Tournaments
+There is an active Tournament Right now:
 
-There is an active tournament right now
 Name: 1st PhoenixMod Tournament (Summer 2024 1v1)
 Phase: Open for signups
 Current Players:
