@@ -1,9 +1,13 @@
 # Tournaments
-There is an active Tournament Right now:
+There is an active tournament right now!
 
-Name: 1st PhoenixMod Tournament (Summer 2024 1v1)
-Phase: Open for signups
-Current Players:
+## 1st PhoenixMod Tournament (1v1, Summer 2024)
+
+- Phase: OPEN for signups (enter by messaging me on Twitch, Steam, or Discord)
+- Brackets: TBD
+- Patch: TBD
+
+## Current Players:
 - Magnolia
 - Wilson
 - Happiness
@@ -13,3 +17,10 @@ Current Players:
 - Smoko
 - Denchi
 - Stronger
+
+# Rules
+
+- No ghost structures for blocking
+- No captain sprint
+- No capwalk
+- No friendly fire grenades
