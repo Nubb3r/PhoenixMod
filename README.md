@@ -17,7 +17,7 @@ Here is the project board where the work for the mod is being organized:
 https://trello.com/b/lxvh5AI0/phoenixmod  Check the "General Information" card on there for more details.
 
 ## How do I install and play?
-Check this out: ![README2 - Installation.md](https://github.com/Nubb3r/PhoenixMod/blob/main/README2%20-%20Installation.md)
+Check this out: ![README2 - Installation.md](https://github.com/Nubb3r/PhoenixMod/blob/main/README2%20-%20Installation)
 
 ## Will there be tournaments on this mod?
 Yes, more info here: ![README3 - Tournaments.md]([https://github.com/Nubb3r/PhoenixMod/blob/main/README2%20-%20Installation%20Guide.md](https://github.com/Nubb3r/PhoenixMod/blob/main/README3%20-%20Tournaments.md))
