@@ -20,6 +20,7 @@ There is an active tournament right now!
 9. Stronger
 10. Revo
 11. Statement
+12. Jammam
 
 ## Rules
 - No ghost structures for blocking
@@ -38,24 +39,36 @@ There is an active tournament right now!
 - Ruins of Rouen
 - Semois
 - Sturzdorf
+- 
+# Verifying match results
+- Matches need to be verified by either
+  - uploading a screenshot of opponent's base taken at the beginning of each game
+  - streaming on Discord or Twitch (with delay), so admins can verify
+- The winner of each match has to send the match result INCLUDING THE REPLAY to Nubb3r on Discord
 
-## Conducting matches
+# Conducting matches
 
-# Map, faction and position/side determination
-1. Coin flip (loser gets first veto and position/side choice)
+##  Group phase process (BO2 on one map)
+1. Coin flip (loser gets first veto and position choice)
 2. Loser of coinflip vetos a map
 3. Winner of coinflip vetos a map
 4. Loser of coinflip vetos a map
 5. Winner of coinflip vetos map (leaving only one map, which will be played)
-6. Winner of coinflip picks faction
-7. Loser of coinflip picks position/side
+7. Loser of coinflip picks position
+8. Each match consists of 2 games on the selected map <br>After the first game, players swap positions and play again
    
-# Playing the match
-- Each match consists of 2 games
-- After the first game, players swap sides and play again
-- Matches need to be verified by either
-  - uploading a screenshot of opponent's base taken at the beginning of each game
-  - streaming on Discord or Twitch (with delay), so admins can verify
-- The winner of the match has to send the match result INCLUDING THE replay to Nubb3r
+## Elimination phase process (BO3 on 3 maps)
+1. Coin flip (loser gets first veto and position choice)
+2. Loser of coinflip vetos a map
+5. Winner of coinflip vetos map (leaving 3 maps)
+6. Winner of coinflip picks a map and faction for first game
+7. Loser picks his position
+8. The players play the first game (and keep note of winner VPs at the end)
+9. Now the loser of the coinflip picks a map and faction for the second game
+10. The winner of the coinflip picks his position
+11. The players play the second game (and keep note of winner VPs at the end)
+12. The player with more VPs picks his faction on the last remaining map
+13. The player with less VPs picks his position on the last remaining map
+14. The players play the third and last game
 
 
