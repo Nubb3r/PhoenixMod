@@ -39,7 +39,7 @@ There is an active tournament right now!
 - Ruins of Rouen
 - Semois
 - Sturzdorf
-- 
+
 # Verifying match results
 - Matches need to be verified by either
   - uploading a screenshot of opponent's base taken at the beginning of each game
