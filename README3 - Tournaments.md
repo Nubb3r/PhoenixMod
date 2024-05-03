@@ -56,6 +56,12 @@ There is an active tournament right now!
 7. Winner of coinflip picks faction
 8. Loser of coinflip picks position
 9. Each match consists of 2 games on the selected map <br>After the first game, players swap positions+teams and play again
+- Scoreline of 2-0 means -> 3 points for winner
+- Scoreline of 1-1 means -> 1 point for each player
+- Top 2 of each group advance to next phase, while bottom 2 are eliminated
+- If 2 players are tied in points, their direct matchup will count
+- If their direct matchup is 1-1, their win/lose ratio will count
+- If win/lose ratio is the same, they will play a single decider game, I will organize it if this really happens
    
 ## Elimination phase process (BO3 on 3 maps)
 1. Coin flip (loser gets first veto and position choice)
