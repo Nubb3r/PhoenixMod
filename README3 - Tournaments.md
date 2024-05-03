@@ -5,7 +5,7 @@ There is an active tournament right now!
 
 - Phase: OPEN for signups (enter by messaging me on Twitch, Steam, or Discord)
 - Brackets/Format: Group phase (bo2) + single elimination (bo3)
-- Patch: TBD (probably 0.0.14, to be released)
+- Patch: 0.0.14 (to be released)
 - Start date / schedule: TBD (several weeks after signups close, depening on players schedules)
 
 ## Current Players:
