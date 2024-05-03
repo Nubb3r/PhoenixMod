@@ -8,15 +8,17 @@ There is an active tournament right now!
 - Patch: TBD
 
 ## Current Players:
-- Magnolia
-- Wilson
-- Happiness
-- BkModTest
-- AndrewRRR
-- Bulat
-- Smoko
-- Denchi
-- Stronger
+1. Magnolia
+2. Wilson
+3. Happiness
+4. BkModTest
+5. AndrewRRR
+6. Bulat
+7. Smoko
+8. Denchi
+9. Stronger
+10. Revo
+11. Statement
 
 # Rules
 
