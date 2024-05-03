@@ -4,8 +4,9 @@ There is an active tournament right now!
 ## 1st PhoenixMod Tournament (1v1, Summer 2024)
 
 - Phase: OPEN for signups (enter by messaging me on Twitch, Steam, or Discord)
-- Brackets: TBD
-- Patch: TBD
+- Brackets/Format: Group phase (bo2) + single elimination (bo3)
+- Patch: TBD (probably 0.0.14, to be released)
+- Start date / schedule: TBD (several weeks after signups close, depening on players schedules)
 
 ## Current Players:
 1. Magnolia
@@ -20,8 +21,7 @@ There is an active tournament right now!
 10. Revo
 11. Statement
 
-# Rules
-
+## Rules
 - No ghost structures for blocking
 - No captain sprint
 - No capwalk
