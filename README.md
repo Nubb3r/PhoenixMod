@@ -20,7 +20,7 @@ https://trello.com/b/lxvh5AI0/phoenixmod  Check the "General Information" card o
 Check this out: ![README2 - Installation.md](https://github.com/Nubb3r/PhoenixMod/blob/main/README2%20-%20Installation.md)
 
 ## Will there be tournaments on this mod?
-Yes, more info here: ![README3 - Tournaments.md]([https://github.com/Nubb3r/PhoenixMod/blob/main/README2%20-%20Installation%20Guide.md](https://github.com/Nubb3r/PhoenixMod/blob/main/README3%20-%20Tournaments.md))
+Yes, more info here: ![README3 - Tournaments.md](https://github.com/Nubb3r/PhoenixMod/blob/main/README3%20-%20Tournaments.md)
 
 ## Can I help inrease the prize pool / fund more tournaments in the future?
 Yes, and you can donate for that here:
