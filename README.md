@@ -13,11 +13,18 @@ So why not start something new? Something that may rise from the ashes of CoH1.
 
 ## What changes are planned / is there a development roadmap?
 Here is the project board where the work for the mod is being organized:
-https://trello.com/b/lxvh5AI0/phoenixmod
-Check the "General Information" card on there for more details.
+
+https://trello.com/b/lxvh5AI0/phoenixmod  Check the "General Information" card on there for more details.
+
+## How do I install and play?
+Check this out: ![README2 - Installation Guide.md](https://github.com/Nubb3r/PhoenixMod/blob/main/README2%20-%20Installation%20Guide.md)
 
 ## Will there be tournaments on this mod?
-Yes, and you can fund them here:
+Yes, more info here: ![README3 - Tournaments.md]([https://github.com/Nubb3r/PhoenixMod/blob/main/README2%20-%20Installation%20Guide.md](https://github.com/Nubb3r/PhoenixMod/blob/main/README3%20-%20Tournaments.md))
 
+## Can I help inrease the prize pool / fund more tournaments in the future?
+Yes, and you can donate for that here:
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/M4M8X1O2A)
+
+
 
