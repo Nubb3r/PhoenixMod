@@ -49,13 +49,13 @@ There is an active tournament right now!
 # Conducting matches
 
 ##  Group phase process (BO2 on one map)
-1. Coin flip (loser gets first veto and position choice)
+1. Coin flip (loser gets first+last veto and position for first game)
 2. Loser of coinflip vetos a map
-3. Winner of coinflip vetos a map
-4. Loser of coinflip vetos a map
-5. Winner of coinflip vetos map (leaving only one map, which will be played)
-7. Loser of coinflip picks position
-8. Each match consists of 2 games on the selected map <br>After the first game, players swap positions and play again
+3. Winner of coinflip vetos two maps
+4. Loser of coinflip vetos a map (leaving only one map, which will be played)
+7. Winner of coinflip picks faction
+8. Loser of coinflip picks position
+9. Each match consists of 2 games on the selected map <br>After the first game, players swap positions+teams and play again
    
 ## Elimination phase process (BO3 on 3 maps)
 1. Coin flip (loser gets first veto and position choice)
