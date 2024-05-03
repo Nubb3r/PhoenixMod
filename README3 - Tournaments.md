@@ -31,3 +31,31 @@ There is an active tournament right now!
 - Total: 100€
 - First place: 70€
 - Second place: 30€
+
+## Map pool
+- Angoville
+- Langres
+- Ruins of Rouen
+- Semois
+- Sturzdorf
+
+## Conducting matches
+
+# Map, faction and position/side determination
+1. Coin flip (loser gets first veto and position/side choice)
+2. Loser of coinflip vetos a map
+3. Winner of coinflip vetos a map
+4. Loser of coinflip vetos a map
+5. Winner of coinflip vetos map (leaving only one map, which will be played)
+6. Winner of coinflip picks faction
+7. Loser of coinflip picks position/side
+   
+# Playing the match
+- Each match consists of 2 games
+- After the first game, players swap sides and play again
+- Matches need to be verified by either
+  - uploading a screenshot of opponent's base taken at the beginning of each game
+  - streaming on Discord or Twitch (with delay), so admins can verify
+- The winner of the match has to send the match result INCLUDING THE replay to Nubb3r
+
+
