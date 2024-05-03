@@ -26,3 +26,8 @@ There is an active tournament right now!
 - No captain sprint
 - No capwalk
 - No friendly fire grenades
+
+## Prize pool
+- Current total: 100€
+- First place: 70€
+- Second place: 30€
