@@ -21,6 +21,10 @@ There is an active tournament right now!
 10. Revo
 11. Statement
 12. Jammam
+13. Simply
+14. Bashlord
+15. Momo
+16. Shaolin
 
 ## Rules
 - No ghost structures for blocking
