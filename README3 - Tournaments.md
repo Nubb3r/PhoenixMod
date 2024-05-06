@@ -25,6 +25,7 @@ There is an active tournament right now!
 14. Bashlord
 15. Momo
 16. Shaolin
+17. Asbrandi
 
 ## Rules
 - No ghost structures for blocking
