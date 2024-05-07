@@ -9,24 +9,7 @@ There is an active tournament right now!
 - Start date / schedule: TBD (several weeks after signups close, depening on players schedules)
 
 ## Current Players:
-1. Magnolia
-2. Wilson
-3. Happiness
-4. BkModTest
-5. AndrewRRR
-6. Bulat
-7. Smoko
-8. Denchi
-9. Stronger
-10. Revo
-11. Statement
-12. Jammam
-13. Simply
-14. Bashlord
-15. Momo
-16. Shaolin
-17. Asbrandi
-18. MrSleaze
+https://challonge.com/phoenixmod1/participants
 
 ## Rules
 - No ghost structures for blocking
