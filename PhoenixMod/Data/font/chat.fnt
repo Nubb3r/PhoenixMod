@@ -1,0 +1,11 @@
+font = 
+{
+	type 		= "FreeType2";
+	name 		= "Arialuni";
+	file		= "Arialuni.ttf";
+
+	sizeDefault 	= 1;
+
+	spaceChar	= " ";
+	missingChar	= "?";
+}
