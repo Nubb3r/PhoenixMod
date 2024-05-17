@@ -9,7 +9,7 @@ There is an active tournament right now!
 - Start date / schedule: TBD (several weeks after signups close, depening on players schedules)
 
 ## Brackets:
-https://docs.google.com/spreadsheets/d/1JqDsAa5kNRfQg8Chhi7pKeBNFKGUArin_VElk8GZhl0/edit#gid=1149293846
+https://docs.google.com/spreadsheets/d/1OGbCECBkwzR7thj_DYLaMpKUiqQnQEAycPmMyq37Jvs/edit#gid=1007855922
 
 ## Rules
 - No ghost structures for blocking
