@@ -30,9 +30,7 @@ https://docs.google.com/spreadsheets/d/1OGbCECBkwzR7thj_DYLaMpKUiqQnQEAycPmMyq37
 - Sturzdorf
 
 # Verifying match results
-- Matches need to be verified by either
-  - uploading a screenshot of opponent's base taken at the beginning of each game
-  - streaming on Discord or Twitch (with delay), so admins can verify
+- Matches need to be verified by streaming on Discord or Twitch or other streaming services(with delay), so admins can verify
 - The winner of each match has to send the match result INCLUDING THE REPLAY to Nubb3r on Discord
 
 # Conducting matches
