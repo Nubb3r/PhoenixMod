@@ -8,8 +8,8 @@ There is an active tournament right now!
 - Patch: 0.2
 - Start date / schedule: TBD (several weeks after signups close, depening on players schedules)
 
-## Current Players:
-https://challonge.com/phoenixmod1/participants
+## Brackets:
+https://docs.google.com/spreadsheets/d/1JqDsAa5kNRfQg8Chhi7pKeBNFKGUArin_VElk8GZhl0/edit#gid=1149293846
 
 ## Rules
 - No ghost structures for blocking
