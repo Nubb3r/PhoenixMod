@@ -40,7 +40,7 @@ with a space after the quotes.
 ---
 9. Done! Now you can start the game with the mod by using the new shortcut on your desktop. <br>
 Each time there is a new version, you need to delete all the PhoenixMod files from the CoH directory and repeat steps 1-6. <br>
-You can conveniently delete everything by double clicking the "!PhoenixMod_Uninstaller.bat" file.
+You can conveniently delete everything by double clicking the "!PhoenixMod_Uninstaller.bat" file located in your CoH Relaunch folder.
 ---
 # GridKeys
 You can use gridkeys in the following manner:
