@@ -39,7 +39,8 @@ with a space after the quotes.
 ![grafik](https://user-images.githubusercontent.com/12478713/200003634-db392825-e72f-402d-b698-f9e3541d6952.png)
 ---
 9. Done! Now you can start the game with the mod by using the new shortcut on your desktop. <br>
-Each time there is a new version, you need to delete all the PhoenixMod files from the CoH directory and repeat steps 1-6
+Each time there is a new version, you need to delete all the PhoenixMod files from the CoH directory and repeat steps 1-6. <br>
+You can conveniently delete everything by double clicking the "!PhoenixMod_Uninstaller.bat" file.
 ---
 # GridKeys
 You can use gridkeys in the following manner:
