@@ -8,7 +8,8 @@ There is an active tournament right now!
 - Patch: 0.2
 - Start date / schedule: several weeks, starting now
 
-## Brackets:
+## Brackets
+Public version:
 https://docs.google.com/spreadsheets/d/1OGbCECBkwzR7thj_DYLaMpKUiqQnQEAycPmMyq37Jvs/edit#gid=1007855922
 
 ## Rules
