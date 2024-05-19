@@ -13,6 +13,7 @@ There is an active tournament right now!
 - No captain sprint
 - No capwalk
 - No friendly fire grenades
+- No AT gun abuse (will be fixed in next patch)
 
 ## Prize pool
 - Total: 100€
