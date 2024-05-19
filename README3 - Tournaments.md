@@ -6,10 +6,7 @@ There is an active tournament right now!
 - Patch: [PhoenixMod 0.2](https://github.com/Nubb3r/PhoenixMod/releases/tag/0.2)
 - Format: Group phase (bo2) + (double) elimination phase (bo3)
 - Current phase: Group phase
-
-## Brackets
-Public version:
-https://docs.google.com/spreadsheets/d/1OGbCECBkwzR7thj_DYLaMpKUiqQnQEAycPmMyq37Jvs/edit#gid=1007855922
+- Brackets: [See here](https://docs.google.com/spreadsheets/d/1OGbCECBkwzR7thj_DYLaMpKUiqQnQEAycPmMyq37Jvs/edit#gid=1007855922)
 
 ## Rules
 - No ghost structures for blocking
