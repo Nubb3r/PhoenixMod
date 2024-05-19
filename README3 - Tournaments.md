@@ -27,8 +27,9 @@ There is an active tournament right now!
 - Sturzdorf
 
 # Verifying match results
-- Matches need to be verified by streaming on Discord or Twitch or other streaming services(with delay), so admins can verify
-- The winner of each match has to send the match result INCLUDING THE REPLAY to Nubb3r on Discord
+- Matches need to be verified by streaming on Discord or Twitch or other streaming services(with delay)
+- You can also provide a screenshot from the opponent's base
+- The winner of each match has to send the match result INCLUDING THE REPLAY into the correct channel on Discord
 
 # Conducting matches
 
