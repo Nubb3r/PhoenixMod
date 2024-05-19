@@ -3,10 +3,9 @@ There is an active tournament right now!
 
 ## 1st PhoenixMod Tournament (1v1, Summer 2024)
 
-- Phase: Closed, starting group phase soon
-- Brackets/Format: Group phase (bo2) + double elimination (bo3)
+- Current phase: Group phase
+- Format: Group phase (bo2) + (double) elimination phase (bo3)
 - Patch: 0.2
-- Start date / schedule: several weeks, starting now
 
 ## Brackets
 Public version:
