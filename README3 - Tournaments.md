@@ -28,9 +28,14 @@ There is an active tournament right now!
 - Sturzdorf
 
 # Verifying match results
-- Matches need to be verified by streaming on Discord or Twitch or other streaming services (with delay)
-- You can also provide a screenshot from the opponent's base
+Matches need to be verified to prevent cheating. You can do this by:
+- Streaming on the PhoenixMod Discord, where admins can watch
+- Streaming on Twitch [privately](https://www.streamscheme.com/how-to-private-stream-on-twitch/) and providing a link so admins can watch
+- Streaming on YouTube [privately](https://support.streamyard.com/hc/en-us/articles/4408476974740-How-do-I-Stream-Privately-to-YouTube) and providing a link so admins can watch
+- Recording the game and upload it somewhere and providing a link so admins can watch
+- Screenshotting the opponent's base and providing the screenshot after the game
 - The winner of each match has to send the match result INCLUDING THE REPLAY into the correct channel on Discord or send it directly to Nubb3r via any appropriate means
+- Please avoid just raw livestreaming to avoid spoilers. Thank you!
 
 # Conducting matches
 
