@@ -54,5 +54,16 @@ You can use gridkeys in the following manner:
 
 ![grafik](https://user-images.githubusercontent.com/12478713/161740515-9f49f85c-1be4-4557-9af0-c0668b81d48c.png)
 
+---
+# Zoom
+You can use customize your max zoom level by customizing the camera.lua file located here:
+...\Company of Heroes Relaunch\PhoenixMod\Data
+![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/9b6ccd86-dcdc-4f97-a1f3-7c48a823e0e6)
+
+Change the "DistMax" (maximum zoom level) and "DefaultHeight" (the zoom level the game starts at) to your liking:
+![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/6c5c8a50-b7c2-4c79-819c-410000dfd43d)
+
+
+
 
 
