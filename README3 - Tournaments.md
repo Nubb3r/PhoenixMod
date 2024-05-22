@@ -30,7 +30,7 @@ There is an active tournament right now!
 # Verifying match results
 - Matches need to be verified by streaming on Discord or Twitch or other streaming services (with delay)
 - You can also provide a screenshot from the opponent's base
-- The winner of each match has to send the match result INCLUDING THE REPLAY into the correct channel on Discord
+- The winner of each match has to send the match result INCLUDING THE REPLAY into the correct channel on Discord or send it directly to Nubb3r via any appropriate means
 
 # Conducting matches
 
