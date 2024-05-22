@@ -1,4 +1,4 @@
-## Installation (including GridKeys instructions at the end). 
+## Installation (including GridKeys instructions and zoom level customization at the end). 
 
 0. Uninstall any skin/sound packs, because they have caused many problems until now. There is a long term fix planned.
 ---
@@ -39,7 +39,8 @@ with a space after the quotes.
 ![grafik](https://user-images.githubusercontent.com/12478713/200003634-db392825-e72f-402d-b698-f9e3541d6952.png)
 ---
 9. Done! Now you can start the game with the mod by using the new shortcut on your desktop. <br>
-Each time there is a new version, you need to delete all the PhoenixMod files from the CoH directory and repeat steps 1-6
+Each time there is a new version, you need to delete all the PhoenixMod files from the CoH directory and repeat steps 1-6. <br>
+You can conveniently delete everything by double clicking the "!PhoenixMod_Uninstaller.bat" file located in your CoH Relaunch folder.
 ---
 # GridKeys
 You can use gridkeys in the following manner:
@@ -52,6 +53,20 @@ You can use gridkeys in the following manner:
 2. Go into the PhoenixMod.module in the main CoH directory and delete the semicolon in line 46. You will have to do this each time you redownload/update the Mod.
 
 ![grafik](https://user-images.githubusercontent.com/12478713/161740515-9f49f85c-1be4-4557-9af0-c0668b81d48c.png)
+
+---
+# Zoom
+You can customize your max zoom level by editing the camera.lua file located here:
+
+...\Company of Heroes Relaunch\PhoenixMod\Data
+
+![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/9b6ccd86-dcdc-4f97-a1f3-7c48a823e0e6)
+
+Change the "DistMax" (maximum zoom level) and "DefaultHeight" (the zoom level the game starts at) to your liking:
+
+![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/6c5c8a50-b7c2-4c79-819c-410000dfd43d)
+
+
 
 
 

@@ -3,19 +3,17 @@ There is an active tournament right now!
 
 ## 1st PhoenixMod Tournament (1v1, Summer 2024)
 
-- Phase: OPEN for signups (enter by messaging me on Twitch, Steam, or Discord)
-- Brackets/Format: Group phase (bo2) + single elimination (bo3)
-- Patch: 0.0.14 (to be released)
-- Start date / schedule: TBD (several weeks after signups close, depening on players schedules)
-
-## Current Players:
-https://challonge.com/phoenixmod1/participants
+- Patch: [PhoenixMod 0.2](https://github.com/Nubb3r/PhoenixMod/releases/tag/0.2)
+- Format: Group phase (bo2) + (double) elimination phase (bo3)
+- Current phase: Group phase
+- Brackets: [See here](https://docs.google.com/spreadsheets/d/1OGbCECBkwzR7thj_DYLaMpKUiqQnQEAycPmMyq37Jvs/edit#gid=1007855922)
 
 ## Rules
 - No ghost structures for blocking
 - No captain sprint
 - No capwalk
 - No friendly fire grenades
+- No AT gun abuse (will be fixed in next patch)
 
 ## Prize pool
 - Total: 100€
@@ -30,10 +28,14 @@ https://challonge.com/phoenixmod1/participants
 - Sturzdorf
 
 # Verifying match results
-- Matches need to be verified by either
-  - uploading a screenshot of opponent's base taken at the beginning of each game
-  - streaming on Discord or Twitch (with delay), so admins can verify
-- The winner of each match has to send the match result INCLUDING THE REPLAY to Nubb3r on Discord
+Matches need to be verified to prevent cheating. You can do this by:
+- Streaming on the PhoenixMod Discord, where admins can watch
+- Streaming on Twitch [privately](https://www.streamscheme.com/how-to-private-stream-on-twitch/) and providing a link so admins can watch
+- Streaming on YouTube [privately](https://support.streamyard.com/hc/en-us/articles/4408476974740-How-do-I-Stream-Privately-to-YouTube) and providing a link so admins can watch
+- Recording the game and upload it somewhere and providing a link so admins can watch
+- Screenshotting the opponent's base and providing the screenshot after the game
+- The winner of each match has to send the match result INCLUDING THE REPLAY into the correct channel on Discord or send it directly to Nubb3r via any appropriate means
+- Please avoid just raw livestreaming to avoid spoilers. Thank you!
 
 # Conducting matches
 
@@ -52,7 +54,7 @@ https://challonge.com/phoenixmod1/participants
 - Bottom 3 are eliminated
 - If 2 players are tied in points, their direct matchup will count
 - If their direct matchup is 1-1, their win/lose ratio will count
-- If win/lose ratio is the same, they will play a single decider game, I will organize it if this really happens
+- If win/lose ratio is the same, they will play a single decider game, this will be organized individually if necessary
    
 ## Elimination phase process (BO3 on 3 maps)
 1. Coin flip
