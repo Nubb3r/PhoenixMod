@@ -85,10 +85,10 @@ EntityMinViewAngle=0.03		--	in radians
 
 	
 -- The default height or distance from the ground or target that the camera starts at.
-DefaultHeight = 40
+DefaultHeight = 40 -- THIS IS 35 in NORMAL COH
 --	Distance ranges in meters (may be influenced by selected object size)
 DistMin=1
-DistMax=60
+DistMax=60 -- THIS IS 40 in NORMAL COH
 
 
 
