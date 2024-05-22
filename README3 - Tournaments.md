@@ -49,7 +49,7 @@ There is an active tournament right now!
 - Bottom 3 are eliminated
 - If 2 players are tied in points, their direct matchup will count
 - If their direct matchup is 1-1, their win/lose ratio will count
-- If win/lose ratio is the same, they will play a single decider game, I will organize it if this really happens
+- If win/lose ratio is the same, they will play a single decider game, this will be organized individually if necessary
    
 ## Elimination phase process (BO3 on 3 maps)
 1. Coin flip
