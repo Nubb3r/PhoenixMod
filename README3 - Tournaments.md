@@ -3,7 +3,7 @@ There is an active tournament right now!
 
 ## 1st PhoenixMod Tournament (1v1, Summer 2024)
 
-- Patch: [PhoenixMod 0.2](https://github.com/Nubb3r/PhoenixMod/releases/tag/0.2)
+- Patch: [PhoenixMod 0.21](https://github.com/Nubb3r/PhoenixMod/releases/tag/0.21)
 - Format: Group phase (bo2) + (double) elimination phase (bo3)
 - Current phase: Group phase
 - Brackets: [See here](https://docs.google.com/spreadsheets/d/1OGbCECBkwzR7thj_DYLaMpKUiqQnQEAycPmMyq37Jvs/edit#gid=1007855922)
