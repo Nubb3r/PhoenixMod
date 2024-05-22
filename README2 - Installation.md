@@ -1,4 +1,4 @@
-## Installation (including GridKeys instructions at the end). 
+## Installation (including GridKeys instructions and zoom level customization at the end). 
 
 0. Uninstall any skin/sound packs, because they have caused many problems until now. There is a long term fix planned.
 ---
