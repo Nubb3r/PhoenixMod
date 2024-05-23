@@ -11,9 +11,7 @@ The CoH1 ladder is becoming completely irrelevant due to cheaters, stream sniper
 That's plenty motivation for starting something new. Something that may rise from the ashes of CoH1.
 
 ## What changes are planned / is there a development roadmap?
-Here is the [project board](https://trello.com/b/lxvh5AI0/phoenixmod) where the work for the mod is being organized:
-
-Check the "General Information" card on there for more details.
+Check the "General Information" card on the [project board](https://trello.com/b/lxvh5AI0/phoenixmod), where the work for the mod is being organized:
 
 ## How do I install and play?
 Check this out: https://github.com/Nubb3r/PhoenixMod/blob/main/README2%20-%20How%20to%20install.md
