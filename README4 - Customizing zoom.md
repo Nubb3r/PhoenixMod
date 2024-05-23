@@ -1,6 +1,6 @@
 
 # Zoom
-You can customize your max zoom level by editing the camera.lua file located here:
+You can customize your standard and max zoom level by editing the camera.lua file located here:
 
 ...\Company of Heroes Relaunch\PhoenixMod\Data
 
