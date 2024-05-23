@@ -1,5 +1,3 @@
-# PhoenixMod
-
 ## What is PhoenixMod?
 Imagine EliteMod, but no crazy stuff, and it will be supported by me as long as I am around.
 If you don't know what EliteMod is/was: Basically, long after CoH's support has been officially stopped,
