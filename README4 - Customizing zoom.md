@@ -2,7 +2,7 @@
 # Zoom
 You can customize your standard and max zoom level by editing the camera.lua file located here:
 
-![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/9b6ccd86-dcdc-4f97-a1f3-7c48a823e0e6)
+![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/d95c003e-0bb7-4bba-ab5a-a25f6c3aac31)
 
 ---
 
