@@ -7,7 +7,7 @@ Eventually, with the downward trend of interest in EliteMod and CoH1 in general,
 
 Scope creep is also a threat for PhoenixMod and I will try my best to mitigate it. In terms of activity of CoH1, 
 I think it is as dead as it gets. Especially since CoH2 and CoH3 released and the latter is being actively supported (yet).
-And the CoH1 ladder is becoming completely irrelevant due to cheaters, stream snipers, bug abusing, drop hacking and stat-padding.
+And the CoH1 ladder is becoming completely irrelevant due to cheaters, stream snipers, bug abusing, drop hacking, stat-padding, etc.
 
 That's plenty motivation for starting something new. Something that may rise from the ashes of CoH1.
 
