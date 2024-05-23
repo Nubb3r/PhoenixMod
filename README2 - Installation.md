@@ -2,7 +2,7 @@
 
 0. Uninstall any skin/sound packs, because they have caused many problems until now. There is a long term fix planned.
 ---
-1. Click on releases and select the LATEST available version.
+1. Click on releases and select the LATEST available version. Go to the [main page](https://github.com/Nubb3r/PhoenixMod) for that.
    
 ![grafik](https://github.com/Nubb3r/PhoenixMod/assets/12478713/9ae5df69-ed13-4bb8-9d13-8f8a058fe081)
 ---
