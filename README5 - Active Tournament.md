@@ -35,7 +35,7 @@ Matches need to be verified to prevent cheating. You can do this by:
 - Recording the game and upload it somewhere and providing a link so admins can watch
 - Screenshotting the opponent's base and providing the screenshot after the game
 - The winner of each match has to send the match result INCLUDING THE REPLAY into the correct channel on Discord or send it directly to Nubb3r via any appropriate means
-- Please avoid just raw livestreaming to avoid spoilers. Thank you!
+- Please avoid publicly livestreaming to avoid spoilers. Thank you!
 
 # Conducting matches
 
