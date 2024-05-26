@@ -35,6 +35,20 @@ Matches need to be verified to prevent cheating. You can do this by:
 - Recording the game and upload it somewhere and providing a link so admins can watch
 - Screenshotting the opponent's base and providing the screenshot after the game
 - One of the players (loser of counflip if you can't agree) has to send the match result INCLUDING ALL REPLAYS directly to Nubb3r via any appropriate means
+  
+Replay name schema:
+
+PMT-GrpD-R2-M2-G1
+
+Explanation:
+- PMT1: PhoenixMod tourney 1
+- GrpD: Group D
+- R2: Round 2
+- M2: Match 2
+- G1: Game 1
+
+This helps with organizing a lot, so I am very grateful if you try your best to match this schema
+
 - Please avoid publicly livestreaming to avoid spoilers. Thank you!
 
 # Conducting matches
