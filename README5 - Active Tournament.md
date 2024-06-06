@@ -34,7 +34,7 @@ Matches need to be verified to prevent cheating. You can do this by:
 - Streaming on YouTube [privately](https://support.streamyard.com/hc/en-us/articles/4408476974740-How-do-I-Stream-Privately-to-YouTube) and providing a link so admins can watch
 - Recording the game and upload it somewhere and providing a link so admins can watch
 - Screenshotting the opponent's base and providing the screenshot after the game
-- One of the players (loser of counflip if you can't agree) has to send the match result INCLUDING ALL REPLAYS directly to Nubb3r via any appropriate means
+- Loser of coinflip has to send the the replay directly to Nubb3r via any appropriate means. IF THE REPLAY IS LOST YOU WILL HAVE TO REMAKE!
   
 Replay name schema:
 
