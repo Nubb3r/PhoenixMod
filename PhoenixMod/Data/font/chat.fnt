@@ -4,7 +4,7 @@ font =
 	name 		= "Arialuni";
 	file		= "Arialuni.ttf";
 
-	sizeDefault 	= 1;
+	sizeDefault 	= 8;
 
 	spaceChar	= " ";
 	missingChar	= "?";
