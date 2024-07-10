@@ -82,3 +82,4 @@ This helps with organizing a lot, so I am very grateful if you try your best to 
 11. The players play the second game (and keep note of winner VPs at the end)
 12. If the BO3 is not over yet, the player with more VPs picks his factionand the player with less VPs picks his position
 13. The players play the third and last (decider) game on the remaining map
+14. Replays need to be sent to aveator via discord by BOTH parties in the dedicated group chat without spoiling the result
