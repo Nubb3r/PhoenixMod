@@ -1,0 +1,1104 @@
+-----------------------------------------------------------------------
+-- VPTicker Win Condition
+--
+-- (c) Relic Entertainment 2006
+--
+-- Programmers: Shelby Hubick, Kris Botha, Randy Lukashuk
+-----------------------------------------------------------------------
+import("ScarUtil.scar")
+import("ScreenshotReminder.scar")
+
+function _initdata()
+
+	-- Constant
+	RACE_STRING_ALLIES = "allies"
+	RACE_STRING_ALLIES_CW = "allies_commonwealth"
+	RACE_STRING_AXIS = "axis"
+	RACE_STRING_AXIS_PE = "axis_panzer_elite"
+	
+	-- SOUND FILES
+	SOUND_FRIENDLY_TICKER_ALLIES	= "speech/mp/allies/INT/intel/FriendlyTickerStatus/"
+	SOUND_FRIENDLY_TICKER_AXIS		= "speech/mp/axis/GAn/Intel/FriendlyTickerStatus/"
+	SOUND_FRIENDLY_TICKER_ALLIES_CW	= "speech/mp/commonwealth/INT/intel/FriendlyTickerStatus/"
+	SOUND_FRIENDLY_TICKER_AXIS_PE	= "speech/mp/panzerelite/GAn/Intel/FriendlyTickerStatus/"
+	
+	SOUND_ENEMY_TICKER_ALLIES		= "speech/mp/allies/INT/intel/EnemyTickerStatus/"
+	SOUND_ENEMY_TICKER_AXIS			= "speech/mp/axis/GAn/Intel/EnemyTickerStatus/"
+	SOUND_ENEMY_TICKER_ALLIES_CW	= "speech/mp/commonwealth/INT/intel/EnemyTickerStatus/"
+	SOUND_ENEMY_TICKER_AXIS_PE		= "speech/mp/panzerelite/GAn/Intel/EnemyTickerStatus/"
+			
+	SOUND_VICTORY_BALANCE_ALLIES	= "speech/mp/allies/INT/intel/VictoryBalChange/"
+	SOUND_VICTORY_BALANCE_AXIS		= "speech/mp/axis/GAn/Intel/VictoryBalChange/"
+	SOUND_VICTORY_BALANCE_ALLIES_CW	= "speech/mp/commonwealth/INT/intel/VictoryBalChange/"
+	SOUND_VICTORY_BALANCE_AXIS_PE	= "speech/mp/panzerelite/GAn/Intel/VictoryBalChange/"
+	
+	SOUND_TICKER_WARNING_FINAL		= "UI/EventCues/CountdownBeep"
+	
+	Sound_PreCacheSound(SOUND_TICKER_WARNING_FINAL)
+
+	--
+	FINAL_TICKER_WARNING_TICKER_LEISURE	= 50
+	FINAL_TICKER_WARNING_TICKER_URGENT	= 25
+	
+	table_FriendlyTickerStatusSpeech = 
+	{
+		Ticker_1 = { 	allies 	= "",
+						axis 	= "",
+						alliesCW= "",
+						axisPE	= "",
+					},
+
+		Ticker_2 = { 	allies 	= "",
+						axis 	= "",
+						alliesCW= "",
+						axisPE	= "",
+					},
+					
+		Ticker_3 = { 	allies 	= "",
+						axis 	= "",
+						alliesCW= "",
+						axisPE	= "",
+					},
+					
+		Ticker_4 = { 	allies 	= "",
+						axis 	= "",
+						alliesCW= "",
+						axisPE	= "",
+					},
+					
+		Ticker_5 = { 	allies 	= "",
+						axis 	= "",
+						alliesCW= "",
+						axisPE	= "",
+					},
+					
+		Ticker_6 = { 	allies 	= "",
+						axis 	= "",
+						alliesCW= "",
+						axisPE	= "",
+					},
+					
+		Ticker_7 = { 	allies 	= "",
+						axis 	= "",
+						alliesCW= "",
+						axisPE	= "",
+					},
+					
+		Ticker_8 = { 	allies 	= "",
+						axis 	= "",
+						alliesCW= "",
+						axisPE	= "",
+					},
+					
+		Ticker_9 = { 	allies 	= "",
+						axis 	= "",
+						alliesCW= "",
+						axisPE	= "",
+					},
+					
+		Ticker_10 = { 	allies 	= "",
+						axis 	= "",
+						alliesCW= "",
+						axisPE	= "",
+					},
+	
+		Ticker_25 = { 	allies 	= SOUND_FRIENDLY_TICKER_ALLIES.."LB_INT_FTS_025Gen_NT_S",
+						axis 	= SOUND_FRIENDLY_TICKER_AXIS.."XB_GAn_fts_025Gen_NT_S",
+						alliesCW= SOUND_FRIENDLY_TICKER_ALLIES_CW.."cb_int_fts_025gen_nt_l",
+						axisPE 	= SOUND_FRIENDLY_TICKER_AXIS_PE.."pb_gan_fts_025gen_nt_s"						
+					},
+
+		-- friendly down to 25 points & enemy has more than 200 points
+		Ticker_25_200
+				  = { 	allies 	= SOUND_FRIENDLY_TICKER_ALLIES.."LB_INT_FTS_025200_NT_S",
+						axis 	= SOUND_FRIENDLY_TICKER_AXIS.."XB_GAn_fts_025200_NT_S",
+						alliesCW= SOUND_FRIENDLY_TICKER_ALLIES_CW.."cb_int_fts_025gen_nt_l",
+						axisPE 	= SOUND_FRIENDLY_TICKER_AXIS_PE.."pb_gan_fts_025gen_nt_s"
+					},
+						
+		Ticker_50 = { 	allies 	= SOUND_FRIENDLY_TICKER_ALLIES.."LB_INT_FTS_050Gen_NT_S",
+						axis 	= SOUND_FRIENDLY_TICKER_AXIS.."XB_GAn_fts_050Gen_NT_S",
+						alliesCW= SOUND_FRIENDLY_TICKER_ALLIES_CW.."cb_int_fts_050gen_nt_l",
+						axisPE 	= SOUND_FRIENDLY_TICKER_AXIS_PE.."pb_gan_fts_050gen_nt_s"
+					},
+	
+		Ticker_100 = { 	allies 	= SOUND_FRIENDLY_TICKER_ALLIES.."LB_INT_FTS_100Gen_NT_S",
+						axis 	= SOUND_FRIENDLY_TICKER_AXIS.."XB_GAn_fts_100Gen_NT_S",
+						alliesCW= SOUND_FRIENDLY_TICKER_ALLIES_CW.."cb_int_fts_100gen_nt_l",
+						axisPE 	= SOUND_FRIENDLY_TICKER_AXIS_PE.."pb_gan_fts_100gen_nt_s"
+					 },
+					
+		Ticker_200 = { 	allies 	= SOUND_FRIENDLY_TICKER_ALLIES.."LB_INT_FTS_200Gen_NT_S",
+						axis 	= SOUND_FRIENDLY_TICKER_AXIS.."XB_GAn_fts_200Gen_NT_S",
+						alliesCW= SOUND_FRIENDLY_TICKER_ALLIES_CW.."cb_int_fts_200gen_nt_s",
+						axisPE 	= SOUND_FRIENDLY_TICKER_AXIS_PE.."pb_gan_fts_200gen_nt_s"
+					 },
+	
+		Ticker_300 = { 	allies 	= SOUND_FRIENDLY_TICKER_ALLIES.."LB_INT_FTS_300Gen_NT_S",
+						axis 	= SOUND_FRIENDLY_TICKER_AXIS.."XB_GAn_fts_300Gen_NT_S",
+						alliesCW= SOUND_FRIENDLY_TICKER_ALLIES_CW.."cb_int_fts_300gen_nt_s",
+						axisPE 	= SOUND_FRIENDLY_TICKER_AXIS_PE.."pb_gan_fts_300gen_nt_s"
+					 },
+					 
+		Ticker_400 = { 	allies 	= SOUND_FRIENDLY_TICKER_ALLIES.."LB_INT_FTS_400Gen_NT_S",
+						axis 	= SOUND_FRIENDLY_TICKER_AXIS.."XB_GAn_fts_400Gen_NT_S",
+						alliesCW= SOUND_FRIENDLY_TICKER_ALLIES_CW.."cb_int_fts_400gen_nt_s",
+						axisPE 	= SOUND_FRIENDLY_TICKER_AXIS_PE.."pb_gan_fts_400gen_nt_s"
+					 },
+	}
+	
+	table_EnemyTickerStatusSpeech = 
+	{
+		Ticker_1 = { 	allies 	= "",
+						axis 	= "",
+						alliesCW= "",
+						axisPE	= "",
+					},
+
+		Ticker_2 = { 	allies 	= "",
+						axis 	= "",
+						alliesCW= "",
+						axisPE	= "",
+					},
+					
+		Ticker_3 = { 	allies 	= "",
+						axis 	= "",
+						alliesCW= "",
+						axisPE	= "",
+					},
+					
+		Ticker_4 = { 	allies 	= "",
+						axis 	= "",
+						alliesCW= "",
+						axisPE	= "",
+					},
+					
+		Ticker_5 = { 	allies 	= "",
+						axis 	= "",
+						alliesCW= "",
+						axisPE	= "",
+					},
+					
+		Ticker_6 = { 	allies 	= "",
+						axis 	= "",
+						alliesCW= "",
+						axisPE	= "",
+					},
+					
+		Ticker_7 = { 	allies 	= "",
+						axis 	= "",
+						alliesCW= "",
+						axisPE	= "",
+					},
+					
+		Ticker_8 = { 	allies 	= "",
+						axis 	= "",
+						alliesCW= "",
+						axisPE	= "",
+					},
+					
+		Ticker_9 = { 	allies 	= "",
+						axis 	= "",
+						alliesCW= "",
+						axisPE	= "",
+					},
+					
+		Ticker_10 = { 	allies 	= "",
+						axis 	= "",
+						alliesCW= "",
+						axisPE	= "",
+					},
+					
+		Ticker_25 = { 	allies 	= SOUND_ENEMY_TICKER_ALLIES.."LB_INT_ETS_025Gen_NT_S",
+						axis 	= SOUND_ENEMY_TICKER_AXIS.."XB_GAn_ets_025100_NT_S",
+						alliesCW= SOUND_ENEMY_TICKER_ALLIES_CW.."cb_int_ets_025gen_nt_l",
+						axisPE 	= SOUND_ENEMY_TICKER_AXIS_PE.."pb_gan_ets_025gen_nt_s"						
+					},
+					
+		-- victory imminent: enemy down to 25, friendly has more than 100
+		Ticker_25_100
+				  = { 	allies 	= SOUND_ENEMY_TICKER_ALLIES.."LB_INT_ETS_025100_NT_S",
+						axis 	= SOUND_ENEMY_TICKER_AXIS.."XB_GAn_ets_025100_NT_S",
+						alliesCW= SOUND_ENEMY_TICKER_ALLIES_CW.."cb_int_ets_025gen_nt_l",
+						axisPE 	= SOUND_ENEMY_TICKER_AXIS_PE.."pb_gan_ets_025gen_nt_s"
+					},
+	
+		Ticker_50 = { 	allies 	= SOUND_ENEMY_TICKER_ALLIES.."LB_INT_ETS_050Gen_NT_S",
+						axis 	= SOUND_ENEMY_TICKER_AXIS.."XB_GAn_ets_050Gen_NT_S",
+						alliesCW= SOUND_ENEMY_TICKER_ALLIES_CW.."cb_int_ets_050gen_nt_l",
+						axisPE 	= SOUND_ENEMY_TICKER_AXIS_PE.."pb_gan_ets_050gen_nt_s"
+					},
+	
+		Ticker_100 = { 	allies 	= SOUND_ENEMY_TICKER_ALLIES.."LB_INT_ETS_100Gen_NT_S",
+						axis 	= SOUND_ENEMY_TICKER_AXIS.."XB_GAn_ets_100Gen_NT_S",
+						alliesCW= SOUND_ENEMY_TICKER_ALLIES_CW.."cb_int_ets_100gen_nt_s",
+						axisPE 	= SOUND_ENEMY_TICKER_AXIS_PE.."pb_gan_ets_100gen_nt_s"
+					 },
+					
+		Ticker_200 = { 	allies 	= SOUND_ENEMY_TICKER_ALLIES.."LB_INT_ETS_200Gen_NT_S",
+						axis 	= SOUND_ENEMY_TICKER_AXIS.."XB_GAn_ets_200Gen_NT_S",
+						alliesCW= SOUND_ENEMY_TICKER_ALLIES_CW.."cb_int_ets_200gen_nt_s",
+						axisPE 	= SOUND_ENEMY_TICKER_AXIS_PE.."pb_gan_ets_200gen_nt_s"
+					 },
+	
+		Ticker_300 = { 	allies 	= SOUND_ENEMY_TICKER_ALLIES.."LB_INT_ETS_300Gen_NT_S",
+						axis 	= SOUND_ENEMY_TICKER_AXIS.."XB_GAn_ets_300Gen_NT_S",
+						alliesCW= SOUND_ENEMY_TICKER_ALLIES_CW.."cb_int_ets_300gen_nt_s",
+						axisPE 	= SOUND_ENEMY_TICKER_AXIS_PE.."pb_gan_ets_300gen_nt_s"
+					 },
+					 
+		Ticker_400 = { 	allies 	= SOUND_ENEMY_TICKER_ALLIES.."LB_INT_ETS_400Gen_NT_S",
+						axis 	= SOUND_ENEMY_TICKER_AXIS.."XB_GAn_ets_400Gen_NT_S",
+						alliesCW= SOUND_ENEMY_TICKER_ALLIES_CW.."cb_int_ets_400gen_nt_s",
+						axisPE 	= SOUND_ENEMY_TICKER_AXIS_PE.."pb_gan_ets_400gen_nt_s"
+					 },
+	}
+	
+	table_VictoryBalanceStatusSpeech = 
+	{
+		-- has more points and more ticket than enemy
+		Advantage_More_Ticket
+					= {
+						allies 	= SOUND_VICTORY_BALANCE_ALLIES.."LB_INT_VBL_MajMor_NT_S",
+						axis 	= SOUND_VICTORY_BALANCE_AXIS.."XB_GAN_VBL_MajMor_NT_S",
+						alliesCW= SOUND_VICTORY_BALANCE_ALLIES_CW.."",
+						axisPE 	= SOUND_VICTORY_BALANCE_AXIS_PE..""
+					},
+		
+		-- has more points but less ticket currently than enemy
+		Advantage_Less_Ticket
+					= {
+						allies 	= SOUND_VICTORY_BALANCE_ALLIES.."LB_INT_VBL_MajLss_NT_S",
+						axis 	= SOUND_VICTORY_BALANCE_AXIS.."XB_GAN_VBL_MajLss_NT_S",
+						alliesCW= SOUND_VICTORY_BALANCE_ALLIES_CW.."",
+						axisPE 	= SOUND_VICTORY_BALANCE_AXIS_PE..""
+					},
+		
+		-- has less points and less ticket than enemy
+		Disadvantage_Less_Ticket
+					= {
+						allies 	= SOUND_VICTORY_BALANCE_ALLIES.."LB_INT_VBL_MinLss_NT_S",
+						axis 	= SOUND_VICTORY_BALANCE_AXIS.."XB_GAN_VBL_MinLss_NT_S",
+						alliesCW= SOUND_VICTORY_BALANCE_ALLIES_CW.."",
+						axisPE 	= SOUND_VICTORY_BALANCE_AXIS_PE..""
+					},
+		
+		-- has less points but more ticket currently than enemy
+		Disadvantage_More_Ticket
+					= {
+						allies 	= SOUND_VICTORY_BALANCE_ALLIES.."LB_INT_VBL_MinMor_NT_S",
+						axis 	= SOUND_VICTORY_BALANCE_AXIS.."XB_GAN_VBL_MinMor_NT_S",
+						alliesCW= SOUND_VICTORY_BALANCE_ALLIES_CW.."",
+						axisPE 	= SOUND_VICTORY_BALANCE_AXIS_PE..""
+					},
+			
+		-- enemy just holded all points
+		Disadvantage_Enemy_Hold_All 
+					= {
+						allies 	= SOUND_VICTORY_BALANCE_ALLIES.."LB_INT_VBL_EALGen_NT_S",
+						axis 	= SOUND_VICTORY_BALANCE_AXIS.."XB_GAN_VBL_EALGen_NT_S",
+						alliesCW= SOUND_VICTORY_BALANCE_ALLIES_CW.."",
+						axisPE 	= SOUND_VICTORY_BALANCE_AXIS_PE..""
+					},
+					
+		Tie = 		{
+						allies 	= SOUND_VICTORY_BALANCE_ALLIES.."LB_INT_VBL_TieGen_NT_S",
+						axis 	= SOUND_VICTORY_BALANCE_AXIS.."XB_GAN_VBL_TieGen_NT_S",
+						alliesCW= SOUND_VICTORY_BALANCE_ALLIES_CW.."",
+						axisPE 	= SOUND_VICTORY_BALANCE_AXIS_PE..""
+					},					
+	}
+
+	-----------------------------------------------------------------------
+	-- Private data for this win condition
+	-----------------------------------------------------------------------
+	VPTickerData =
+	{
+		-- number of points each team starts with
+		-- TODO: this should be read in from the game options
+		start_points = Setup_GetVictoryPointTickerOption(), 
+		
+		-- total number of victory points in the the level
+		world_point_count = World_GetNumVictoryPoints(),
+		
+		-- number of tickers you get per strategic point
+		ticker_per_point = 1.0,
+		
+		-- interval (in seconds,) that the main rule is called
+		main_rule_interval = 4.0,
+		
+		-- checks gameover condition - can be turned off externally by Blaine
+		checkGameEnd = true,
+		
+		-- ui/audio cue warnings are issued to players at certain tick counts
+		-- DO NOT TOUCH w/out asking UI and audio designers, speech/text may be specific
+		ticker_warnings =
+		{
+			20,			-- warning#1 - very intense
+			30,			-- warning#2 - intense
+			60,			-- warning#3 - not intense
+			150,		-- warning#4 - casual
+		},
+		
+		-- stores ticker values and number of points captured, indexed by team (each team can have multiple players)
+		team_data = {},
+		
+		-- stores flag when points held has been changed. Used to trigger victory balance speeches
+		points_updated = false,
+	}
+
+end
+
+
+
+
+function IsAllies(raceString)
+	return raceString == RACE_STRING_ALLIES
+end
+
+function IsAlliesCW(raceString)
+	return raceString == RACE_STRING_ALLIES_CW
+end
+
+function IsAxis(raceString)
+	return raceString == RACE_STRING_AXIS
+end
+
+function IsAxisPE(raceString)
+	return raceString == RACE_STRING_AXIS_PE
+end
+
+function IsSameSide(raceStringA, raceStringB)
+
+	if IsAllies(raceStringA) or IsAlliesCW(raceStringA) then
+		return IsAllies(raceStringB) or IsAlliesCW(raceStringB)
+	else
+		return IsAxis(raceStringB) or IsAxisPE(raceStringB)
+	end
+	
+end
+
+
+
+-----------------------------------------------------------------------
+-- Global flags (used externally)
+--  must be global because we don't know the order the Init functions
+--  are called.
+-----------------------------------------------------------------------
+
+function SetGlobals()
+
+	-- this is used externally to know that this condition is running
+	g_VPConditionsLoaded = true
+	
+	-- used to indicate we want annihilate to be checked
+	g_CheckAnnihilate = true
+
+end
+
+SetGlobals()
+
+-----------------------------------------------------------------------
+-- OnInit - Main script entry point (not called for saved games)
+-----------------------------------------------------------------------
+function VPTicker_OnInit()
+	print("VPTicker_OnInit")
+	
+	-- initialize the data for this gametype
+	_initdata()
+	
+	-- must set these everytime because the global vars are cleared at gameend, so 
+	-- a restart will not work since the vars are nil (see WCUtil.scar)
+	SetGlobals()
+	
+	-- check to see if the MP map has added an override
+	if (WinConditionOverride) then
+		WinConditionOverride()
+	end
+	
+	-- register the main rule to get called at given interval
+	Rule_AddInterval( VPTicker_MainRule, VPTickerData.main_rule_interval )
+	Rule_AddInterval( VPTicker_UpdateTickers, 0.25 )
+	
+	-- initialize the team data table
+	-- NOTE: this needs to get done after the win condition override is called
+	for i = 1, World_GetPlayerCount() do
+		local player = World_GetPlayerAt( i )
+		local teamId = Player_GetTeam( player ) + 1 -- returns zero-based index
+		if VPTickerData.team_data[teamId] == nil then
+			VPTickerData.team_data[teamId] = 
+			{
+				tickers = VPTickerData.start_points,
+				points_held = 0,
+				victory_balance = 0,
+			}
+		end
+	end
+	
+	-- add reminders when ticker points reach certain levels
+	Rule_AddInterval(VPTicker_PointReminder, 1)
+	
+	-- add reminders on current victory balance
+--	Rule_AddInterval(VPTicker_VictoryBalanceReminder, 90)
+	
+end
+
+function VPTicker_UpdateTickers()
+
+	if not WinWarning_Exists( "vp_team1" ) then
+		WinWarning_Add( "vp_team1", World_GetPlayerAt(1), "", "", Loc_Empty() )
+	end
+	if not WinWarning_Exists( "vp_team2" ) then
+		WinWarning_Add( "vp_team2", World_GetPlayerAt(1), "", "", Loc_Empty() )
+	end
+	
+	-- update the times for the first frame
+	local team1Tickers = VPTicker_GetTeamTickers( 1 )
+	local team2Tickers = VPTicker_GetTeamTickers( 2 )
+	
+	WinWarning_SetText( "vp_team1", Loc_ConvertNumber(team1Tickers) )
+	WinWarning_SetText( "vp_team2", Loc_ConvertNumber(team2Tickers) )
+	
+	Misc_SyncCheckVariable( "Team 1 Tickers", team1Tickers )
+	Misc_SyncCheckVariable( "Team 2 Tickers", team2Tickers )
+
+end
+
+-----------------------------------------------------------------------
+-- MainRule - Called every so often to process the win condition
+-----------------------------------------------------------------------
+function VPTicker_MainRule( )
+		
+	-- reset updated flag 
+	VPTickerData.points_updated = false
+	
+	-- update points count
+	for teamId,Data in pairs( VPTickerData.team_data ) do
+		local points = VPTicker_GetTeamVictoryPoints( teamId )
+		
+		-- check for changes
+		if ( points ~= Data.points_held ) then
+			VPTickerData.points_updated = true
+		end
+		
+		Data.points_held = points
+		Misc_SyncCheckVariable( "Points Held", Data.points_held )
+	end
+	
+	-- update tickers
+	
+	-- find the team with the most victory points
+	local mostVP = 0
+	for teamId,Data in pairs( VPTickerData.team_data ) do
+		if Data.points_held > mostVP then
+			mostVP = Data.points_held
+		end
+	end
+	
+	-- decrement all other teams points
+	local losers = {}
+	for teamId,Data in pairs( VPTickerData.team_data ) do
+		if Data.points_held < mostVP then
+			-- decrement
+			local diffVP = mostVP - Data.points_held
+			local newTickers = math.max( 0, VPTicker_GetTeamTickers(teamId) - (diffVP * VPTickerData.ticker_per_point) )
+			
+			VPTicker_SetTeamTickers( teamId, newTickers )
+			
+			-- check for win
+			if newTickers == 0 then
+				table.insert(losers, teamId)
+			end
+		end
+	end
+	
+	if (VPTickerData.checkGameEnd==true) then
+		-- check for end of game
+		local loser_count = table.getn(losers)
+		if loser_count == 1 then
+			-- loser
+			VPTicker_GameOverLose( losers[1] )
+		elseif loser_count > 1 then
+			if loser_count == table.getn(VPTickerData.team_data) then
+				-- tie game
+				VPTicker_GameOverTie()
+			else
+				-- just take the first loser
+				VPTicker_GameOverLose( losers[1] )
+			end
+		end
+	end
+	
+end
+
+-----------------------------------------------------------------------
+-- GameOverLose - The game has ended with a losing team
+-----------------------------------------------------------------------
+function VPTicker_GameOverLose( loseTeamId )
+	print("VPTicker_GameOverLose")
+	
+	Rule_RemoveAll()
+	
+	World_SetTeamWin( Team_GetEnemyTeam( loseTeamId - 1), "VPTickerWin-Annihilate" )
+	World_SetGameOver( )
+	
+	--TODO: Set UI game over message to "Player blah blah is victorious"
+	
+end
+
+-----------------------------------------------------------------------
+-- GameOverTie - The game has ended in a tie
+-----------------------------------------------------------------------
+function VPTicker_GameOverTie( )
+	print("VPTicker_GameOverTie")
+	
+	Rule_RemoveAll()
+	
+	-- no teams win, no teams lose, just game over
+	World_SetGameOver( )
+	
+	-- TODO: Set UI game over message to "Tie Game"
+end
+
+
+
+-----------------------------------------------------------------------
+-- Helper functions
+--
+-----------------------------------------------------------------------
+
+-----------------------------------------------------------------------
+-- Sets the ticker points for a given team and updates the UI.
+-- Also issues a UI/Audio ticker warning if applicable
+-----------------------------------------------------------------------
+function VPTicker_SetTeamTickers( teamId, tickers )
+	-- validate params
+	if VPTickerData.team_data[teamId] == nil then error("invalid teamId "..teamId) end
+	
+	-- check if we need to issue a ticker warning
+	local curTickers = VPTickerData.team_data[teamId].tickers
+	for k,v in pairs(VPTickerData.ticker_warnings) do
+		if curTickers >= v and tickers < v then
+			-- the lower the value of k is, the more intense the warning is
+			VPTicker_PublishLoseReminder( teamId, k )
+		end
+	end
+	
+	-- store new value
+	VPTickerData.team_data[teamId].tickers = tickers
+	
+	-- TODO: Update GUI (teamId needs to be converted to zero-based index)
+	--UI_SetVictoryTicks( teamId-1, tickers ) 
+end
+
+----------------------------------------------------------------------
+-- Returns the number of tickers for a given team
+-----------------------------------------------------------------------
+function VPTicker_GetTeamTickers( teamId )
+	-- validate params
+	if VPTickerData.team_data[teamId] == nil then error("invalid teamId "..teamId) end
+	
+	return VPTickerData.team_data[teamId].tickers
+end
+
+----------------------------------------------------------------------
+-- Returns the number of tickers for a given player
+-----------------------------------------------------------------------
+function VPTicker_GetTeamTickerFromPlayerID( playerId )
+	
+	local teamId = Player_GetTeam( playerId ) + 1
+	
+	-- validate params
+	if VPTickerData.team_data[teamId] == nil then error("invalid teamId "..teamId) end
+	
+	return VPTickerData.team_data[teamId].tickers
+end
+
+-----------------------------------------------------------------------
+-- Send a reminder event for all players on a given team that they're
+--  about to lose the game.
+-- The lower the warningLevel, the more intense the event is
+-----------------------------------------------------------------------
+function VPTicker_PublishLoseReminder( teamId, warningLevel )
+	-- validate params
+	if warningLevel < 1 then error("invalid warningLevel "..warningLevel.." (out of range)") end
+	
+	--
+	for i = 1, World_GetPlayerCount( ) do
+		local player = World_GetPlayerAt( i )
+		-- NOTE: Player_GetTeam returns zero-based index
+		if teamId == (Player_GetTeam(player)+1) then
+			WinWarning_PublishLoseReminder( player, warningLevel )
+		end
+	end
+end
+
+-----------------------------------------------------------------------
+-- Returns the number of victory points for a given team
+-----------------------------------------------------------------------
+function VPTicker_GetTeamVictoryPoints( teamId )
+	-- FIXME: This could be done better, currently the SCAR function for the player returns the number of
+	-- victory points for that team
+	for i = 1, World_GetPlayerCount() do
+		local player = World_GetPlayerAt( i )
+		if Player_IsAlive( player ) and teamId == (Player_GetTeam(player)+1) then
+			return Player_GetNumVictoryPoints( player )
+		end
+	end
+	
+	-- error("invalid teamId "..teamId.." (could not find player with matching id)")
+	return 0
+end
+
+-- Remind players what ticker points are at
+function VPTicker_PointReminder()
+	if _VPTickerReminders_runOnce ~= 1 then
+				
+		table_VPTickerReminders = {}
+		
+		table_VPTickerReminders[1] = {tickerValue = 750, raceSTRING = RACE_STRING_ALLIES, titleCard = 39367, flag_Played = 0 }
+		table_VPTickerReminders[2] = {tickerValue = 500, raceSTRING = RACE_STRING_ALLIES, titleCard = 39366, flag_Played = 0 }
+		table_VPTickerReminders[3] = {tickerValue = 400, raceSTRING = RACE_STRING_ALLIES, titleCard = 39360, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_400,  enemy_speech = table_EnemyTickerStatusSpeech.Ticker_400,	}
+		table_VPTickerReminders[4] = {tickerValue = 300, raceSTRING = RACE_STRING_ALLIES, titleCard = 39361, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_300, 	enemy_speech = table_EnemyTickerStatusSpeech.Ticker_300,	}
+		table_VPTickerReminders[5] = {tickerValue = 200, raceSTRING = RACE_STRING_ALLIES, titleCard = 39362, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_200, 	enemy_speech = table_EnemyTickerStatusSpeech.Ticker_200,	}
+		table_VPTickerReminders[6] = {tickerValue = 100, raceSTRING = RACE_STRING_ALLIES, titleCard = 39363, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_100, 	enemy_speech = table_EnemyTickerStatusSpeech.Ticker_100,	}
+		table_VPTickerReminders[7] = {tickerValue = 50,  raceSTRING = RACE_STRING_ALLIES, titleCard = 39364, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_50, 	enemy_speech = table_EnemyTickerStatusSpeech.Ticker_50,	}
+		table_VPTickerReminders[8] = {tickerValue = 25,  raceSTRING = RACE_STRING_ALLIES, titleCard = 39365, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_25, 	enemy_speech = table_EnemyTickerStatusSpeech.Ticker_25,		
+																								friendlyTickerCondition = 200,	friendly_conditional_speech = table_FriendlyTickerStatusSpeech.Ticker_25_200,
+																								enemyTickerCondition = 100,		enemy_conditional_speech = table_EnemyTickerStatusSpeech.Ticker_25_100 }
+		table_VPTickerReminders[9] = {tickerValue = 10,  raceSTRING = RACE_STRING_ALLIES, titleCard = nil, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_10, 	enemy_speech = nil,		} 	
+		table_VPTickerReminders[10] = {tickerValue = 9,  raceSTRING = RACE_STRING_ALLIES, titleCard = nil, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_9, 	enemy_speech = nil, 	}
+		table_VPTickerReminders[11] = {tickerValue = 8,  raceSTRING = RACE_STRING_ALLIES, titleCard = nil, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_8, 	enemy_speech = nil, 	}
+		table_VPTickerReminders[12] = {tickerValue = 7,  raceSTRING = RACE_STRING_ALLIES, titleCard = nil, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_7, 	enemy_speech = nil, 	}
+		table_VPTickerReminders[13] = {tickerValue = 6,  raceSTRING = RACE_STRING_ALLIES, titleCard = nil, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_6, 	enemy_speech = nil, 	}
+		table_VPTickerReminders[14] = {tickerValue = 5,  raceSTRING = RACE_STRING_ALLIES, titleCard = nil, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_5, 	enemy_speech = nil, 	}
+		table_VPTickerReminders[15] = {tickerValue = 4,  raceSTRING = RACE_STRING_ALLIES, titleCard = nil, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_4, 	enemy_speech = nil,		}
+		table_VPTickerReminders[16] = {tickerValue = 3,  raceSTRING = RACE_STRING_ALLIES, titleCard = nil, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_3, 	enemy_speech = nil,		}
+		table_VPTickerReminders[17] = {tickerValue = 2,  raceSTRING = RACE_STRING_ALLIES, titleCard = nil, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_2, 	enemy_speech = nil,		}
+		table_VPTickerReminders[18] = {tickerValue = 1,  raceSTRING = RACE_STRING_ALLIES, titleCard = nil, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_1, 	enemy_speech = nil,		}
+
+		table_VPTickerReminders[19] = {tickerValue = 750, raceSTRING = RACE_STRING_AXIS, titleCard = 39377, flag_Played = 0	}
+		table_VPTickerReminders[20] = {tickerValue = 500, raceSTRING = RACE_STRING_AXIS, titleCard = 39376, flag_Played = 0 }
+		table_VPTickerReminders[21] = {tickerValue = 400, raceSTRING = RACE_STRING_AXIS, titleCard = 39370, flag_Played = 0,	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_400,  	enemy_speech = table_EnemyTickerStatusSpeech.Ticker_400, 	}
+		table_VPTickerReminders[22] = {tickerValue = 300, raceSTRING = RACE_STRING_AXIS, titleCard = 39371, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_300,  	enemy_speech = table_EnemyTickerStatusSpeech.Ticker_300,	}
+		table_VPTickerReminders[23] = {tickerValue = 200, raceSTRING = RACE_STRING_AXIS, titleCard = 39372, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_200,  	enemy_speech = table_EnemyTickerStatusSpeech.Ticker_200,	}
+		table_VPTickerReminders[24] = {tickerValue = 100, raceSTRING = RACE_STRING_AXIS, titleCard = 39373, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_100,  	enemy_speech = table_EnemyTickerStatusSpeech.Ticker_100,	}
+		table_VPTickerReminders[25] = {tickerValue = 50,  raceSTRING = RACE_STRING_AXIS, titleCard = 39374, flag_Played = 0,  	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_50,  		enemy_speech = table_EnemyTickerStatusSpeech.Ticker_50,		}
+		table_VPTickerReminders[26] = {tickerValue = 25,  raceSTRING = RACE_STRING_AXIS, titleCard = 39375, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_25, 		enemy_speech = table_EnemyTickerStatusSpeech.Ticker_25,		
+																								friendlyTickerCondition = 200,	friendly_conditional_speech = table_FriendlyTickerStatusSpeech.Ticker_25_200,
+																								enemyTickerCondition = 100,		enemy_conditional_speech = table_EnemyTickerStatusSpeech.Ticker_25_100 }
+		table_VPTickerReminders[27] = {tickerValue = 10, raceSTRING = RACE_STRING_AXIS, titleCard = nil, 	flag_Played = 0,  	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_10,  		enemy_speech = nil, 	}
+		table_VPTickerReminders[28] = {tickerValue = 9,  raceSTRING = RACE_STRING_AXIS, titleCard = nil, 	flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_9, 		enemy_speech = nil, 	}
+		table_VPTickerReminders[29] = {tickerValue = 8,  raceSTRING = RACE_STRING_AXIS, titleCard = nil, 	flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_8, 		enemy_speech = nil, 	}
+		table_VPTickerReminders[30] = {tickerValue = 7,  raceSTRING = RACE_STRING_AXIS, titleCard = nil, 	flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_7, 		enemy_speech = nil, 	}
+		table_VPTickerReminders[31] = {tickerValue = 6,  raceSTRING = RACE_STRING_AXIS, titleCard = nil, 	flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_6, 		enemy_speech = nil, 	}
+		table_VPTickerReminders[32] = {tickerValue = 5,  raceSTRING = RACE_STRING_AXIS, titleCard = nil, 	flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_5, 		enemy_speech = nil, 	}
+		table_VPTickerReminders[33] = {tickerValue = 4,  raceSTRING = RACE_STRING_AXIS, titleCard = nil, 	flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_4, 		enemy_speech = nil,		}
+		table_VPTickerReminders[34] = {tickerValue = 3,  raceSTRING = RACE_STRING_AXIS, titleCard = nil, 	flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_3, 		enemy_speech = nil,		}
+		table_VPTickerReminders[35] = {tickerValue = 2,  raceSTRING = RACE_STRING_AXIS, titleCard = nil, 	flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_2, 		enemy_speech = nil,		}
+		table_VPTickerReminders[36] = {tickerValue = 1,  raceSTRING = RACE_STRING_AXIS, titleCard = nil, 	flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_1, 		enemy_speech = nil,		}
+
+		
+		
+		
+		
+		table_VPTickerReminders[37] = {tickerValue = 750, raceSTRING = RACE_STRING_ALLIES_CW, titleCard = 39367, flag_Played = 0 }
+		table_VPTickerReminders[38] = {tickerValue = 500, raceSTRING = RACE_STRING_ALLIES_CW, titleCard = 39366, flag_Played = 0 }
+		table_VPTickerReminders[39] = {tickerValue = 400, raceSTRING = RACE_STRING_ALLIES_CW, titleCard = 39360, flag_Played = 0,	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_400,  enemy_speech = table_EnemyTickerStatusSpeech.Ticker_400, 	}
+		table_VPTickerReminders[40] = {tickerValue = 300, raceSTRING = RACE_STRING_ALLIES_CW, titleCard = 39361, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_300, 	enemy_speech = table_EnemyTickerStatusSpeech.Ticker_300,	}
+		table_VPTickerReminders[41] = {tickerValue = 200, raceSTRING = RACE_STRING_ALLIES_CW, titleCard = 39362, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_200, 	enemy_speech = table_EnemyTickerStatusSpeech.Ticker_200,	}
+		table_VPTickerReminders[42] = {tickerValue = 100, raceSTRING = RACE_STRING_ALLIES_CW, titleCard = 39363, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_100, 	enemy_speech = table_EnemyTickerStatusSpeech.Ticker_100,	}
+		table_VPTickerReminders[43] = {tickerValue = 50,  raceSTRING = RACE_STRING_ALLIES_CW, titleCard = 39364, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_50, 	enemy_speech = table_EnemyTickerStatusSpeech.Ticker_50,		}
+		table_VPTickerReminders[44] = {tickerValue = 25,  raceSTRING = RACE_STRING_ALLIES_CW, titleCard = 39365, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_25, 	enemy_speech = table_EnemyTickerStatusSpeech.Ticker_25,		
+																								friendlyTickerCondition = 200,	friendly_conditional_speech = table_FriendlyTickerStatusSpeech.Ticker_25_200,
+																								enemyTickerCondition = 100,		enemy_conditional_speech = table_EnemyTickerStatusSpeech.Ticker_25_100 }
+		table_VPTickerReminders[45] = {tickerValue = 10,  raceSTRING = RACE_STRING_ALLIES_CW, titleCard = nil, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_10, 	enemy_speech = nil,		} 	
+		table_VPTickerReminders[46] = {tickerValue = 9,  raceSTRING = RACE_STRING_ALLIES_CW, titleCard = nil, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_9, 	enemy_speech = nil, 	}
+		table_VPTickerReminders[47] = {tickerValue = 8,  raceSTRING = RACE_STRING_ALLIES_CW, titleCard = nil, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_8, 	enemy_speech = nil, 	}
+		table_VPTickerReminders[48] = {tickerValue = 7,  raceSTRING = RACE_STRING_ALLIES_CW, titleCard = nil, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_7, 	enemy_speech = nil, 	}
+		table_VPTickerReminders[49] = {tickerValue = 6,  raceSTRING = RACE_STRING_ALLIES_CW, titleCard = nil, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_6, 	enemy_speech = nil, 	}
+		table_VPTickerReminders[50] = {tickerValue = 5,  raceSTRING = RACE_STRING_ALLIES_CW, titleCard = nil, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_5, 	enemy_speech = nil, 	}
+		table_VPTickerReminders[51] = {tickerValue = 4,  raceSTRING = RACE_STRING_ALLIES_CW, titleCard = nil, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_4, 	enemy_speech = nil,		}
+		table_VPTickerReminders[52] = {tickerValue = 3,  raceSTRING = RACE_STRING_ALLIES_CW, titleCard = nil, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_3, 	enemy_speech = nil,		}
+		table_VPTickerReminders[53] = {tickerValue = 2,  raceSTRING = RACE_STRING_ALLIES_CW, titleCard = nil, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_2, 	enemy_speech = nil,		}
+		table_VPTickerReminders[54] = {tickerValue = 1,  raceSTRING = RACE_STRING_ALLIES_CW, titleCard = nil, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_1, 	enemy_speech = nil,		}
+
+		table_VPTickerReminders[55] = {tickerValue = 750, raceSTRING = RACE_STRING_AXIS_PE, titleCard = 39377, flag_Played = 0	}
+		table_VPTickerReminders[56] = {tickerValue = 500, raceSTRING = RACE_STRING_AXIS_PE, titleCard = 39376, flag_Played = 0 }
+		table_VPTickerReminders[57] = {tickerValue = 400, raceSTRING = RACE_STRING_AXIS_PE, titleCard = 39370, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_400,  	enemy_speech = table_EnemyTickerStatusSpeech.Ticker_400,	}
+		table_VPTickerReminders[58] = {tickerValue = 300, raceSTRING = RACE_STRING_AXIS_PE, titleCard = 39371, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_300,  	enemy_speech = table_EnemyTickerStatusSpeech.Ticker_300,	}
+		table_VPTickerReminders[59] = {tickerValue = 200, raceSTRING = RACE_STRING_AXIS_PE, titleCard = 39372, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_200,  	enemy_speech = table_EnemyTickerStatusSpeech.Ticker_200,	}
+		table_VPTickerReminders[60] = {tickerValue = 100, raceSTRING = RACE_STRING_AXIS_PE, titleCard = 39373, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_100,  	enemy_speech = table_EnemyTickerStatusSpeech.Ticker_100,	}
+		table_VPTickerReminders[61] = {tickerValue = 50,  raceSTRING = RACE_STRING_AXIS_PE, titleCard = 39374, flag_Played = 0,  	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_50,  		enemy_speech = table_EnemyTickerStatusSpeech.Ticker_50,		}
+		table_VPTickerReminders[62] = {tickerValue = 25,  raceSTRING = RACE_STRING_AXIS_PE, titleCard = 39375, flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_25, 		enemy_speech = table_EnemyTickerStatusSpeech.Ticker_25,		
+																								friendlyTickerCondition = 200,	friendly_conditional_speech = table_FriendlyTickerStatusSpeech.Ticker_25_200,
+																								enemyTickerCondition = 100,		enemy_conditional_speech = table_EnemyTickerStatusSpeech.Ticker_25_100 }
+		table_VPTickerReminders[63] = {tickerValue = 10, raceSTRING = RACE_STRING_AXIS_PE, titleCard = nil, 	flag_Played = 0,  	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_10,	  	enemy_speech = nil, 	}
+		table_VPTickerReminders[64] = {tickerValue = 9,  raceSTRING = RACE_STRING_AXIS_PE, titleCard = nil, 	flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_9, 		enemy_speech = nil, 	}
+		table_VPTickerReminders[65] = {tickerValue = 8,  raceSTRING = RACE_STRING_AXIS_PE, titleCard = nil, 	flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_8, 		enemy_speech = nil, 	}
+		table_VPTickerReminders[66] = {tickerValue = 7,  raceSTRING = RACE_STRING_AXIS_PE, titleCard = nil, 	flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_7, 		enemy_speech = nil, 	}
+		table_VPTickerReminders[67] = {tickerValue = 6,  raceSTRING = RACE_STRING_AXIS_PE, titleCard = nil, 	flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_6, 		enemy_speech = nil, 	}
+		table_VPTickerReminders[68] = {tickerValue = 5,  raceSTRING = RACE_STRING_AXIS_PE, titleCard = nil, 	flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_5, 		enemy_speech = nil, 	}
+		table_VPTickerReminders[69] = {tickerValue = 4,  raceSTRING = RACE_STRING_AXIS_PE, titleCard = nil, 	flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_4, 		enemy_speech = nil,		}
+		table_VPTickerReminders[70] = {tickerValue = 3,  raceSTRING = RACE_STRING_AXIS_PE, titleCard = nil, 	flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_3, 		enemy_speech = nil,		}
+		table_VPTickerReminders[71] = {tickerValue = 2,  raceSTRING = RACE_STRING_AXIS_PE, titleCard = nil, 	flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_2, 		enemy_speech = nil,		}
+		table_VPTickerReminders[72] = {tickerValue = 1,  raceSTRING = RACE_STRING_AXIS_PE, titleCard = nil, 	flag_Played = 0, 	friendly_speech = table_FriendlyTickerStatusSpeech.Ticker_1, 		enemy_speech = nil,		}
+		
+		
+		
+		-- flag table entries as "played" if their ticker values are >= the initial ticker value
+		for i = 1, table.getn(table_VPTickerReminders) do
+			if table_VPTickerReminders[i].tickerValue >= VPTickerData.start_points then
+				table_VPTickerReminders[i].flag_Played = 1
+			end
+		end
+		
+		_VPTickerReminders_runOnce = 1
+	end 
+
+	-- find the team with the most victory points
+	local mostVP = 0
+	local mostTicker = 0
+	local mostTickerTeamId
+	for teamId,Data in pairs( VPTickerData.team_data ) do
+		if Data.points_held > mostVP then
+			mostVP = Data.points_held
+		end
+		
+		if Data.tickers > mostTicker then
+			mostTicker = Data.tickers
+			mostTickerTeamId = teamId
+		end
+	end 
+	
+	-- Victory status speech
+	
+	VPTicker_VictorySpeechReminder()
+
+	-- Victory balance Speech
+
+	if ( VPTickerData.points_updated ) then
+	
+		if( Game_HasLocalPlayer() == true ) then
+			Rule_AddOneShot( VPTicker_VictoryBalanceReminder, 3 )
+		end
+		
+		-- reset ticket until next time points are updated
+		VPTickerData.points_updated = false
+	end
+	
+	-- Final ticker warning speech
+	VPTicker_FinalTickerWarningReminder()
+
+end
+
+function VPTicker_VictorySpeechReminder()
+
+	if( Game_HasLocalPlayer() == false ) then
+		return
+	end
+	
+	--
+	local localRaceSTRING = Player_GetRaceName( Game_GetLocalPlayer() )
+	local localTeamId = Player_GetTeam( Game_GetLocalPlayer() ) + 1
+	local raceTeamInfo = VPTickerBuildRaceTeamInfo()
+
+	for i = 1, table.getn(table_VPTickerReminders) do
+		local raceSTRING = table_VPTickerReminders[i].raceSTRING
+		local isLocalRace = IsSameSide(localRaceSTRING, raceSTRING)
+		
+		for k = 1, World_GetPlayerCount() do
+			local playerRaceSTRING = Player_GetRaceName( World_GetPlayerAt(k) )
+			local playerTeamID = Player_GetTeam( World_GetPlayerAt(k) ) + 1
+			
+			if 	table_VPTickerReminders[i].flag_Played == 0 
+				and VPTicker_GetTeamTickerFromPlayerID(World_GetPlayerAt(k)) < table_VPTickerReminders[i].tickerValue 
+				and playerRaceSTRING == raceSTRING then
+				
+				
+				if ( table_VPTickerReminders[i].titleCard ~= nil ) then
+					-- play mission title
+					Util_MissionTitle(table_VPTickerReminders[i].titleCard)				
+				end
+				
+				VPTickerSetFlagPlayed(raceTeamInfo, playerTeamID, i)
+ 				
+				-- play vp ticker speech
+				if ( isLocalRace ) then
+					
+					-- check if special speech should be played ( see if enemy has more tickets than specified )
+					if ( table_VPTickerReminders[i].friendlyTickerCondition ~= nil 
+						and mostTickerTeamId ~= nil 
+						and mostTickerTeamId ~= localTeamId 
+						and mostTicker > table_VPTickerReminders[i].friendlyTickerCondition ) then
+						
+						-- play special speech
+						if ( table_VPTickerReminders[i].friendly_conditional_speech ~= nil ) then
+							VPTickerReminderSpeech(table_VPTickerReminders[i].friendly_conditional_speech, localRaceSTRING)
+						end
+					else
+						-- play regular speech
+						if ( table_VPTickerReminders[i].friendly_speech ~= nil ) then
+							VPTickerReminderSpeech(table_VPTickerReminders[i].friendly_speech, localRaceSTRING)
+						end
+					end
+					
+				else
+					-- check if special speech should be played ( see if friendly has more tickets than specified )
+					if ( table_VPTickerReminders[i].enemyTickerCondition ~= nil 
+						and mostTickerTeamId ~= nil 
+						and mostTickerTeamId == localTeamId 
+						and mostTicker > table_VPTickerReminders[i].enemyTickerCondition ) then
+						
+						-- play special speech
+						if ( table_VPTickerReminders[i].enemy_conditional_speech ~= nil ) then
+							VPTickerReminderSpeech(table_VPTickerReminders[i].enemy_conditional_speech, localRaceSTRING)
+						end
+						
+					else
+						-- play regular speech
+						if ( table_VPTickerReminders[i].enemy_speech ~= nil ) then
+							VPTickerReminderSpeech(table_VPTickerReminders[i].enemy_speech, localRaceSTRING)
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+
+function VPTickerReminderSpeech(soundPath, localRaceSTRING)
+	if ( IsAllies(localRaceSTRING) and soundPath.allies ~= nil  ) then
+		Sound_PlayStreamed( soundPath.allies )
+	elseif ( IsAlliesCW(localRaceSTRING) and soundPath.alliesCW ~= nil  ) then
+		Sound_PlayStreamed( soundPath.alliesCW )
+	elseif ( IsAxis(localRaceSTRING) and soundPath.axis ~= nil  ) then
+		Sound_PlayStreamed( soundPath.axis )
+	elseif ( IsAxisPE(localRaceSTRING) and soundPath.axisPE ~= nil  ) then
+		Sound_PlayStreamed( soundPath.axisPE )
+	end
+end
+
+
+function VPTickerBuildRaceTeamInfo()
+	local raceTeamInfo = {}
+	for i = 1, World_GetPlayerCount() do
+		local team = Player_GetTeam(World_GetPlayerAt(i)) + 1
+		if raceTeamInfo[team] == nil then
+			raceTeamInfo[team] = { Player_GetRaceName(World_GetPlayerAt(i)) }
+		else
+			table.insert(raceTeamInfo[team], Player_GetRaceName(World_GetPlayerAt(i)))
+		end
+	end
+	
+	return raceTeamInfo
+end
+
+function VPTickerSetFlagPlayed(raceTeamInfo, playerTeamID, numReminder)
+	for reminderKey, reminder in pairs(table_VPTickerReminders) do
+		for teamKey, teamValue in pairs(raceTeamInfo) do
+			if teamKey == playerTeamID then
+				for teamMemberKey, teamMember in pairs(teamValue) do
+					if reminder.raceSTRING == teamMember 
+						and reminder.tickerValue == table_VPTickerReminders[numReminder].tickerValue then
+						reminder.flag_Played = 1
+					end
+				end
+			end
+		end
+	end
+end
+
+
+function VPTicker_VictoryBalanceReminder()
+
+	local localRaceSTRING = Player_GetRaceName( Game_GetLocalPlayer() )
+	local localTeamId = Player_GetTeam( Game_GetLocalPlayer() ) + 1
+	local localTeamPointsHeld = VPTicker_GetTeamVictoryPoints( localTeamId )
+	local localTeamTicker = VPTicker_GetTeamTickers( localTeamId )
+	
+	-- find the team other than the local team with the most victory points
+	local mostVP = localTeamPointsHeld
+	local mostVPTeam = localTeamId
+	local mostVPTeamTicker = localTeamTicker
+	
+	-- also find the sum of tickers for all teams
+	local currentTickerSum = 0
+	local startingTickerSum = 0
+	
+	-- loop
+	for teamId,Data in pairs( VPTickerData.team_data ) do
+	
+		--
+		currentTickerSum  = currentTickerSum + Data.tickers
+		startingTickerSum = startingTickerSum + VPTickerData.start_points
+		
+		--
+		if teamId ~= localTeamId and Data.points_held >= mostVP then
+			mostVP = Data.points_held
+			mostVPTeam = teamId
+			mostVPTeamTicker = Data.tickers
+		end
+	end
+	
+	-- will only play victory balance reminder if sum of current tickers is less than 75% of sum of original tickers
+	-- victory balance will need to be updated anyways
+	local shouldPlaySound = (currentTickerSum / startingTickerSum < 0.75)
+	
+	-- 1 is advantage, 0 is tie, -1 is disadvantage for the local player's team
+	local currentVictoryBalance = 0
+	-- give local team 100 pt handicap before playing less ticket speech
+	local localHasMoreTicker = ( ( localTeamTicker + 100 ) >= mostVPTeamTicker )
+	
+	-- find out the new victory balance
+	if ( mostVPTeam ~= localTeamId ) then
+		if ( localTeamPointsHeld < mostVP ) then
+			currentVictoryBalance = -1
+		end
+	else
+		currentVictoryBalance = 1
+	end
+	
+--~ 	print( "currentVictoryBalance="..currentVictoryBalance )
+--~ 	print( localHasMoreTicker )
+--~ 	print( mostVP )
+--~ 	print( World_GetNumVictoryPoints() )
+--~ 	print( localTeamTicker )
+--~ 	print( mostVPTeamTicker )
+	
+	local isOneTeamHoldingAllPoints = ( mostVP == World_GetNumVictoryPoints() )
+	
+	-- only need to play victory balance speech when different from previous victory balance
+	if ( isOneTeamHoldingAllPoints == true or VPTickerData.team_data[localTeamId].victory_balance ~= currentVictoryBalance ) then
+
+		-- update current victory balance for all teams
+		for teamId,Data in pairs( VPTickerData.team_data ) do
+			if ( teamId == localTeamId ) then
+				Data.victory_balance = currentVictoryBalance
+			else
+				-- negative victory balance for the enemy
+				Data.victory_balance = -currentVictoryBalance
+			end
+		end
+		
+		-- early exit if not playing any sound at this moment
+		if ( shouldPlaySound == false ) then
+			return
+		end
+		
+		-- play sound!
+		local soundFile
+		
+		if ( IsAllies(localRaceSTRING) ) then
+			if ( currentVictoryBalance == 1 ) 	then 
+				if ( localHasMoreTicker ) then 				soundFile = table_VictoryBalanceStatusSpeech.Advantage_More_Ticket.allies
+				else										soundFile = table_VictoryBalanceStatusSpeech.Advantage_Less_Ticket.allies
+				end
+			elseif 	( currentVictoryBalance == 0 ) 	then 	soundFile = table_VictoryBalanceStatusSpeech.Tie.allies
+			elseif 	( currentVictoryBalance == -1 ) then 	
+				if ( isOneTeamHoldingAllPoints ) then
+															soundFile = table_VictoryBalanceStatusSpeech.Disadvantage_Enemy_Hold_All.allies
+				elseif ( localHasMoreTicker ) then 			soundFile = table_VictoryBalanceStatusSpeech.Disadvantage_More_Ticket.allies
+				else										soundFile = table_VictoryBalanceStatusSpeech.Disadvantage_Less_Ticket.allies
+				end
+			end
+		elseif ( IsAlliesCW(localRaceSTRING) ) then
+			if ( currentVictoryBalance == 1 ) 	then 
+				if ( localHasMoreTicker ) then 				soundFile = table_VictoryBalanceStatusSpeech.Advantage_More_Ticket.alliesCW
+				else										soundFile = table_VictoryBalanceStatusSpeech.Advantage_Less_Ticket.alliesCW
+				end
+			elseif 	( currentVictoryBalance == 0 ) 	then 	soundFile = table_VictoryBalanceStatusSpeech.Tie.alliesCW
+			elseif 	( currentVictoryBalance == -1 ) then 	
+				if ( isOneTeamHoldingAllPoints ) then
+															soundFile = table_VictoryBalanceStatusSpeech.Disadvantage_Enemy_Hold_All.alliesCW
+				elseif ( localHasMoreTicker ) then 			soundFile = table_VictoryBalanceStatusSpeech.Disadvantage_More_Ticket.alliesCW
+				else										soundFile = table_VictoryBalanceStatusSpeech.Disadvantage_Less_Ticket.alliesCW
+				end
+			end
+		elseif ( IsAxis(localRaceSTRING) ) then
+			if ( currentVictoryBalance == 1 ) 	then 	
+				if ( localHasMoreTicker ) then 				soundFile = table_VictoryBalanceStatusSpeech.Advantage_More_Ticket.axis
+				else										soundFile = table_VictoryBalanceStatusSpeech.Advantage_Less_Ticket.axis
+				end
+			elseif 	( currentVictoryBalance == 0 ) 	then 	soundFile = table_VictoryBalanceStatusSpeech.Tie.axis
+			elseif 	( currentVictoryBalance == -1 ) then 	
+				if ( isOneTeamHoldingAllPoints ) then
+															soundFile = table_VictoryBalanceStatusSpeech.Disadvantage_Enemy_Hold_All.axis 
+				elseif ( localHasMoreTicker ) then 			soundFile = table_VictoryBalanceStatusSpeech.Disadvantage_More_Ticket.axis
+				else										soundFile = table_VictoryBalanceStatusSpeech.Disadvantage_Less_Ticket.axis
+				end
+			end			
+		elseif ( IsAxisPE(localRaceSTRING) ) then
+			if ( currentVictoryBalance == 1 ) 	then 	
+				if ( localHasMoreTicker ) then 				soundFile = table_VictoryBalanceStatusSpeech.Advantage_More_Ticket.axisPE
+				else										soundFile = table_VictoryBalanceStatusSpeech.Advantage_Less_Ticket.axisPE
+				end
+			elseif 	( currentVictoryBalance == 0 ) 	then 	soundFile = table_VictoryBalanceStatusSpeech.Tie.axisPE
+			elseif 	( currentVictoryBalance == -1 ) then 	
+				if ( isOneTeamHoldingAllPoints ) then
+															soundFile = table_VictoryBalanceStatusSpeech.Disadvantage_Enemy_Hold_All.axisPE
+				elseif ( localHasMoreTicker ) then 			soundFile = table_VictoryBalanceStatusSpeech.Disadvantage_More_Ticket.axisPE
+				else										soundFile = table_VictoryBalanceStatusSpeech.Disadvantage_Less_Ticket.axisPE
+				end
+			end
+		end	
+		
+--		print( soundFile )
+		if ( soundFile ~= nil ) then
+			Sound_PlayStreamed( soundFile )
+		end
+	end
+end
+
+
+function VPTicker_FinalTickerWarningReminder()
+
+	local localTeamId = Player_GetTeam( Game_GetLocalPlayer() ) + 1
+	local localTeamPointsHeld = VPTicker_GetTeamVictoryPoints( localTeamId )
+	local localTeamTicker = VPTicker_GetTeamTickers( localTeamId )
+
+	local localTeamData = VPTickerData.team_data[ localTeamId ]
+	
+	local shouldPlayWarning = false
+	
+	-- play victory final warning if ticker is under the threshold
+	if ( localTeamData.tickers <= FINAL_TICKER_WARNING_TICKER_URGENT ) then
+	
+		shouldPlayWarning = true	
+		
+	elseif ( localTeamData.tickers <= FINAL_TICKER_WARNING_TICKER_LEISURE ) then
+		
+		-- only play final warning speech when ticker is going down for the local player
+		if ( localTeamData.victory_balance < 0 ) then
+			shouldPlayWarning = true	
+		end
+	
+	end
+
+	if ( localTeamData.playingFinalWarning == nil  ) then
+	
+		if ( shouldPlayWarning == true ) then 
+			-- play the warning sound
+			localTeamData.playingFinalWarning = Sound_Play2D( SOUND_TICKER_WARNING_FINAL )
+		end
+		
+	else
+	
+		if ( shouldPlayWarning == false ) then 
+			-- stop the warning sound
+			Sound_Stop( localTeamData.playingFinalWarning )
+			localTeamData.playingFinalWarning = nil
+		 end
+		
+	end
+
+end
+
+
+-----------------------------------------------------------------------
+-- Register the OnInit function w/ the SCAR system
+-----------------------------------------------------------------------
+Scar_AddInit( VPTicker_OnInit )
+
+

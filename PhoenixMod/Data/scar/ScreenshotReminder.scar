@@ -1,0 +1,24 @@
+-----------------------------------------------------------------------
+-- Script written by Nubb3r for PhoenixMod
+messageStartTime = 10
+messageEndTime = 20
+
+function DisplayMessage()
+    -- PrintOnScreen("time is bla") --THIS JUST CRASHES THE SCAR 
+    --UIWarning_Show(15133704)
+    Util_MissionTitle(15133704) 		
+    --Game_ShowSystemMessage(15133704)
+end
+
+function RemoveMessage()
+    Game_HideSystemMessage(15133704)
+end
+
+function ScreenshotReminder_OnInit()
+    Rule_AddOneShot(DisplayMessage,messageStartTime)
+    --Rule_AddOneShot(RemoveMessage,messageEndTime)
+end
+-----------------------------------------------------------------------
+-- Register the OnInit function w/ the SCAR system
+-----------------------------------------------------------------------
+Scar_AddInit(ScreenshotReminder_OnInit)
