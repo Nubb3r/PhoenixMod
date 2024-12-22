@@ -1,12 +1,10 @@
-# Tournaments
-There is an active tournament right now!
-
 ## 1st PhoenixMod Tournament (1v1, Summer 2024)
 
 - Patch: [PhoenixMod 0.21](https://github.com/Nubb3r/PhoenixMod/releases/tag/0.21)
 - Format: Group phase (bo2) + (double) elimination phase (bo3)
-- Current phase: Group phase
+- Current phase: DONE!
 - Brackets: [See here](https://docs.google.com/spreadsheets/d/1OGbCECBkwzR7thj_DYLaMpKUiqQnQEAycPmMyq37Jvs/edit#gid=1007855922)
+Replay pack with ALL replays downloadable here (LINK)
 
 ## Rules
 - No ghost structures for blocking
@@ -35,10 +33,10 @@ Matches need to be verified to prevent cheating. You can do this by:
 - Recording the game and upload it somewhere and providing a link so admins can watch
 - Screenshotting the opponent's base and providing the screenshot after the game
 - Loser of coinflip has to send the the replay directly to Nubb3r via any appropriate means. IF THE REPLAY IS LOST YOU WILL HAVE TO REMAKE!
-  
+
 Replay name schema:
 
-PMT-GrpD-R2-M2-G1
+PMT1-GrpD-R2-M2-G1
 
 Explanation:
 - PMT1: PhoenixMod tourney 1
@@ -69,7 +67,7 @@ This helps with organizing a lot, so I am very grateful if you try your best to 
 - If 2 players are tied in points, their direct matchup will count
 - If their direct matchup is 1-1, their win/lose ratio will count
 - If win/lose ratio is the same, they will play a single decider game, this will be organized individually if necessary
-   
+
 ## Elimination phase process (BO3 on 3 maps)
 1. Coin flip
 2. Loser of coinflip vetos a map
@@ -83,3 +81,23 @@ This helps with organizing a lot, so I am very grateful if you try your best to 
 12. If the BO3 is not over yet, the player with more VPs picks his factionand the player with less VPs picks his position
 13. The players play the third and last (decider) game on the remaining map
 14. Replays need to be sent to by BOTH parties to @1aveator directly AND ONLY TO HIM
+
+## Grand Final
+1. Coinflip winner picks a map and faction for game 1
+2. Coinflip loser picks his position
+3. The players play the game (and keep note of winner VPs at the end)
+---
+4. Coinflip loser picks a map and faction for game 2
+5. Coinflip winner picks his position
+6. The players play the game (and keep note of winner VPs at the end)
+--------------------------------
+7. Coinflip loser picks a map and faction for game 3
+8. Coinflip loser picks his position
+9. The players play the game (and keep note of winner VPs at the end)
+---
+10. Coinflip loser picks a map and faction for game 4
+11. Coinflip winner picks his position
+12. The players play the game (and keep note of winner VPs at the end)
+--------------------------------
+13. VP leader picks a map and faction for last game (5)
+14. VP trailer picks his position
