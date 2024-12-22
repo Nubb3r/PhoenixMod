@@ -1,103 +1,105 @@
-## 1st PhoenixMod Tournament (1v1, Summer 2024)
+# Tournaments
+There is an active tournament right now!
 
-- Patch: [PhoenixMod 0.21](https://github.com/Nubb3r/PhoenixMod/releases/tag/0.21)
-- Format: Group phase (bo2) + (double) elimination phase (bo3)
-- Current phase: DONE!
-- Brackets: [See here](https://docs.google.com/spreadsheets/d/1OGbCECBkwzR7thj_DYLaMpKUiqQnQEAycPmMyq37Jvs/edit#gid=1007855922)
+## 2nd PhoenixMod Tournament (1v1, Fall 2024)
+- Patch: https://github.com/Nubb3r/PhoenixMod/releases/tag/0.32
+- Format: Group phase BO2 + Double Elimination phase BO3 + Grand Final BO5
+- Phases: Pre Preperation -> Registration -> Final Preparation (CURRENT) -> Group Phase -> Elimination Phase -> Grand Final -> Recap
+"- Coordination: Players schedule their matches freely during each week. All communication is encouraged to be done in the respective discord channels.
+If a player commits to a date/time and doesn't show up he will auto lose unless his opponent gives him another chance.
+If players can't agree on a date/time, they will have to show up for the final check-in on Sunday between 19:00 an 22:59 (UTC+2) time and bring enough time to play their match.
+Whoever doesn't show up auto loses. If neither player shows up, they both auto lose. This is just necessary to keep the timeline reasonable."
+"- Timeline: Start is Monday, October 21st. Duration depends a bit. Pace is one match per week per player, enforced by the final check-ins (see discord).
+Lower Bracket matches need to be played ASAP however, to keep overall duration reasonable. I will help schedule these individually. You can think of this as an extra handicap for dropping from upper bracket."
+- All games will be casted live on: https://www.twitch.tv/nubb3r
+- All casts will be uploaded on: https://www.youtube.com/@nubb3r918/videos in it's own playlist (link will follow soon)
 Replay pack with ALL replays downloadable here (LINK)
 
 ## Rules
 - No ghost structures for blocking
-- No captain sprint
 - No capwalk
 - No friendly fire grenades
-- No AT gun abuse (will be fixed in next patch)
+- No unclickable commando demos
 
 ## Prize pool
-- Total: 100€
-- First place: 70€
-- Second place: 30€
+- Total: 300€
+- First place: 200€
+- Second place: 75€
+- Third place: 25€
 
-## Map pool
+## Map pool (1v1 VERSIONS, NOT OBSERVER VERSIONS!)
 - Angoville
 - Langres
-- Ruins of Rouen
 - Semois
 - Sturzdorf
+- Wrecked Train
+- Beaux Lowlands
+- Ruins of Rouen
+- Strasbourg (https://steamcommunity.com/sharedfiles/filedetails/?id=3352085564)
+- Argentan Crossroads (https://steamcommunity.com/sharedfiles/filedetails/?id=938103490)
+- Bois du Chatelet (https://steamcommunity.com/sharedfiles/filedetails/?id=937983328)
 
-# Verifying match results
-Matches need to be verified to prevent cheating. You can do this by:
-- Streaming on the PhoenixMod Discord, where admins can watch
-- Streaming on Twitch [privately](https://www.streamscheme.com/how-to-private-stream-on-twitch/) and providing a link so admins can watch
-- Streaming on YouTube [privately](https://support.streamyard.com/hc/en-us/articles/4408476974740-How-do-I-Stream-Privately-to-YouTube) and providing a link so admins can watch
-- Recording the game and upload it somewhere and providing a link so admins can watch
-- Screenshotting the opponent's base and providing the screenshot after the game
-- Loser of coinflip has to send the the replay directly to Nubb3r via any appropriate means. IF THE REPLAY IS LOST YOU WILL HAVE TO REMAKE!
+# Verifying matches
+- Record and upload a video or screenshot of the game (screenshots preferably over opponent base at game start)
+- Not providing this is grounds for auto loss
+- No livestreaming allowed because of spoilers and impossibly annoying cheating allegations
 
-Replay name schema:
+# Crashes and restarts
+- If a player crashes, the game will be replayed. This will be handled individually and under extreme scrutiny.
 
-PMT1-GrpD-R2-M2-G1
-
-Explanation:
-- PMT1: PhoenixMod tourney 1
-- GrpD: Group D
-- R2: Round 2
-- M2: Match 2
-- G1: Game 1
-
-This helps with organizing a lot, so I am very grateful if you try your best to match this schema
-
-- Please avoid publicly livestreaming to avoid spoilers. Thank you!
+# Replays
+- Winner sends the replay to me in DMs on discord
+- Please give the replays good names, both in-game, but also the files in the playback folder before sending
+- Ideally, it would follow the following format: "PMT2-GrpD-R2-M2-G1" (this means "PhoenixMod tourney 2, Group D, Round 2, Match 2, Game 1)
 
 # Conducting matches
 
-##  Group phase process (BO2 on one map)
+##  Group phase (BO2 on two maps)
 1. Coin flip
-2. Loser of coinflip vetos a map
-3. Winner of coinflip vetos two maps
-4. Loser of coinflip vetos a map (leaving only one map, which will be played)
-6. Winner of coinflip picks faction
-7. Loser of coinflip picks position
-8. Each match consists of 2 games on the selected map. After the first game, players swap positions+teams and play again
-- Scoreline of 2-0 means -> 3 points for winner
-- Scoreline of 1-1 means -> 1 point for both players
-- Top 2 of each group advance to upper bracket
-- Third place of each group advances to lower bracket
-- Bottom 3 are eliminated
-- If 2 players are tied in points, their direct matchup will count
-- If their direct matchup is 1-1, their win/lose ratio will count
-- If win/lose ratio is the same, they will play a single decider game, this will be organized individually if necessary
+2. Coinflip loser vetos 2 maps, reducing the pool from 10 to 8
+3. Coinflip winner vetos 3 maps, reducing the pool from 8 to 5
+4. Coinflip loser vetos 2 maps, reducing the pool from 5 to 3
+5. Coinflip winner picks a map and faction for the first game, reducing the pool from 3 to 2
+6. Coinflip loser picks positions
+7. Game 1 is played and VPs of winner are kept
+8. Coinflip loser picks a map from the remaining 2 and also faction for the second game
+9. Coinflip winner picks positions
+10. Game 2 is played and VPs of winner are kept
 
-## Elimination phase process (BO3 on 3 maps)
+- Scoreline of 2-0 means 3 points for winner, 0 for loser
+- Scoreline of 1-1 means 1 point for each player
+- Top 2 players of each group advance to upper bracket
+- Bottom 2 players of each group are eliminated
+- Tiebreaking will be resolved by the following succession: Direct matchup, win/lose ratio, VPs
+
+## Elimination phase (BO3 on 3 maps)
 1. Coin flip
-2. Loser of coinflip vetos a map
-5. Winner of coinflip vetos map (leaving 3 maps)
-6. Winner of coinflip picks a map and faction for first game
-7. Loser picks his position
-8. The players play the first game (and keep note of winner VPs at the end)
-9. Now the loser of the coinflip picks a map and faction for the second game
-10. The winner of the coinflip picks his position
-11. The players play the second game (and keep note of winner VPs at the end)
-12. If the BO3 is not over yet, the player with more VPs picks his factionand the player with less VPs picks his position
-13. The players play the third and last (decider) game on the remaining map
-14. Replays need to be sent to by BOTH parties to @1aveator directly AND ONLY TO HIM
+2. Coinflip loser vetos 2 maps, reducing the pool from 10 to 8
+3. Coinflip winner vetos 3 maps, reducing the pool from 8 to 5
+4. Coinflip loser vetos 2 maps, reducing the pool from 5 to 3
+5. Coinflip winner picks a map and faction for the first game, reducing the pool from 3 to 2
+6. Coinflip loser picks positions
+7. Game 1 is played and VPs of winner are kept
+8. Coinflip loser picks a map from the remaining 2 and also faction for the second game
+9. Coinflip winner picks positions
+10. Game 2 is played and VPs of winner are kept
+11. Game 3 (if necessary) will be played on the last remaining map, where the player with more VPs picks his faction and the player with less VPs picks positions
 
-## Grand Final
-1. Coinflip winner picks a map and faction for game 1
-2. Coinflip loser picks his position
-3. The players play the game (and keep note of winner VPs at the end)
----
-4. Coinflip loser picks a map and faction for game 2
-5. Coinflip winner picks his position
-6. The players play the game (and keep note of winner VPs at the end)
---------------------------------
-7. Coinflip loser picks a map and faction for game 3
-8. Coinflip loser picks his position
-9. The players play the game (and keep note of winner VPs at the end)
----
-10. Coinflip loser picks a map and faction for game 4
-11. Coinflip winner picks his position
-12. The players play the game (and keep note of winner VPs at the end)
---------------------------------
-13. VP leader picks a map and faction for last game (5)
-14. VP trailer picks his position
+## Grand Final (BO5 on 5 maps, veto/pick order might change depending on final map pool)
+1. Coin flip
+2. Coinflip loser vetos 2 maps, reducing the pool from 10 to 8
+3. Coinflip winner vetos 2 maps, reducing the pool from 8 to 6
+4. Coinflip loser vetos 1 map, reducing the pool from 6 to 5
+5. Game 1: Coinflip winner picks a map and faction, reducing the pool from 5 to 4
+6. Coinflip loser picks his position
+7. The players play the game (and keep note of winner VPs at the end)
+8. Game 2 Coinflip loser picks a map and faction, reducing the pool from 4 to 3
+9. Coinflip winner picks his position
+10. The players play the game (and keep note of winner VPs at the end)
+11. Game 3: Coinflip loser picks a map and faction, reducing the pool from 3 to 2
+12. Coinflip winner picks his position
+13. The players play the game (and keep note of winner VPs at the end)
+14. Game 4: Coinflip winner picks a map and faction, reducing the pool from 2 to 1
+15. Coinflip loser picks his position
+16. The players play the game (and keep note of winner VPs at the end)
+17. Game 5 (if necessary) will be played on the last remaining map, where the player with more VPs picks his faction and the player with less VPs picks positions
