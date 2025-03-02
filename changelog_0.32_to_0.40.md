@@ -37,7 +37,7 @@
 - Officer
   - MP cost from 260 to 200
 - Terror Doctrine
-  - V1 no longer caused Nebel+Mortars to fire along
+  - V1 no longer causes Nebel + Mortars to fire along
 
 ---
 
