@@ -43,7 +43,8 @@ folder = DLC3\Movies
 
 [data:common:01]
 folder = CoH\Data
-;archive.01 = WW2\Archives\WW2Data_KeyDefaults
+archive.01 = PhoenixMod\Maps\PhoenixMod_Scenarios_0.50
+;archive.02 = WW2\Archives\WW2Data_KeyDefaults
 
 [data:common:02]
 folder = PhoenixMod\Data
