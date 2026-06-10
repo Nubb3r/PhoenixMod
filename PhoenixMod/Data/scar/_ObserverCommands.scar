@@ -1,0 +1,203 @@
+import("ScarUtil.scar")
+
+
+------------------------------------------------
+-- CONSTANTS & LOOKUP TABLES
+------------------------------------------------
+
+-- Player Slot Constants (Using index numbers)
+local P1_INDEX = 1
+local P5_INDEX = 5
+
+-- Player Index Groups for Exclusion (Active players who should NOT have the hotkey)
+local _1V1_ACTIVE_PLAYERS = { P1_INDEX, P5_INDEX }
+local _2V2_ACTIVE_PLAYERS = { P1_INDEX, 2, P5_INDEX, 6 }
+
+-- 2V2 Observer Cycle Map: Current Slot -> Next Slot
+local _2V2_SWITCH_CYCLE = {
+    [3] = 4,
+    [4] = 7,
+    [7] = 8,
+    [8] = 3,
+}
+
+local CAMERA_FOCUS_MAP_1V1 = {
+    [2] = P1_INDEX,
+    [3] = P1_INDEX,
+    [4] = P1_INDEX,
+    [6] = P5_INDEX,
+    [7] = P5_INDEX,
+    [8] = P5_INDEX,
+}
+
+local CAMERA_FOCUS_MAP_2V2 = {
+    [3] = P1_INDEX,  -- P3 -> P1
+    [4] = 2,         -- P4 -> P2
+    [7] = P5_INDEX,  -- P7 -> P5
+    [8] = 6,         -- P8 -> P6
+}
+
+
+-- Global State Variable (The only necessary global state for caching the local player)
+g_obscommand_localPlayer = nil
+
+
+----------------------------------
+-- HELPER FUNCTIONS
+----------------------------------
+
+
+ -- Checks if the current
+  function IsObserverIndex(player_index)
+
+     local active_list = (SETUP_FORMAT == "2V2") and _2V2_ACTIVE_PLAYERS or _1V1_ACTIVE_PLAYERS
+
+     for _, active_idx in ipairs(active_list) do
+         if player_index == active_idx then
+             return false -- It's an active player, NOT an observer
+         end
+     end
+     return true -- It's an observer player
+ end
+
+ -- to the local player's view, so a single pcall is sufficient to clear them
+ function _DisableActivePlayerColours()
+     pcall(function()
+         -- Disable the player colour UI bindings globally for the local player's screen,
+         -- ensuring a clean slate before setting the correct observer colour
+         UI_BindingSetEnabled("playercolour_01", false)
+         UI_BindingSetEnabled("playercolour_02", false)
+     end)
+ end
+
+
+-----------------------------------------
+-- PLAYER COLOUR UI LOGIC
+-----------------------------------------
+
+function _UpdatePlayerColourUI(player_index)
+      
+    if SETUP_FORMAT ~= "2V2" then
+        return
+    end
+
+    local target_player_index = player_index
+    pcall(function()
+        UI_BindingSetEnabled("playercolour_01", true)
+        UI_BindingSetEnabled("chat_button", false)
+    end)
+
+    if target_player_index == 4 or target_player_index == 8 then
+        -- Cyan Observer Slots -> ENABLE Cyan indicator
+        pcall(function()
+            UI_BindingSetEnabled("playercolour_02", true)
+        end)
+    else
+        -- Green Observer Slots -> ENABLE Green indicator
+        pcall(function()
+            UI_BindingSetEnabled("playercolour_02", false)
+        end)
+    end
+end
+
+
+---------------------------------------
+-- POSITION SWITCH LOGIC
+---------------------------------------
+
+function _obscommand_Switch_Local_Player()
+      
+    local current_world_index
+    local next_world_index
+      
+---------- 1: Get the current player index
+    if g_obscommand_localPlayer == nil then
+        g_obscommand_localPlayer = Game_GetLocalPlayer()
+    end
+    current_world_index = World_GetPlayerIndex(g_obscommand_localPlayer)
+
+---------- 2: Determine the target index based on the current index and the global format
+    if SETUP_FORMAT == "2V2" then
+        -- Use the lookup table for the cyclic switch
+        next_world_index = _2V2_SWITCH_CYCLE[current_world_index]
+        if next_world_index == nil then
+             return -- Player is P1, P2, P5, or P6 (inactive for cycling)
+        end
+    else
+        -- 1V1 (Default) Mirrored Switch: 2<->6, 3<->7, 4<->8
+        if current_world_index >= 2 and current_world_index <= 4 then
+            next_world_index = current_world_index + 4
+        elseif current_world_index >= 6 and current_world_index <= 8 then
+            next_world_index = current_world_index - 4
+        else
+            return
+        end
+    end
+      
+---------- 3: Perform the swap and UI update
+    local next_player = World_GetPlayerAt(next_world_index)
+      
+    if (next_player ~= nil) then
+        Misc_SelectEntity(observer_lock)
+        g_obscommand_localPlayer = next_player
+        Game_SetLocalPlayer(g_obscommand_localPlayer)
+        -- Call UI update here for hotkey switches
+        _UpdatePlayerColourUI(next_world_index)
+    else
+        return
+    end
+end
+
+
+----------------------------------
+-- INITIALIZATION HOOK
+----------------------------------
+
+function _obscommand_Init()
+    if Scar_DebugConsoleExecute then
+        _DisableActivePlayerColours()
+          
+        local local_player = Game_GetLocalPlayer()
+          
+        if local_player ~= nil then
+            local local_player_index = World_GetPlayerIndex(local_player)
+              
+            -- Use helper function to check eligibility
+            local should_bind_hotkey = IsObserverIndex(local_player_index)
+
+            -- Bind the hotkey only for eligible observer players
+            if should_bind_hotkey then
+
+                -- .INITIAL CAMERA MOVE
+                local source_player_index = nil
+                  
+                -- IMPROVED: Use lookup tables instead of verbose if/elseif chains
+                local focus_map = (SETUP_FORMAT == "2V2") and CAMERA_FOCUS_MAP_2V2 or CAMERA_FOCUS_MAP_1V1
+                source_player_index = focus_map[local_player_index]
+
+                  
+                if source_player_index ~= nil then
+                    local source_player = World_GetPlayerAt(source_player_index)
+                
+                    if source_player ~= nil then
+                        local pos = Player_GetStartingPosition(source_player)
+                        -- Instant Camera Move
+                        pcall(function()
+                            Camera_FocusOnPosition(pos, false)
+                        end)
+                    end
+                end
+
+                -- HOTKEY BIND AND UI INITIALIZATION
+                Scar_DebugConsoleExecute("bind([[Control+Space]], [[Scar_DoString('_obscommand_Switch_Local_Player()')]])")
+                _UpdatePlayerColourUI(local_player_index)
+            end
+        end
+    end
+end
+
+function OnInit()
+    Rule_AddOneShot(_obscommand_Init, 0)
+end
+
+Scar_AddInit(OnInit)

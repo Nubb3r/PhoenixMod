@@ -1,0 +1,453 @@
+import("ScarUtil.scar")
+
+
+----------------------------------
+-- HELPER FUNCTIONS
+----------------------------------
+
+function Util_CreateLocString(text)
+    local tmpstr = LOC(text)
+    tmpstr[1] = text
+    return tmpstr
+end
+
+local function BP_GetSquadBlueprint2(blueprint)
+	if (BP_IsPropertyBagGroupValid(blueprint)) then
+		return BP_GetSquadBlueprint(blueprint)
+	else
+		return nil
+	end
+end
+
+local function BP_GetEntityBlueprint2(blueprint)
+	if (BP_IsPropertyBagGroupValid(blueprint)) then
+		return BP_GetEntityBlueprint(blueprint)
+	else
+		return nil
+	end
+end
+
+local function BP_GetAbilityBlueprint2(blueprint)
+	if (BP_IsPropertyBagGroupValid(blueprint)) then
+		return BP_GetAbilityBlueprint(blueprint)
+	else
+		return nil
+	end
+end
+
+local function Table_Remove_Nil(bp_table)
+	local n = table.getn(bp_table)
+	for i = n, 1, -1 do
+		if (bp_table[i] == nil) then
+			table.remove(bp_table, i)
+		elseif (scartype(bp_table[i]) == ST_TABLE and bp_table[i].blueprint == nil) then
+			table.remove(bp_table, i)
+		end
+	end
+end
+
+------------------------
+-- DATA TABLES
+------------------------
+
+local testmod_table_allies_squads = {
+	SBP.ALLIES.ENGINEER, SBP.ALLIES.RIFLEMEN, SBP.ALLIES.JEEP, SBP.ALLIES.HEAVYMG, SBP.ALLIES.MORTAR, 
+	SBP.ALLIES.SNIPER, SBP.ALLIES.HALFTRACK, SBP.ALLIES.GREYHOUND, SBP.ALLIES.AT_57MM, SBP.ALLIES.M10,
+	SBP.ALLIES.CROCODILE, SBP.ALLIES.SHERMAN, SBP.ALLIES.RANGER, SBP.ALLIES.HOWITZER, 
+	{blueprint = SBP.ALLIES.PARATROOPER, paradrop = true},
+	SBP.ALLIES.PERSHING, SBP.ALLIES.CALLIOPE, SBP.ALLIES.TRUCK, SBP.ALLIES.OFFICER, SBP.ALLIES.MEDIC_SP,
+	BP_GetSquadBlueprint2("sbps/races/allies/vehicles/m18_hellcat.lua"),
+	BP_GetSquadBlueprint2("sbps/races/allies/vehicles/t17_armoured_car_squad.lua"),
+}
+Table_Remove_Nil(testmod_table_allies_squads)
+
+local testmod_table_axis_squads = {
+	SBP.AXIS.PIONEER, SBP.AXIS.MOTORCYCLE, SBP.AXIS.VOLKSGRENADIER, SBP.AXIS.HEAVYMG, SBP.AXIS.SNIPER,
+	SBP.AXIS.HALFTRACK, SBP.AXIS.HALFTRACK_FLAME, SBP.AXIS.HALFTRACK_STUKA, SBP.AXIS.GRENADIER, SBP.AXIS.MORTAR,
+	SBP.AXIS.PAK_38, SBP.AXIS.PUMA, SBP.AXIS.OFFICER, SBP.AXIS.NEBELWERFER, SBP.AXIS.STUG,
+	SBP.AXIS.KNIGHTSCROSS, SBP.AXIS.OSTWIND, SBP.AXIS.PANZER, SBP.AXIS.PANTHER, SBP.AXIS.GOLIATH,
+	SBP.AXIS.FLAK_88, SBP.AXIS.STORMTROOPER, SBP.AXIS.TIGER, SBP.AXIS.KING_TIGER, 
+	SBP.AXIS.OPELBLITZ, SBP.AXIS.AA_20MM, nil,
+	BP_GetSquadBlueprint2("sbps/races/axis/vehicles/tiger_squad_spg_ace.lua"),
+	BP_GetSquadBlueprint2("sbps/races/axis/vehicles/axis_schwimmwagen.lua"),
+	BP_GetSquadBlueprint2("sbps/races/axis/vehicles/geschutzwagen_squad.lua"),
+	BP_GetSquadBlueprint2("sbps/races/axis/vehicles/howitzer_squad.lua"),
+}
+Table_Remove_Nil(testmod_table_axis_squads)
+
+local testmod_table_cw_squads = {
+	SBP.CW.COMMANDOS_MG, SBP.CW.CAPTAIN, SBP.CW.LIEUTENANT, SBP.CW.COMMANDOS, SBP.CW.SAPPER,
+	SBP.CW.TOMMIES, SBP.CW.MORTAR, SBP.CW.VICKERSMG, SBP.CW.COMMANDOS_MORTAR, SBP.CW.COMMANDOS_PIAT,
+	SBP.CW.COMMANDOS_SNIPER, SBP.CW.BREN_CARRIER, SBP.CW.CHURCHILL_AVRE, SBP.CW.CHURCHILL_CROC, SBP.CW.CHURCHILL,
+	SBP.CW.COMMAND_CROMWELL, SBP.CW.STUART, SBP.CW.PRIEST, SBP.CW.FIREFLY, SBP.CW.TETRARCH,
+	SBP.CW.COMMANDOS_JEEP, SBP.CW.TOWED_AT, SBP.CW.ARTILLERY_25_POUNDER, SBP.CW.BOFORS_AA,
+	SBP.CW.HQ, SBP.CW.HQ_REINFORCEMENT, SBP.CW.ARMOUR_HQ, SBP.CW.INFANTRY_HQ, SBP.CW.CROMWELL,
+	{blueprint = BP_GetSquadBlueprint2("sbps/races/allies_commonwealth/soldiers/commando_paratrooper_squad_sp.lua"), paradrop = false, state_machine = "rolevariation", state = "airborne00"},
+	BP_GetSquadBlueprint2("sbps/races/allies_commonwealth/soldiers/infantry_piper_squad.lua"),
+	BP_GetSquadBlueprint2("sbps/races/allies_commonwealth/soldiers/tommy_squad_canadian.lua"),
+	BP_GetSquadBlueprint2("sbps/races/allies_commonwealth/soldiers/tommy_boys_at_squad.lua"),
+	BP_GetSquadBlueprint2("sbps/races/allies_commonwealth/vehicles/kangaroo_carrier_squad.lua"),
+	BP_GetSquadBlueprint2("sbps/races/allies_commonwealth/vehicles/staghound_armoured_car_squad.lua"),
+}
+Table_Remove_Nil(testmod_table_cw_squads)
+
+local testmod_table_elite_squads = {
+	SBP.ELITE.HENSCHEL_TAKEOFF, SBP.ELITE.PANZERGRENADIER, SBP.ELITE.HEAVYMG, SBP.ELITE.MORTAR, SBP.ELITE.LUFTWAFFE,
+	SBP.ELITE.FALLSCHIRMJAGER, SBP.ELITE.ASSAULTGRENADIER, SBP.ELITE.TANKBUSTERS, SBP.ELITE.KETTENRAD, SBP.ELITE.ARMOURCAR_221,
+	SBP.ELITE.ARMOURCAR_222, SBP.ELITE.ARMOURCAR_223, SBP.ELITE.HALFTRACK_250, SBP.ELITE.HALFTRACK_MORTAR, SBP.ELITE.HALFTRACK_SNIPER,
+	SBP.ELITE.HALFTRACK_VAMPIRE, SBP.ELITE.HALFTRACK_251, SBP.ELITE.PANZER_SUPPORT, SBP.ELITE.HUMMEL, SBP.ELITE.HETZER,
+	SBP.ELITE.JAGDPANTHER, SBP.ELITE.MARDER, SBP.ELITE.WIRBLEWIND, SBP.ELITE.BERGETIGER, SBP.ELITE.PANTHER,
+	SBP.ELITE.GOLIATH, SBP.ELITE.FLAK_38, SBP.ELITE.KING_TIGER_ARNHEM,
+	BP_GetSquadBlueprint2("sbps/races/axis_panzer_elite/vehicles/hotchkiss_squad.lua"),
+	BP_GetSquadBlueprint2("sbps/races/axis_panzer_elite/vehicles/panzer_elite_schwimmwagen.lua"),
+}
+Table_Remove_Nil(testmod_table_elite_squads)
+
+local testmod_table_allies_buildings = {
+	EBP.ALLIES.HQ, EBP.ALLIES.BARRACKS, EBP.ALLIES.ARMORY, EBP.ALLIES.MOTORPOOL, EBP.ALLIES.TANK_DEPOT,
+	EBP.ALLIES.QUARTER_MASTER, EBP.ALLIES.MEDIC_STATION, EBP.ALLIES.TRIAGE, EBP.ALLIES.MG_NEST, EBP.ALLIES.OBSERVATION_POST,
+	EBP.ALLIES.BARBED_WIRE, EBP.ALLIES.SANDBAG, EBP.ALLIES.TANK_TRAP, EBP.ALLIES.MINES, EBP.ALLIES.HOWITZER,
+	EBP.PICKUP.MANPOWER, EBP.PICKUP.MUNITIONS, EBP.PICKUP.FUEL, EBP.PICKUP.AIRDROP_FUEL, EBP.PICKUP.AIRDROP_MUNITIONS,
+	EBP.PICKUP.ALLIES.BAZOOKA, EBP.PICKUP.ALLIES.BAR, EBP.PICKUP.ALLIES.HMG, EBP.PICKUP.ALLIES.MORTAR,
+	BP_GetEntityBlueprint2("ebps/races/allies/vehicles/m1_57mm_towed_at_gun.lua"),
+	BP_GetEntityBlueprint2("ebps/races/allies/vehicles/m2a1_105mm_howitzer.lua"),
+	BP_GetEntityBlueprint2("ebps/races/allies/vehicles/p47_thunderbolt.lua"),
+	BP_GetEntityBlueprint2("ebps/environment/art_ambient/objects/vehicles/military/typhoon_aircraft_recon.lua"),
+	BP_GetEntityBlueprint2("ebps/gameplay/props/allied_m18_recoilless_rifle_item.lua"),
+	BP_GetEntityBlueprint2("ebps/gameplay/props/allied_m1_thompson_item.lua"),
+}
+Table_Remove_Nil(testmod_table_allies_buildings)
+
+local testmod_table_axis_buildings = {
+	EBP.AXIS.HQ, EBP.AXIS.QUARTERS, EBP.AXIS.BARRACKS, EBP.AXIS.ARMORY, EBP.AXIS.COMMAND,
+	EBP.AXIS.KAMPFKRAFT, EBP.AXIS.BUNKER, EBP.AXIS.BARBED_WIRE, EBP.AXIS.OBSERVATION_POST, EBP.AXIS.MINES,
+	EBP.AXIS.SANDBAG, EBP.AXIS.TANK_TRAP, EBP.PICKUP.AXIS.HMG, EBP.PICKUP.AXIS.MORTAR, 
+	EBP.PICKUP.AXIS.LMG_42, EBP.PICKUP.AXIS.LMG_44, EBP.PICKUP.AXIS.PANZERSCHRECK,
+	BP_GetEntityBlueprint2("ebps/races/axis/vehicles/88mm_flak_36_at.lua"),
+	BP_GetEntityBlueprint2("ebps/races/axis/vehicles/50mm_pak38.lua"),
+}
+Table_Remove_Nil(testmod_table_axis_buildings)
+
+local testmod_table_cw_buildings = {
+	EBP.CW.GLIDER_COMMANDOS,
+	EBP.CW.GLIDER_HQ, EBP.CW.GLIDER_TETRARCH, EBP.CW.MG_NEST, EBP.CW.HOWITZER_NEST, EBP.CW.ANTITANK_NEST,
+	EBP.CW.SLITTRENCH_NEST, EBP.CW.MORTAR_NEST, EBP.CW.BOFORS_NEST, EBP.CW.RADIO_BEACON, EBP.CW.BARBED_WIRE,
+	EBP.CW.SANDBAG, EBP.CW.CASUALTY_CLEARING, EBP.CW.MINES, EBP.CW.DEMOLITION_CHARGE,
+	BP_GetEntityBlueprint2("ebps/gameplay/props/commonwealth_bren_item.lua"),
+	BP_GetEntityBlueprint2("ebps/gameplay/props/commonwealth_piat_item.lua"),
+	BP_GetEntityBlueprint2("ebps/gameplay/props/cw_3inch_mortar.lua"),
+	BP_GetEntityBlueprint2("ebps/gameplay/props/cw_vickers_303_mg.lua"),
+}
+Table_Remove_Nil(testmod_table_cw_buildings)
+
+local testmod_table_elite_buildings = {
+	EBP.ELITE.HQ, EBP.ELITE.PANZERJAGER, EBP.ELITE.LOGISTIK, EBP.ELITE.KAMPFGRUPGE, EBP.ELITE.PANZER_ARTILLERIE,
+	EBP.ELITE.BARBED_WIRE, EBP.ELITE.MINE_TELLER, EBP.ELITE.MINE_AIR_DROPPED, EBP.ELITE.SANDBAG, EBP.ELITE.TANK_TRAP,
+	EBP.SYNC_WEAPON.FLAK_38, EBP.SYNC_WEAPON.FLAK_88_PE,
+	BP_GetEntityBlueprint2("ebps/races/axis_panzer_elite/buildings/barbed_wire_scorched_earth"),
+}
+Table_Remove_Nil(testmod_table_elite_buildings)
+
+local testmod_table_all_abilities = {
+	BP_GetAbilityBlueprint2("abilities/allied_armor_self_heal.lua"),
+	BP_GetAbilityBlueprint2("abilities/allied_at_apc_shell.lua"),
+	BP_GetAbilityBlueprint2("abilities/allied_hmg_armor_piercing_round.lua"),
+	BP_GetAbilityBlueprint2("abilities/ally_air_recon_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/ally_air_strike_ability_rockets.lua"),
+	BP_GetAbilityBlueprint2("abilities/ally_air_strike_ability_strafe.lua"),
+	BP_GetAbilityBlueprint2("abilities/ally_fireup_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/ally_fire_calliope.lua"),
+	BP_GetAbilityBlueprint2("abilities/ally_heavy_crush_bulldozer_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/ally_howitzer_barrage_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/ally_mortar_smoke_barrage.lua"),
+	BP_GetAbilityBlueprint2("abilities/ally_off_map_howitzer_shoot.lua"),
+	BP_GetAbilityBlueprint2("abilities/ally_paradrop_57mm_at.lua"),
+	BP_GetAbilityBlueprint2("abilities/ally_paradrop_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/ally_paradrop_ability_supplies.lua"),
+	BP_GetAbilityBlueprint2("abilities/ally_paradrop_engineer_reinforcement.lua"),
+	BP_GetAbilityBlueprint2("abilities/ally_paradrop_scar.lua"),
+	BP_GetAbilityBlueprint2("abilities/ally_reinforcements_ability_rangers.lua"),
+	BP_GetAbilityBlueprint2("abilities/ally_suppression_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/ally_suppression_ability_rifle_squad_infantry.lua"),
+	BP_GetAbilityBlueprint2("abilities/ally_sync_mortar_barrage.lua"),
+	BP_GetAbilityBlueprint2("abilities/ally_sync_mortar_barrage_improved.lua"),
+	BP_GetAbilityBlueprint2("abilities/ally_throw_grenade.lua"),
+	BP_GetAbilityBlueprint2("abilities/ally_throw_satchel_charge.lua"),
+	BP_GetAbilityBlueprint2("abilities/ally_throw_sticky_bombs.lua"),
+	BP_GetAbilityBlueprint2("abilities/ally_weapon_direct_hit_stunned.lua"),
+	BP_GetAbilityBlueprint2("abilities/ambush_camo_timed.lua"),
+	BP_GetAbilityBlueprint2("abilities/ambush_camo_toggled.lua"),
+	BP_GetAbilityBlueprint2("abilities/attrition_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/axis_150mm_rocket_barrage.lua"),
+	BP_GetAbilityBlueprint2("abilities/axis_280mm_rocket_barrage.lua"),
+	BP_GetAbilityBlueprint2("abilities/axis_assault_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/axis_at_guns_camouflage_toggled.lua"),
+	BP_GetAbilityBlueprint2("abilities/axis_fire_panzerfaust.lua"),
+	BP_GetAbilityBlueprint2("abilities/axis_for_the_fuhrer.lua"),
+	BP_GetAbilityBlueprint2("abilities/axis_heavy_crush_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/axis_kch_assault_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/axis_manpower_resource_push.lua"),
+	BP_GetAbilityBlueprint2("abilities/axis_mortar_smoke_barrage.lua"),
+	BP_GetAbilityBlueprint2("abilities/axis_nebelwerfer_barrage.lua"),
+	BP_GetAbilityBlueprint2("abilities/axis_nebelwerfer_barrage_improved.lua"),
+	BP_GetAbilityBlueprint2("abilities/axis_off_map_defensive_bombardment_player_level.lua"),
+	BP_GetAbilityBlueprint2("abilities/axis_pe_air_dropped_mines.lua"),
+	BP_GetAbilityBlueprint2("abilities/axis_pioneer_reinforcements_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/axis_reinforcements_ability_tiger_ace.lua"),
+	BP_GetAbilityBlueprint2("abilities/axis_stormtrooper_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/axis_stormtrooper_ability_with_stug.lua"),
+	BP_GetAbilityBlueprint2("abilities/axis_stormtrooper_ability_with_tiger.lua"),
+	BP_GetAbilityBlueprint2("abilities/axis_stuka_zu_fuss_rocket_halftrack.lua"),
+	BP_GetAbilityBlueprint2("abilities/axis_sync_mortar_barrage.lua"),
+	BP_GetAbilityBlueprint2("abilities/axis_sync_mortar_bunker_barrage.lua"),
+	BP_GetAbilityBlueprint2("abilities/axis_terror_bombardment.lua"),
+	BP_GetAbilityBlueprint2("abilities/axis_throw_grenade.lua"),
+	BP_GetAbilityBlueprint2("abilities/axis_throw_grenade_assault.lua"),
+	BP_GetAbilityBlueprint2("abilities/axis_throw_grenade_improved.lua"),
+	BP_GetAbilityBlueprint2("abilities/axis_v1_weapon.lua"),
+	BP_GetAbilityBlueprint2("abilities/blitzkrieg_tactics.lua"),
+	BP_GetAbilityBlueprint2("abilities/booby_trap_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/bren_carrier_hmg_apr.lua"),
+	BP_GetAbilityBlueprint2("abilities/bren_self_repair.lua"),
+	BP_GetAbilityBlueprint2("abilities/building_healing_aura.lua"),
+	BP_GetAbilityBlueprint2("abilities/building_healing_aura_commonwealth.lua"),
+	BP_GetAbilityBlueprint2("abilities/button_enemy_vehicle.lua"),
+	BP_GetAbilityBlueprint2("abilities/calliope_reinforce.lua"),
+	BP_GetAbilityBlueprint2("abilities/camouflage_commando.lua"),
+	BP_GetAbilityBlueprint2("abilities/camouflage_toggled.lua"),
+	BP_GetAbilityBlueprint2("abilities/camouflage_toggled_hetzer.lua"),
+	BP_GetAbilityBlueprint2("abilities/camouflage_toggled_knights_cross.lua"),
+	BP_GetAbilityBlueprint2("abilities/camouflage_toggled_pe_bike.lua"),
+	BP_GetAbilityBlueprint2("abilities/camouflage_toggled_sniper.lua"),
+	BP_GetAbilityBlueprint2("abilities/camouflage_toggled_sniper_allied.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_25pounder_barrage_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_25pounder_barrage_ability_takeover.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_25pounder_supercharge.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_apds_armour_piercing.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_armour_hq_reinforcements_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_bren_capture_enable.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_building_toggle.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_captain_resource_multiplier.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_churchill_avre_reinforcement.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_churchill_crocodile_reinforcement.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_churchill_mine_clearing.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_churchill_tank_reinforcement.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_churchill_tank_shock.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_creeping_barrage_cover_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_decoy_artillery.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_decoy_artillery_real.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_fire_avre_petard.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_fire_canister_ammunition.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_flank_speed_bonus.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_foo_artillery.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_foo_command_tank_smoke_barrage.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_force_multipliers.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_hull_down.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_hull_down_croc.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_hull_down_medium.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_lt_heroic_charge_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_medical_kit.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_mobile_hq_reinforcements_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_piat.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_priest_barrage_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_priest_barrage_ability_supercharge.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_priest_reinforcement.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_recon_marksmen_shot.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_recon_squad.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_reinforcements_commandos.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_resource_multiplier.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_resource_multiplier_commander_tree.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_smoke_rifle_grenade_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_soldiers_hq_reinforcements_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_suppression_break.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_sync_mortar_barrage.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_sync_mortar_barrage_takeover.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_sync_mortar_supercharge.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_throw_grenade_commando.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_truck_armour_setup.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_truck_hq_setup.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_truck_infantry_setup.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_truck_setup.lua"),
+	BP_GetAbilityBlueprint2("abilities/commonwealth_truck_unsetup.lua"),
+	BP_GetAbilityBlueprint2("abilities/counterbattery_barrage_25_pounder.lua"),
+	BP_GetAbilityBlueprint2("abilities/counterbattery_barrage_3inch_mortar.lua"),
+	BP_GetAbilityBlueprint2("abilities/counterbattery_barrage_priest_105mm.lua"),
+	BP_GetAbilityBlueprint2("abilities/counterbattery_barrage_remove.lua"),
+	BP_GetAbilityBlueprint2("abilities/counterbattery_barrage_remove_mortar.lua"),
+	BP_GetAbilityBlueprint2("abilities/counter_battery.lua"),
+	BP_GetAbilityBlueprint2("abilities/counter_battery_mortar.lua"),
+	BP_GetAbilityBlueprint2("abilities/counter_battery_priest.lua"),
+	BP_GetAbilityBlueprint2("abilities/creeping_barrage.lua"),
+	BP_GetAbilityBlueprint2("abilities/creeping_barrage_25_pounder.lua"),
+	BP_GetAbilityBlueprint2("abilities/creeping_barrage_command_tank_smoke.lua"),
+	BP_GetAbilityBlueprint2("abilities/defensive_smokecloud.lua"),
+	BP_GetAbilityBlueprint2("abilities/disable_capture_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/facing_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/facing_lock_down_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/fire_smoke_canister.lua"),
+	BP_GetAbilityBlueprint2("abilities/first_aid_heal_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/follow_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/follow_ability_captain.lua"),
+	BP_GetAbilityBlueprint2("abilities/follow_ability_command_tank.lua"),
+	BP_GetAbilityBlueprint2("abilities/follow_ability_munitions_halftrack.lua"),
+	BP_GetAbilityBlueprint2("abilities/for_the_fatherland.lua"),
+	BP_GetAbilityBlueprint2("abilities/glider_hq_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/glider_tetrarch.lua"),
+	BP_GetAbilityBlueprint2("abilities/glider_troops.lua"),
+	BP_GetAbilityBlueprint2("abilities/goliath_detonate.lua"),
+	BP_GetAbilityBlueprint2("abilities/greyhound_mines.lua"),
+	BP_GetAbilityBlueprint2("abilities/hmg_armor_piercing_round.lua"),
+	BP_GetAbilityBlueprint2("abilities/medical_kit.lua"),
+	BP_GetAbilityBlueprint2("abilities/medical_kit_field.lua"),
+	BP_GetAbilityBlueprint2("abilities/medical_kit_field_weapon_capture_squad.lua"),
+	BP_GetAbilityBlueprint2("abilities/medical_kit_weapon_capture_squad.lua"),
+	BP_GetAbilityBlueprint2("abilities/mortar_hold_fire.lua"),
+	BP_GetAbilityBlueprint2("abilities/necessary_player_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/off_map_artillery_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/overwatch_barrage.lua"),
+	BP_GetAbilityBlueprint2("abilities/overwatch_barrage_25_pounder.lua"),
+	BP_GetAbilityBlueprint2("abilities/overwatch_barrage_25_pounder_remove.lua"),
+	BP_GetAbilityBlueprint2("abilities/overwatch_barrage_3inch_mortar.lua"),
+	BP_GetAbilityBlueprint2("abilities/overwatch_barrage_3inch_mortar_remove.lua"),
+	BP_GetAbilityBlueprint2("abilities/overwatch_barrage_priest_105mm.lua"),
+	BP_GetAbilityBlueprint2("abilities/overwatch_barrage_priest_105mm_remove.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_223_setup.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_area_effects.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_bergetiger_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_building_booby_trap.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_car_setup.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_car_unsetup.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_fallschirmjager_camo.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_fallschirmjager_throw_incendiary_grenade.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_fire_panzerfaust.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_fire_panzerfaust_fallschirmjager.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_fire_panzerfaust_improved.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_focused_firing.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_henschel_at_strike.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_howitzer_barrage_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_howitzer_barrage_ability_improved.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_hq_munitions_resupply.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_hummel_artillery.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_incendiary_mortar_barrage.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_infiltration_fallshirmjager_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_luftwaffe_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_medical_aura.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_munitions_resupply.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_point_booby_trap.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_point_booby_trap_improved.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_reinforcements_hetzer.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_reinforcements_jagdpanther.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_reinforcements_panther_battlegroup.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_sprint_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_sync_mortar_barrage.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_throw_incendiary_grenade.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_warning_shot.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_elite_wirblewind_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_grenadier_mob_bonuses.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_grenadier_reinforcements_ability_large_squads.lua"),
+	BP_GetAbilityBlueprint2("abilities/panzer_grenadier_reinforcements_ability_small_squads.lua"),
+	BP_GetAbilityBlueprint2("abilities/pershing_reinforce.lua"),
+	BP_GetAbilityBlueprint2("abilities/pe_lockdown_hummel_rapidfire.lua"),
+	BP_GetAbilityBlueprint2("abilities/pe_lockdown_marder_iii_at.lua"),
+	BP_GetAbilityBlueprint2("abilities/pe_lockdown_panzeriv_rapid_fire.lua"),
+	BP_GetAbilityBlueprint2("abilities/pe_munitionspanzer_goliath.lua"),
+	BP_GetAbilityBlueprint2("abilities/pe_overdrive.lua"),
+	BP_GetAbilityBlueprint2("abilities/pe_test_halftrack_sniper.lua"),
+	BP_GetAbilityBlueprint2("abilities/recover_ability_bergtiger.lua"),
+	BP_GetAbilityBlueprint2("abilities/reenable_capture_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/reinforcements_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/reinforcements_ability_new.lua"),
+	BP_GetAbilityBlueprint2("abilities/resource_commonwealth_set_up_hq.lua"),
+	BP_GetAbilityBlueprint2("abilities/resource_manpower_commonwealth_default.lua"),
+	BP_GetAbilityBlueprint2("abilities/resource_manpower_player_default.lua"),
+	BP_GetAbilityBlueprint2("abilities/resource_manpower_upgrade.lua"),
+	BP_GetAbilityBlueprint2("abilities/resource_manpower_upgrade_advanced.lua"),
+	BP_GetAbilityBlueprint2("abilities/resource_manpower_upgrade_more_advanced.lua"),
+	BP_GetAbilityBlueprint2("abilities/retreat_to_captain_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/rout_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/rout_officer_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/salvage_wreck_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/sector_artillery.lua"),
+	BP_GetAbilityBlueprint2("abilities/secure_territory_on_and_off.lua"),
+	BP_GetAbilityBlueprint2("abilities/sherman_crab_mine_clearing.lua"),
+	BP_GetAbilityBlueprint2("abilities/supervise_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/suppression_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/toggle_resource_stealing.lua"),
+	BP_GetAbilityBlueprint2("abilities/v1_targeter.lua"),
+	BP_GetAbilityBlueprint2("abilities/v1_target_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/victor_targeter.lua"),
+	BP_GetAbilityBlueprint2("abilities/victor_target_ability.lua"),
+	BP_GetAbilityBlueprint2("abilities/zz_panzer_elite_howitzer_barrage_ability_vet1.lua"),
+	BP_GetAbilityBlueprint2("abilities/zz_panzer_elite_howitzer_barrage_ability_vet1_improved.lua"),
+	BP_GetAbilityBlueprint2("abilities/zz_panzer_elite_howitzer_barrage_ability_vet2.lua"),
+	BP_GetAbilityBlueprint2("abilities/zz_panzer_elite_howitzer_barrage_ability_vet2_improved.lua"),
+	BP_GetAbilityBlueprint2("abilities/zz_panzer_elite_howitzer_barrage_ability_vet3.lua"),
+	BP_GetAbilityBlueprint2("abilities/zz_panzer_elite_howitzer_barrage_ability_vet3_improved.lua")
+}
+Table_Remove_Nil(testmod_table_all_abilities)
+
+----------------------------------------------------------------------------------
+-- CORE CHEAT LOGIC
+----------------------------------------------------------------------------------
+
+function Apply_CheatSettings(player)
+    local set_resource = Player_SetResource
+    local add_resource = Player_AddResource
+    local set_popcap = Player_SetPopCapOverride
+    local modify_prod = Modify_PlayerProductionRate
+    local modify_build = Modify_EntityBuildTime
+    local modify_recharge = Modify_AbilityRechargeTime
+    local get_table_len = table.getn
+
+    -- 1. Resources 
+    set_resource(player, RT_Manpower, 99999)
+    add_resource(player, RT_Fuel, 99999)
+    add_resource(player, RT_Munition, 99999)
+    add_resource(player, RT_Action, 2000)
+    set_popcap(player, 9999)
+
+    -- 2. Instant Production 
+    modify_prod(player, 10000)
+
+    -- 3. Instant Build 
+    local all_building_tables = {
+        testmod_table_allies_buildings,
+        testmod_table_axis_buildings,
+        testmod_table_cw_buildings,
+        testmod_table_elite_buildings
+    }
+    
+    for j = 1, get_table_len(all_building_tables) do
+        local b_table = all_building_tables[j]
+        for i = 1, get_table_len(b_table) do
+            modify_build(player, b_table[i], 0.01)
+        end
+    end
+
+    -- 4. Instant Ability Recharge
+    local num_abilities = get_table_len(testmod_table_all_abilities)
+    for i = 1, num_abilities do
+        modify_recharge(player, testmod_table_all_abilities[i], 0)
+    end
+end
+
+function display_mod()
+    UI_SetDisplayIngameScore(true, true)
+    UI_SetScoreSingle(Util_CreateLocString("Mode"), Util_CreateLocString("Test Mode") )
+end
+
+--------------------------
+-- INITIALISATION
+--------------------------
+
+function Mod_OnInit()
+    local playerCount = World_GetPlayerCount()
+    for i = 1, playerCount do
+        local player = World_GetPlayerAt(i)
+        Apply_CheatSettings(player)
+    end
+
+    Rule_AddOneShot(display_mod, 0.25)
+end
+
+Scar_AddInit(Mod_OnInit)

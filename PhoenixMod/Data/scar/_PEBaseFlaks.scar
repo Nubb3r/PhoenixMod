@@ -1,0 +1,77 @@
+local flakBP = BP_GetEntityBlueprint("ebps/races/axis_panzer_elite/vehicles/flakvierling38_quad20mm_aagun_starting.lua")
+local crewBP = BP_GetSquadBlueprint("sbps/races/phoenixmod/soldiers/pe_flak38_quad20mm_aagun_squad_starting_crew.lua")
+
+function Man_Starting_Guns_Logic()
+    for i = 1, World_GetPlayerCount() do
+        local playerObj = World_GetPlayerAt(i)
+        
+        local gunTable = {}
+        local crewTable = {}
+
+        -- 1. Find all Guns
+        local eg = Player_GetEntities(playerObj)
+        EGroup_ForEach(eg, function(egroupid, itemindex, entityID)
+            if Entity_GetBlueprint(entityID) == flakBP then
+                table.insert(gunTable, entityID)
+            end
+            return false 
+        end)
+
+        -- 2. Find all Crew Squads
+        local sg = Player_GetSquads(playerObj)
+        SGroup_ForEach(sg, function(sgroupid, itemindex, squadID)
+            if Squad_GetBlueprint(squadID) == crewBP then
+                table.insert(crewTable, squadID)
+            end
+            return false
+        end)
+
+        -- 3. Pair them up
+        for _, squadID in ipairs(crewTable) do
+            local squadPos = Squad_GetPosition(squadID)
+            local closestGun = nil
+            local minDistance = 99999
+            local gunIndex = -1
+
+            for j, entityID in ipairs(gunTable) do
+                local gunPos = Entity_GetPosition(entityID)
+                local dist = World_DistancePointToPoint(squadPos, gunPos)
+                if dist < minDistance then
+                    minDistance = dist
+                    closestGun = entityID
+                    gunIndex = j
+                end
+            end
+
+            if closestGun ~= nil then
+                -- ONLY lock the squad if the player is an AI
+                if AI_IsAIPlayer(playerObj) then
+                    AI_LockSquad(playerObj, squadID)
+                end
+                
+                -- Neutralize the gun
+                Entity_SetWorldOwned(closestGun)
+                
+                -- Prepare groups for the command
+                local tempS = SGroup_CreateIfNotFound("tempS" .. i)
+                local tempE = EGroup_CreateIfNotFound("tempE" .. i)
+                SGroup_Clear(tempS)
+                EGroup_Clear(tempE)
+                SGroup_Add(tempS, squadID)
+                EGroup_Add(tempE, closestGun)
+
+                -- Issue the capture order
+                Cmd_CaptureTeamWeapon(tempS, tempE)
+                
+                -- Remove gun from available list
+                table.remove(gunTable, gunIndex)
+            end
+        end
+    end
+end
+
+function Initialize_Starting_Guns()
+    Rule_AddOneShot(Man_Starting_Guns_Logic, 1.0)
+end
+
+Scar_AddInit(Initialize_Starting_Guns)

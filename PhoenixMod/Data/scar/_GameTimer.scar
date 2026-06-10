@@ -1,0 +1,81 @@
+import("ScarUtil.scar")
+
+
+G_TotalTimeElapsed = 0
+G_HourThresholdReached = false
+
+
+----------------------------------
+--  HELPER FUNCTIONS
+----------------------------------
+
+function Util_CreateLocString(text)
+    local tmpstr = LOC(text)
+    tmpstr[1] = text
+    return tmpstr
+end
+
+function Util_FormatTime(totalSeconds)
+    local hours = math.floor(totalSeconds / 3600)
+    local minutes = math.floor((totalSeconds % 3600) / 60)
+    local seconds = totalSeconds % 60
+    
+    if totalSeconds >= 3600 then
+        -- Format for 1 hour or more: HH:MM:SS
+        return string.format("%02d:%02d:%02d", hours, minutes, seconds)
+    else
+        -- Format for under 1 hour: MM:SS
+        local totalMinutes = math.floor(totalSeconds / 60)
+        return string.format("%02d:%02d", totalMinutes, seconds)
+    end
+end
+
+function Enforce_Narrow_Background()
+    UI_BindingSetEnabled("pm_timer_wide", false)
+end
+
+function Hotkey_HideReplayProgress()
+    UI_BindingSetEnabled("replay_progress", false)
+end
+
+
+--------------------------------
+-- CORE TIMER LOGIC
+--------------------------------
+
+function Update_GameTimer()
+    G_TotalTimeElapsed = G_TotalTimeElapsed + 1
+    
+    if (G_TotalTimeElapsed == 3600) and (not G_HourThresholdReached) then
+        -- Switch to wide background and 6-digit time format
+        UI_BindingSetEnabled("pm_timer_narrow", false)
+        UI_BindingSetEnabled("pm_timer_wide", true)
+        G_HourThresholdReached = true
+    end
+    
+    local timeString = Util_FormatTime(G_TotalTimeElapsed)
+    UI_SetScoreRight(Util_CreateLocString("Game Duration"), Util_CreateLocString(timeString))
+end
+
+
+--------------------------
+-- INITIALISATION
+--------------------------
+
+function Initialise_GameTimer()
+    
+    G_TotalTimeElapsed = 0
+    G_HourThresholdReached = false
+    UI_SetDisplayIngameScore(false, true)
+
+    local initialTimeString = Util_FormatTime(G_TotalTimeElapsed)
+    UI_SetScoreRight(Util_CreateLocString("Game Duration"), Util_CreateLocString(initialTimeString))
+
+    Rule_AddOneShot(Enforce_Narrow_Background, 0)
+    Rule_AddInterval(Update_GameTimer, 1)
+
+    --Hotkey to hide replay progress
+    Scar_DebugConsoleExecute("bind([[Control+Backspace]], [[Scar_DoString('Hotkey_HideReplayProgress()')]])")
+end
+
+Scar_AddInit(Initialise_GameTimer)

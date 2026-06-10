@@ -88,7 +88,7 @@ EntityMinViewAngle=0.03		--	in radians
 DefaultHeight = 40 -- THIS IS 35 in NORMAL COH
 --	Distance ranges in meters (may be influenced by selected object size)
 DistMin=1
-DistMax=60 -- THIS IS 40 in NORMAL COH
+DistMax = 60 -- THIS IS 40 in NORMAL COH
 
 
 
@@ -118,7 +118,7 @@ ZoomLocked = 1
 
 -- NISlet overrides
 NISletDistMin=0.25
-NISletDistMax=2000
+NISletDistMax = 60
 NISletDistGroundMin=1.0
 NISletDistMinGround=0.5
 NISletDeclBelow=-45.000000

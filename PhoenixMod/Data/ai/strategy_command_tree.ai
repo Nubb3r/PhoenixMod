@@ -1,0 +1,188 @@
+import("util/demand.ai")
+
+strategy_command_tree = {}
+
+--------------------------------------------------------------------------------
+
+function strategy_command_tree.trace( msg )
+
+	local ticks = World_GetGameTime() * 8
+	-- pipe this out also
+	msg = "[" .. ticks .. "]" .. msg
+
+	aitrace_ext( "Commander_Tree_Strategy", msg )
+end
+
+function strategy_command_tree.trace_clear()
+
+	aitraceclear_ext( "Commander_Tree_Strategy" )
+
+end
+
+--------------------------------------------------------------------------------
+
+function strategy_command_tree:init()
+	
+	print("strategy_command_tree:init")
+end
+
+function GetCommandTreeIndexFromUPGID( upgradePBG )
+
+	if (upgradePBG==nil) then
+		return -1 -- error
+	end
+	
+	local treeCount = CommandTree_Count( s_selfplayer )
+	
+	local pbgid = BP_GetID( upgradePBG )
+
+	for ti=0, (treeCount-1) do 
+		local upgradePBG = CommandTree_GetMainUpgrade( s_selfplayer, ti )
+		if (BP_GetID(upgradePBG) == pbgid) then
+			return ti
+		end
+	end
+	
+	return -1 -- error
+end
+
+
+function strategy_command_tree:choose_initial_tree()
+	local treeCount = CommandTree_Count(s_selfplayer)
+
+	-- first, check if any tree already has points
+	for ti = 0, (treeCount - 1) do
+		local upgradePBG = CommandTree_GetMainUpgrade(s_selfplayer, ti)
+		if PBG_GetCount(s_selfplayer, upgradePBG) > 0 then
+			return ti, upgradePBG
+		end
+	end
+
+	local validTrees = {}
+	if s_current_race and s_player_ability_defs_coh[s_current_race] then
+		-- build whitelist of valid BP_GetID trees
+		for treeID, _ in pairs(s_player_ability_defs_coh[s_current_race]) do
+			for ti = 0, (treeCount - 1) do
+				local upgradePBG = CommandTree_GetMainUpgrade(s_selfplayer, ti)
+				if BP_GetID(upgradePBG) == treeID then
+					table.insert(validTrees, {index = ti, upgrade = upgradePBG})
+					break
+				end
+			end
+		end
+	end
+
+	local chosenTree = nil
+	if #validTrees > 0 then
+		-- pick one at random with equal weighting
+		local randIndex = AI_RandMax(#validTrees - 1) + 1 -- AI_RandMax is 0-based
+		chosenTree = validTrees[randIndex]
+	elseif treeCount > 0 then
+		-- fallback to any available tree
+		local randIndex = AI_RandMax(treeCount - 1)
+		chosenTree = {index = randIndex, upgrade = CommandTree_GetMainUpgrade(s_selfplayer, randIndex)}
+	end
+
+	if chosenTree and AIProduction_CanProduceNow(s_selfplayer, PITEM_PlayerUpgrade, chosenTree.upgrade, DEFAULT_HERO_ID) then
+		Request_Production(s_selfplayer, TGROUP_CommandTree, TPRIORITY_CommandTree, PITEM_PlayerUpgrade, chosenTree.upgrade, DEFAULT_HERO_ID)
+		return chosenTree.index, chosenTree.upgrade
+	end
+
+	print("ERROR: Could not find a valid command tree!")
+	return nil, nil
+end
+
+
+function strategy_command_tree:do_purchase()
+
+	-- determine what command tree items to purchase
+
+	if (self.chosenTreeIdx == nil) then
+		
+		local chosenIndex, upgradePBG = self:choose_initial_tree()
+		
+		if (chosenIndex ~= nil) then
+			self.chosenTreeIdx = chosenIndex
+			strategy_command_tree.trace("Found command tree:"..chosenIndex)
+			--print("Chose command tree:"..BP_GetName( upgradePBG ) )
+			s_player_ability_list = GetPlayerAbilityTable( s_current_race, upgradePBG )
+		else
+			strategy_command_tree.trace("No command tree chosen!")
+			print("NO COMMAND TREE CHOSEN!")
+		end
+		
+	end
+	
+	-- check to see if we have a commandpoint to spend
+	if (AIResource_GetCurrentResources( s_selfplayer ).command == 0) then
+		strategy_command_tree.trace("No command points to spend!")
+		aipoptrace()
+		return
+	end
+	
+	local treeCount = CommandTree_Count(s_selfplayer)
+	
+	-- if we are following a pref-tree then lets try it
+	if (self.prefIndexChosen) then
+	
+		local pref_tbl = s_personality.command_tree_pref_tbl[ self.prefIndexChosen ]
+		if (pref_tbl and pref_tbl.choices) then
+			
+			local prefcount = 0
+			
+			-- run through the choice table in order, making sure we have each
+			for k,v in pairs(pref_tbl.choices) do 
+				
+				-- count the total number of these items, including those that have been requested but not active
+				local upg_count = UtilPBG_CountTotal( v )
+				if (upg_count <= 0) then
+					if (CanProduceNow( s_selfplayer, PITEM_PlayerUpgrade, v )) then
+						Request_Production( s_selfplayer, TGROUP_CommandTree, TPRIORITY_CommandTree, PITEM_PlayerUpgrade, command_item, DEFAULT_HERO_ID )
+						strategy_command_tree.trace("CommandTree: Produce:"..BP_GetName(v) )
+					else
+						strategy_command_tree.trace("CommandTree: COULD NOT PRODUCE PREF:"..BP_GetName(v) )
+					end
+					aipoptrace();
+					return
+				end
+			
+				prefcount = prefcount + 1
+			end
+			
+			if (prefcount==6) then
+				strategy_command_tree.trace("CommandTree: Done with all pref choices")
+				aipoptrace();
+				return
+			end
+		end
+	end
+	
+	if self.chosenTreeIdx ~= nil then
+		
+		local ct_count = CommandTree_GetItemCount( s_selfplayer, self.chosenTreeIdx )-1
+		
+		for ci=0, ct_count do
+			
+			local command_item = CommandTree_GetItemAt( s_selfplayer, self.chosenTreeIdx, ci )
+			if ( command_item ~= nil ) then			
+				strategy_command_tree.trace("Chosing item from command tree:"..self.chosenTreeIdx)
+				
+				-- get info about this item (and determine if we want this)
+				-- should also get info about goals for this AI (infantry heavy vs tank vs ...)
+				
+				if (AIProduction_CanProduceNow( s_selfplayer, PITEM_PlayerUpgrade, command_item, DEFAULT_HERO_ID )) then
+								
+					Request_Production( s_selfplayer, TGROUP_CommandTree, TPRIORITY_CommandTree, PITEM_PlayerUpgrade, command_item, DEFAULT_HERO_ID )
+					
+					strategy_command_tree.trace("CommandTree: Produce:"..BP_GetName(command_item) )
+					aipoptrace();
+					return
+					
+				else
+					strategy_command_tree.trace("CommandTree: CANNOT Produce:"..BP_GetName(command_item) )
+				end
+			end
+		end
+	end
+	
+end

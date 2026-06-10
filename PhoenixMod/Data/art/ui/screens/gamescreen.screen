@@ -1,0 +1,390 @@
+Screen =  
+{
+	TooltipWidgets =  
+	{
+		type = "Group",
+		name = "grp_tooltips",
+		position =  
+		{
+			0,
+			0,
+		},
+		HitArea =  
+		{
+			 
+			{
+				type = "Rectangle",
+				size =  
+				{
+					1,
+					1,
+				},
+				position =  
+				{
+					0,
+					0,
+				},
+			},
+		},
+		size =  
+		{
+			1,
+			1,
+		},
+	},
+	version = 4,
+	Widgets =  
+	{
+		type = "Group",
+		name = "grp_screen",
+		position =  
+		{
+			0,
+			0,
+		},
+		HitArea =  
+		{
+			 
+			{
+				type = "Rectangle",
+				size =  
+				{
+					1,
+					1,
+				},
+				position =  
+				{
+					0,
+					0,
+				},
+			},
+		},
+		Children =  
+		{
+			 
+			{
+				type = "Group",
+				HitArea =  
+				{
+					 
+					{
+						type = "Rectangle",
+						size =  
+						{
+							1,
+							1,
+						},
+						position =  
+						{
+							0,
+							0,
+						},
+					},
+				},
+				name = "gamescreen_grp",
+				position =  
+				{
+					0,
+					0,
+				},
+				Children =  
+				{
+					 
+					{
+						type = "Custom",
+						name = "simvis",
+						position =  
+						{
+							0,
+							0,
+						},
+						customProperties = "",
+						xAlignToParent = "Middle",
+						HitArea =  
+						{
+							 
+							{
+								type = "Rectangle",
+								size =  
+								{
+									1,
+									1,
+								},
+								position =  
+								{
+									0,
+									0,
+								},
+							},
+						},
+						size =  
+						{
+							1,
+							1,
+						},
+					},
+					 
+					{
+						type = "TextLabel",
+						text = "",
+						HitArea =  
+						{
+						},
+						name = "txtInfo",
+						position =  
+						{
+							0.30260,
+							0.08000,
+						},
+						xAlignToParent = "Middle",
+						Presentation =  
+						{
+							Art =  
+							{
+								 
+								{
+									type = "Text",
+									textColourBottom =  
+									{
+										148,
+										148,
+										148,
+										255,
+									},
+									shadermode = 0,
+									textColourTop =  
+									{
+										248,
+										248,
+										248,
+										255,
+									},
+									horzAlign = "Centre",
+									vertAlign = "Top",
+									ID = 2065,
+									fontname = "impact_20",
+									dropShadow = true,
+									states =  
+									{
+										"Normal",
+										"Active",
+										"Hover",
+										"Disabled",
+									},
+								},
+							},
+						},
+						size =  
+						{
+							0.39480,
+							0.12600,
+						},
+					},
+					 
+					{
+						type = "TextLabel",
+						text = "",
+						HitArea =  
+						{
+						},
+						name = "txtSystemWarning",
+						position =  
+						{
+							0.30260,
+							0.48497,
+						},
+						xAlignToParent = "Middle",
+						Presentation =  
+						{
+							Art =  
+							{
+								 
+								{
+									type = "Text",
+									textColourBottom =  
+									{
+										148,
+										148,
+										148,
+										255,
+									},
+									shadermode = 0,
+									textColourTop =  
+									{
+										248,
+										248,
+										248,
+										255,
+									},
+									horzAlign = "Centre",
+									ID = 2065,
+									fontname = "impact_20",
+									dropShadow = true,
+									states =  
+									{
+										"Normal",
+										"Active",
+										"Hover",
+										"Disabled",
+									},
+								},
+							},
+						},
+						size =  
+						{
+							0.39480,
+							0.12605,
+						},
+					},
+				},
+				style =  
+				{
+					"DefaultStyles",
+					"defStyleGroup",
+				},
+				Presentation =  
+				{
+				},
+				size =  
+				{
+					1,
+					1,
+				},
+			},
+		},
+		size =  
+		{
+			1,
+			1,
+		},
+	},
+}
+ToolInfo =  
+{
+	version = 3,
+	WidgetInfo =  
+	{
+		 
+		{
+			ArtGuides =  
+			{
+			},
+			name = "grp_screen",
+			HitAreaGuides =  
+			{
+			},
+			type = "Group",
+		},
+		 
+		{
+			ArtGuides =  
+			{
+			},
+			name = "gamescreen_grp",
+			HitAreaGuides =  
+			{
+			},
+			type = "Group",
+		},
+		 
+		{
+			ArtGuides =  
+			{
+			},
+			name = "simvis",
+			HitAreaGuides =  
+			{
+			},
+			type = "Custom",
+		},
+		 
+		{
+			ArtGuides =  
+			{
+			},
+			name = "txtSystemWarning",
+			HitAreaGuides =  
+			{
+			},
+			type = "TextLabel",
+		},
+		 
+		{
+			ArtGuides =  
+			{
+			},
+			name = "grp_tooltips",
+			HitAreaGuides =  
+			{
+			},
+			type = "",
+		},
+		 
+		{
+			ArtGuides =  
+			{
+			},
+			name = "txtInfo",
+			HitAreaGuides =  
+			{
+			},
+			type = "TextLabel",
+		},
+	},
+	Guides =  
+	{
+		 
+		{
+			horizontal = true,
+			position = 0.39797,
+		},
+		 
+		{
+			horizontal = true,
+			position = 0.13057,
+		},
+		 
+		{
+			horizontal = true,
+			position = 0.48875,
+		},
+		 
+		{
+			horizontal = true,
+			position = 0.64456,
+		},
+		 
+		{
+			horizontal = false,
+			position = 0.80667,
+		},
+		 
+		{
+			horizontal = false,
+			position = 0.78500,
+		},
+		 
+		{
+			horizontal = false,
+			position = 0.79030,
+		},
+		 
+		{
+			horizontal = false,
+			position = 0.91146,
+		},
+		 
+		{
+			horizontal = true,
+			position = 0.02628,
+		},
+	},
+	ScreenInfo =  
+	{
+		LocaleRange =  
+		{
+			72750,
+			72999,
+		},
+	},
+}

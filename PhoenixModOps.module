@@ -23,7 +23,7 @@ folder = CoH\OPS\DataPreview
 archive.01 = CoH\Ops\Archives\OPSAttribArchive
 
 [data:common]
-folder = CoH\Ops\Data
+folder = PhoenixMod\Ops\Data
 archive.01 = CoH\Ops\Archives\OPSData
 
 [locale:chineseenglish]

@@ -1,0 +1,377 @@
+import("ScarUtil.scar")
+import("winconditions/vptickerwin-annihilate.scar")
+import("WCUtil.scar")
+import("_ObserverCommands.scar") -- Commands are now imported here
+
+
+---------------------------------------------------
+-- GLOBAL VARIABLES & CONSTANTS
+---------------------------------------------------
+
+local player1, player2, player3, player4, player5, player6, player7, player8 = nil
+
+-- Global Sync Tables
+SYNC_PAIRS = {}
+OBSERVER_PLAYERS = {}
+SOURCE_PLAYERS = {}
+
+-- Constants
+local MIN_FLOOR = 0.0001
+local SYNC_THRESHOLD = 0.0005
+local OBSERVER_LOCK_EBP = BP_GetEntityBlueprint("ebps/races/phoenixmod/gameplay/observer_ability_blocker.lua")
+ 
+local COMMANDER_ROOT_UPGRADES = {
+    -- ALLIES
+    UPG.COMMANDER_TREE.ALLIES.AIRBORNE,
+    UPG.COMMANDER_TREE.ALLIES.INFANTRY,
+    UPG.COMMANDER_TREE.ALLIES.ARMOR,
+    -- AXIS
+    UPG.COMMANDER_TREE.AXIS.DEFENSE,
+    UPG.COMMANDER_TREE.AXIS.PROPAGANDA,
+    UPG.COMMANDER_TREE.AXIS.BLITZKRIEG,
+    -- CW
+    UPG.COMMANDER_TREE.CW.CANADIAN_ARTILLERY,
+    UPG.COMMANDER_TREE.CW.COMMANDOS,
+    UPG.COMMANDER_TREE.CW.ENGINEERS,
+    -- PE
+    UPG.COMMANDER_TREE.ELITE.LUFTWAFFE,
+    UPG.COMMANDER_TREE.ELITE.SCORCHED_EARTH,
+    UPG.COMMANDER_TREE.ELITE.TANK_DESTROYER,
+}
+
+local ALL_UPGRADES = {
+    -- ALLIES 
+    UPG.COMMANDER_TREE.ALLIES.AIRBORNE_00, UPG.COMMANDER_TREE.ALLIES.AIRBORNE_01, UPG.COMMANDER_TREE.ALLIES.AIRBORNE_02,
+    UPG.COMMANDER_TREE.ALLIES.AIRBORNE_10, UPG.COMMANDER_TREE.ALLIES.AIRBORNE_11, UPG.COMMANDER_TREE.ALLIES.AIRBORNE_12,
+    UPG.COMMANDER_TREE.ALLIES.INFANTRY_00, UPG.COMMANDER_TREE.ALLIES.INFANTRY_01, UPG.COMMANDER_TREE.ALLIES.INFANTRY_02,
+    UPG.COMMANDER_TREE.ALLIES.INFANTRY_10, UPG.COMMANDER_TREE.ALLIES.INFANTRY_11, UPG.COMMANDER_TREE.ALLIES.INFANTRY_12,
+    UPG.COMMANDER_TREE.ALLIES.ARMOR_00, UPG.COMMANDER_TREE.ALLIES.ARMOR_01, UPG.COMMANDER_TREE.ALLIES.ARMOR_02,
+    UPG.COMMANDER_TREE.ALLIES.ARMOR_10, UPG.COMMANDER_TREE.ALLIES.ARMOR_11, UPG.COMMANDER_TREE.ALLIES.ARMOR_12,
+    
+    -- AXIS
+    UPG.COMMANDER_TREE.AXIS.DEFENSE_00, UPG.COMMANDER_TREE.AXIS.DEFENSE_01, UPG.COMMANDER_TREE.AXIS.DEFENSE_02,
+    UPG.COMMANDER_TREE.AXIS.DEFENSE_10, UPG.COMMANDER_TREE.AXIS.DEFENSE_11, UPG.COMMANDER_TREE.AXIS.DEFENSE_12,
+    UPG.COMMANDER_TREE.AXIS.PROPAGANDA_00, UPG.COMMANDER_TREE.AXIS.PROPAGANDA_01, UPG.COMMANDER_TREE.AXIS.PROPAGANDA_02,
+    UPG.COMMANDER_TREE.AXIS.PROPAGANDA_10, UPG.COMMANDER_TREE.AXIS.PROPAGANDA_11, UPG.COMMANDER_TREE.AXIS.PROPAGANDA_12,
+    UPG.COMMANDER_TREE.AXIS.BLITZKRIEG_00, UPG.COMMANDER_TREE.AXIS.BLITZKRIEG_01, UPG.COMMANDER_TREE.AXIS.BLITZKRIEG_02,
+    UPG.COMMANDER_TREE.AXIS.BLITZKRIEG_10, UPG.COMMANDER_TREE.AXIS.BLITZKRIEG_11, UPG.COMMANDER_TREE.AXIS.BLITZKRIEG_12,
+    
+    -- CW 
+    UPG.COMMANDER_TREE.CW.CANADIAN_ARTILLERY_00, UPG.COMMANDER_TREE.CW.CANADIAN_ARTILLERY_01, UPG.COMMANDER_TREE.CW.CANADIAN_ARTILLERY_02,
+    UPG.COMMANDER_TREE.CW.CANADIAN_ARTILLERY_10, UPG.COMMANDER_TREE.CW.CANADIAN_ARTILLERY_11, UPG.COMMANDER_TREE.CW.CANADIAN_ARTILLERY_12,
+    UPG.COMMANDER_TREE.CW.COMMANDOS_00, UPG.COMMANDER_TREE.CW.COMMANDOS_01, UPG.COMMANDER_TREE.CW.COMMANDOS_02,
+    UPG.COMMANDER_TREE.CW.COMMANDOS_10, UPG.COMMANDER_TREE.CW.COMMANDOS_11, UPG.COMMANDER_TREE.CW.COMMANDOS_12,
+    UPG.COMMANDER_TREE.CW.ENGINEERS_00, UPG.COMMANDER_TREE.CW.ENGINEERS_01, UPG.COMMANDER_TREE.CW.ENGINEERS_02,
+    UPG.COMMANDER_TREE.CW.ENGINEERS_10, UPG.COMMANDER_TREE.CW.ENGINEERS_11, UPG.COMMANDER_TREE.CW.ENGINEERS_12,
+    
+    -- PE
+    UPG.COMMANDER_TREE.ELITE.LUFTWAFFE_00, UPG.COMMANDER_TREE.ELITE.LUFTWAFFE_01, UPG.COMMANDER_TREE.ELITE.LUFTWAFFE_02,
+    UPG.COMMANDER_TREE.ELITE.LUFTWAFFE_10, UPG.COMMANDER_TREE.ELITE.LUFTWAFFE_11, UPG.COMMANDER_TREE.ELITE.LUFTWAFFE_12,
+    UPG.COMMANDER_TREE.ELITE.SCORCHED_EARTH_00, UPG.COMMANDER_TREE.ELITE.SCORCHED_EARTH_01, UPG.COMMANDER_TREE.ELITE.SCORCHED_EARTH_02,
+    UPG.COMMANDER_TREE.ELITE.SCORCHED_EARTH_10, UPG.COMMANDER_TREE.ELITE.SCORCHED_EARTH_11, UPG.COMMANDER_TREE.ELITE.SCORCHED_EARTH_12,
+    UPG.COMMANDER_TREE.ELITE.TANK_DESTROYER_00, UPG.COMMANDER_TREE.ELITE.TANK_DESTROYER_01, UPG.COMMANDER_TREE.ELITE.TANK_DESTROYER_02,
+    UPG.COMMANDER_TREE.ELITE.TANK_DESTROYER_10, UPG.COMMANDER_TREE.ELITE.TANK_DESTROYER_11, UPG.COMMANDER_TREE.ELITE.TANK_DESTROYER_12,
+
+    -- GLOBALS
+    UPG.ALLIES.DEMOLITION, UPG.ALLIES.BAR, UPG.ALLIES.GRENADE, UPG.ALLIES.STICKY_BOMB, UPG.ALLIES.SMOKE_SCREEN, UPG.ALLIES.GUN_76MM,
+    UPG.AXIS.PHASE2, UPG.AXIS.PHASE3, UPG.AXIS.PHASE4, UPG.AXIS.KING_TIGER_LOCKOUT,
+    UPG.AXIS.VETERANCY.INFANTRY1, UPG.AXIS.VETERANCY.INFANTRY2, UPG.AXIS.VETERANCY.INFANTRY3,
+    UPG.AXIS.VETERANCY.SUPPORT_INF1, UPG.AXIS.VETERANCY.SUPPORT_INF2, UPG.AXIS.VETERANCY.SUPPORT_INF3, 
+    UPG.AXIS.VETERANCY.VEHICLE1, UPG.AXIS.VETERANCY.VEHICLE2, UPG.AXIS.VETERANCY.VEHICLE3,
+    UPG.AXIS.VETERANCY.TANK1, UPG.AXIS.VETERANCY.TANK2, UPG.AXIS.VETERANCY.TANK3,
+    UPG.CW.HQ_SPEED, UPG.CW.HQ_ECONOMY_BONUS, UPG.CW.MOBILEHQ, UPG.CW.ENABLE_MOBILE_HQ, UPG.CW.CONVERT_AMBIENT_BUILDING, UPG.CW.CAPTAIN_TECH_UNLOCK,
+    UPG.ELITE.PANZER_ARTILLERIE, UPG.ELITE.PANZERJAGER, UPG.ELITE.LOGISTIK, UPG.ELITE.KAMPFGRUPPE, UPG.ELITE.AT_GRENADE,
+    UPG.ELITE.ADVANCED_REPAIR, UPG.ELITE.INCENDIARY_GRENADE, UPG.ELITE.CAPTURE_RATE, UPG.ELITE.SQUAD_SIZE, UPG.ELITE.DEFENSIVE_OPS,
+    UPG.ELITE.GROUP_ZEAL, UPG.ELITE.VETERAN_SGT, UPG.ELITE.PANTHER_BATTLEGROUP, UPG.ELITE.CONVERT_AMBIENT_BUILDING, UPG.ELITE.JAGDPANTHER_LOCKOUT,
+    UPG.ELITE.VETERANCY.INFANTRY.OFFENSIVE1, UPG.ELITE.VETERANCY.INFANTRY.OFFENSIVE2, UPG.ELITE.VETERANCY.INFANTRY.OFFENSIVE3,
+    UPG.ELITE.VETERANCY.INFANTRY.DEFENSIVE1, UPG.ELITE.VETERANCY.INFANTRY.DEFENSIVE2, UPG.ELITE.VETERANCY.INFANTRY.DEFENSIVE3,
+    UPG.ELITE.VETERANCY.VEHICLE.OFFENSIVE1, UPG.ELITE.VETERANCY.VEHICLE.OFFENSIVE2, UPG.ELITE.VETERANCY.VEHICLE.OFFENSIVE3,
+    UPG.ELITE.VETERANCY.VEHICLE.DEFENSIVE1, UPG.ELITE.VETERANCY.VEHICLE.DEFENSIVE2, UPG.ELITE.VETERANCY.VEHICLE.DEFENSIVE3,
+}
+
+local ALL_LOCKABLE_UPGRADES = {}
+for _, upg in ipairs(COMMANDER_ROOT_UPGRADES) do table.insert(ALL_LOCKABLE_UPGRADES, upg) end
+for _, upg in ipairs(ALL_UPGRADES) do table.insert(ALL_LOCKABLE_UPGRADES, upg) end
+
+
+--------------------------------
+-- SETUP FUNCTIONS
+--------------------------------
+
+function SetupPlayerRoles()
+    if SETUP_FORMAT == "2V2" then
+        SOURCE_PLAYERS = { player1, player2, player5, player6 }
+        OBSERVER_PLAYERS = { player3, player4, player7, player8 }
+        
+        SYNC_PAIRS = {
+            { player3, player1 },
+            { player4, player2 },
+            { player7, player5 },
+            { player8, player6 },
+        }
+    else -- 1V1 (Default)
+        SOURCE_PLAYERS = { player1, player5 }
+        OBSERVER_PLAYERS = { player2, player3, player4, player6, player7, player8 }
+        
+        SYNC_PAIRS = {
+            { player2, player1 },
+            { player3, player1 },
+            { player4, player1 },
+            { player6, player5 },
+            { player7, player5 },
+            { player8, player5 },
+        }
+    end
+end
+
+
+----------------------------------
+-- HELPER FUNCTIONS
+----------------------------------
+
+function Util_CreateLocString(text)
+    local tmpstr = LOC(text)
+    tmpstr[1] = text
+    return tmpstr
+end
+
+function _IsActivePlayer(player_index)
+    local active_players_list = {}
+    if SETUP_FORMAT == "2V2" then
+        active_players_list = { 1, 2, 5, 6 } 
+    else
+        active_players_list = { 1, 5 } 
+    end
+
+    for _, index in ipairs(active_players_list) do
+        if player_index == index then return true end
+    end
+    return false
+end
+
+function Player_HasUpgrade_Native(player_id, upgrade_bp)
+    if upgrade_bp == nil then return false end
+    return Player_HasUpgrade(player_id, upgrade_bp)
+end
+
+function ExecuteCrashCheck()
+    -- This function just forces SCAR error to prevent BugSplat if any slots are empty
+    Player_FromId(1000) 
+    Player_FromId(1001) 
+    Player_FromId(1002)
+    Player_FromId(1003)
+    Player_FromId(1004)
+    Player_FromId(1005)
+    Player_FromId(1006)
+    Player_FromId(1007)
+end
+
+
+----------------------------
+-- MODIFIER LOGIC
+----------------------------
+
+function DisableBritHQCallIn()
+    for _, p in ipairs(OBSERVER_PLAYERS) do
+        Player_SetAbilityAvailability(p, ABILITY.CW.HQ_REINFORCE, ITEM_REMOVED)
+    end
+end
+
+function LockAllUpgrades(player_id)
+    if player_id == nil then return end
+    for _, upg_bp in ipairs(ALL_LOCKABLE_UPGRADES) do
+        Player_SetUpgradeAvailability(player_id, upg_bp, ITEM_LOCKED)
+    end
+end
+
+
+-----------------
+-- UI LOGIC
+-----------------
+
+function DisablePopCapUI()
+    local local_player = Game_GetLocalPlayer()
+    if local_player ~= nil then
+        local local_player_index = World_GetPlayerIndex(local_player)
+        if not _IsActivePlayer(local_player_index) then
+            pcall(function() UI_BindingSetEnabled("squadcap", false) end)
+        end
+    end
+end
+
+function _DisablePingsForObservers()
+    local local_player = Game_GetLocalPlayer()
+    local local_player_index = World_GetPlayerIndex(local_player)    
+    local is_source_player = false
+    
+    if SETUP_FORMAT == "2V2" then
+        if local_player_index == 1 or local_player_index == 2 or local_player_index == 5 or local_player_index == 6 then
+            is_source_player = true
+        end
+    else 
+        if local_player_index == 1 or local_player_index == 5 then
+            is_source_player = true
+        end
+    end
+
+    if not is_source_player then
+        pcall(function()
+            UI_BindingSetEnabled("attack_ping", false) 
+            UI_BindingSetEnabled("defend_ping", false) 
+            UI_BindingSetEnabled("capture_ping", false) 
+            UI_BindingSetEnabled("ping_frame", false)
+        end)
+    end
+end
+
+
+----------------------
+-- SYNC LOGIC
+----------------------
+
+function SyncPlayerResources(obsPlayer, srcPlayer)
+    -- RESOURCE VALUES
+    Player_SetResource(obsPlayer, RT_Manpower, Player_GetResource(srcPlayer, RT_Manpower))
+    Player_SetResource(obsPlayer, RT_Munition, Player_GetResource(srcPlayer, RT_Munition))
+    Player_SetResource(obsPlayer, RT_Fuel, Player_GetResource(srcPlayer, RT_Fuel))
+    Player_SetResource(obsPlayer, RT_Action, Player_GetResource(srcPlayer, RT_Action))
+    Player_SetResource(obsPlayer, RT_Command, Player_GetResource(srcPlayer, RT_Command))
+
+    -- RESOURCE RATES
+    for _, resType in ipairs({ RT_Manpower, RT_Munition, RT_Fuel }) do
+        local obsCurrentIncome = Player_GetResourceRate(obsPlayer, resType)
+        local obsTargetIncome = Player_GetResourceRate(srcPlayer, resType)
+
+        if obsTargetIncome <= MIN_FLOOR then
+            if obsCurrentIncome > MIN_FLOOR then
+                local required_additive = MIN_FLOOR - obsCurrentIncome
+                Modify_PlayerResourceRate(obsPlayer, resType, required_additive, MUT_Addition)
+            end
+        else
+            if obsCurrentIncome <= MIN_FLOOR then
+                local required_additive = obsTargetIncome - obsCurrentIncome
+                Modify_PlayerResourceRate(obsPlayer, resType, required_additive, MUT_Addition)
+            else
+                local sync_modifier = obsTargetIncome / obsCurrentIncome
+                if math.abs(sync_modifier - 1.0) > SYNC_THRESHOLD then
+                    Modify_PlayerResourceRate(obsPlayer, resType, sync_modifier)
+                end
+            end
+        end
+    end
+end
+
+function SyncCommanderTree(pA, pB)
+    if pA == nil or pB == nil then return end -- pA = Source, pB = Observer
+
+    -- 1. SYNC ROOT COMMANDER UPGRADE
+    for _, root_bp in ipairs(COMMANDER_ROOT_UPGRADES) do         
+        if Player_HasUpgrade_Native(pA, root_bp) then            
+            if not Player_HasUpgrade_Native(pB, root_bp) then
+                Player_RevertChosenCommanderTree(pB) 
+                Player_SetUpgradeAvailability(pB, root_bp, ITEM_UNLOCKED) 
+                Cmd_InstantUpgrade(pB, root_bp) 
+            end
+            break 
+        end
+    end
+
+    -- 2. SYNC ALL NON-ROOT UPGRADES
+    for _, bp in ipairs(ALL_UPGRADES) do         
+        if Player_HasUpgrade_Native(pA, bp) then   
+            if not Player_HasUpgrade_Native(pB, bp) then                 
+                Player_SetUpgradeAvailability(pB, bp, ITEM_UNLOCKED)
+                Cmd_InstantUpgrade(pB, bp) 
+            end
+        end
+    end
+end
+
+
+------------------------------
+-- MASTER INTERVAL
+------------------------------
+
+function MasterObserverInterval()
+    local local_observer_player = Game_GetLocalPlayer()
+    
+    for _, pair in ipairs(SYNC_PAIRS) do
+        local obsPlayer = pair[1] -- Observer
+        local srcPlayer = pair[2] -- Source
+
+        -- 1. Sync Resources
+        SyncPlayerResources(obsPlayer, srcPlayer)
+
+        -- 2. Sync Commanders
+        SyncCommanderTree(srcPlayer, obsPlayer)
+
+        -- 3. Sync Population UI (Local only)
+        if obsPlayer == local_observer_player and srcPlayer ~= nil then
+            local current_pop = Player_GetCurrentPopulation(srcPlayer, CT_Personnel)
+            local max_pop = Player_GetMaxPopulation(srcPlayer, CT_Personnel)
+            local popString = string.format("%d/%d", current_pop, max_pop)
+            UI_SetScoreLeft(Util_CreateLocString("Population"), Util_CreateLocString(popString))
+        end
+    end
+end
+
+
+------------------------------------
+-- INITIALIZATION HOOKS
+------------------------------------
+
+function ObserverMod_OnInit()    
+
+    Rule_AddOneShot(ExecuteCrashCheck, 0)
+
+    Rule_AddOneShot(function()
+        for _, p in ipairs(OBSERVER_PLAYERS) do
+            LockAllUpgrades(p)
+        end
+    end, 0.125)
+
+    Rule_AddOneShot(function()
+        Scar_DebugConsoleExecute("Scar_DoString('_DisablePingsForObservers()')")
+    end, 0.125)
+
+    Rule_AddOneShot(DisableBritHQCallIn, 0.125)
+    Rule_AddOneShot(DisablePopCapUI, 0.125)
+    
+    Rule_AddOneShot(function()
+        for _, p in ipairs(OBSERVER_PLAYERS) do
+            if p ~= nil then
+                local spawn_position = Player_GetStartingPosition(p)
+                observer_lock = Entity_CreateENV(OBSERVER_LOCK_EBP, spawn_position, spawn_position)
+                if observer_lock ~= nil then
+                    Entity_SetPlayerOwner(observer_lock, p)
+                end
+            end
+        end
+    end, 1)
+
+    Rule_AddInterval(MasterObserverInterval, 1)
+end
+
+function OnGameSetup()
+    player1 = World_GetPlayerAt(1)
+    player2 = World_GetPlayerAt(2)
+    player3 = World_GetPlayerAt(3)
+    player4 = World_GetPlayerAt(4)
+    player5 = World_GetPlayerAt(5)
+    player6 = World_GetPlayerAt(6)
+    player7 = World_GetPlayerAt(7)
+    player8 = World_GetPlayerAt(8)
+
+    SetupPlayerRoles()
+  
+    Setup_SetPlayerTeam(player1, 0)
+    Setup_SetPlayerTeam(player2, 0)
+    Setup_SetPlayerTeam(player3, 0)
+    Setup_SetPlayerTeam(player4, 0)
+    Setup_SetPlayerTeam(player5, 1)
+    Setup_SetPlayerTeam(player6, 1)
+    Setup_SetPlayerTeam(player7, 1)
+    Setup_SetPlayerTeam(player8, 1)
+end
+
+Scar_AddInit(ObserverMod_OnInit)

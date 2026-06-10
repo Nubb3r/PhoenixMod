@@ -6,7 +6,10 @@
 -- Programmers: Shelby Hubick, Kris Botha, Randy Lukashuk
 -----------------------------------------------------------------------
 import("ScarUtil.scar")
-import("ScreenshotReminder.scar")
+
+if Misc_IsCommandLineOptionSet("test") then
+	import("_TestMod.scar")
+end
 
 function _initdata()
 

@@ -1,0 +1,1815 @@
+import("ScarUtil.scar")
+import("screensaver.scar")
+import("ui.scar")
+
+
+function Util_CreateLocString(text)
+	local tmpstr = LOC(text)
+	tmpstr[1] = text
+	return tmpstr
+end
+
+local function Table_Merge(table1, table2)
+	for i,v in ipairs(table2) do
+		table.insert(table1, v)
+	end
+end
+
+local function BP_GetSquadBlueprint2(blueprint)
+	if (BP_IsPropertyBagGroupValid(blueprint)) then
+		return BP_GetSquadBlueprint(blueprint)
+	else
+		return nil
+	end
+end
+
+local function BP_GetEntityBlueprint2(blueprint)
+	if (BP_IsPropertyBagGroupValid(blueprint)) then
+		return BP_GetEntityBlueprint(blueprint)
+	else
+		return nil
+	end
+end
+
+local function BP_GetAbilityBlueprint2(blueprint)
+	if (BP_IsPropertyBagGroupValid(blueprint)) then
+		return BP_GetAbilityBlueprint(blueprint)
+	else
+		return nil
+	end
+end
+
+local function Table_Remove_Nil(bp_table)
+	for i = table.getn(bp_table), 1, -1 do
+		if (bp_table[i] == nil) then
+			table.remove(bp_table, i)
+		elseif (scartype(bp_table[i]) == ST_TABLE and bp_table[i].blueprint == nil) then
+			table.remove(bp_table, i)
+		end
+	end
+end
+
+
+-- returns blueprint name without full path name (so for instance "sbps\allies\infantry\engineer" becomes "engineer")
+local function BP_GetName2(blueprint) 
+	local pathname = BP_GetName(blueprint)
+	local start = 0
+	local start2
+	local stop
+	local found = true
+	-- find last occurrence of "\" character in pathname string:
+	repeat 
+		start2, stop = string.find(pathname, "\\", start + 1)
+		if (start2 == nil) then
+			found = false
+		else
+			start = start2
+		end
+	until found == false
+	return string.sub(pathname, start + 1)
+end
+
+local function Util_GetFacing(pos, heading)
+	return World_Pos(pos.x + 10 * heading.x, pos.y + 10 * heading.y, pos.z + 10 * heading.z)
+end
+
+--? @group Modifiers
+--? @shortdesc enables/disables an SGroup/Egroup weapon auto target.
+--? @extdesc The hardpoint should be specified as a string - i.e. "hardpoint_01"
+--? @result ModID
+--? @args SGroupID/EGroupID group, Boolean enable, String hardpoint
+local function Modify_WeaponAutoTarget(groupid, enable, hardpoint)
+	if (scartype(enable) ~= ST_BOOLEAN) then
+		fatal("Modify_WeaponAutoTarget: enable is not of type boolean")
+	end
+	if (hardpoint == nil) then
+		hardpoint = "hardpoint_01"
+	end
+	-- create the appropriate modifier
+	local modifier = Modifier_Create(MAT_Weapon, "modifiers\\auto_target_enable_weapon_modifier.lua", MUT_Enable, enable, -1, hardpoint)
+	local result = {}
+	
+	local _ApplyModifierToSquad = function(gid, idx, sid)
+		local modid = Modifier_ApplyToSquad(modifier, sid)
+		table.insert(result, modid)
+		Modifier_AddToSquadTable(sid, modid)
+	end
+	local _ApplyModifierToEntity = function(gid, idx, eid)
+		local modid = Modifier_ApplyToEntity(modifier, eid)
+		table.insert(result, modid)
+		Modifier_AddToEntityTable(eid, modid)
+	end
+	
+	if (scartype(groupid) == ST_SGROUP) then
+		-- apply this to each squad in the group
+		SGroup_ForEachEx(groupid, _ApplyModifierToSquad, true, true)
+	elseif (scartype(groupid) == ST_EGROUP) then
+		-- apply this to each entity in the group
+		EGroup_ForEach(groupid, _ApplyModifierToEntity)
+	end
+
+	return result
+end
+
+-- get player from a selected squad or building. If nothing is selected, function returns: g_cheatmod_localPlayer, or nil if return_nil_if_world_owner = true
+local function Util_GetPlayerFromSelection(return_nil_if_world_owner)
+	local player = (return_nil_if_world_owner == nil) and g_cheatmod_localPlayer or nil
+	local sg_temp = SGroup_CreateIfNotFound("sg_temp")
+	SGroup_Clear(sg_temp)
+	Misc_GetSelectedSquads(sg_temp, false)
+	if (SGroup_IsEmpty("sg_temp") == false) then
+		local squadid = SGroup_GetSpawnedSquadAt("sg_temp", 1)
+		if (World_OwnsSquad(squadid) == false) then
+			player = Squad_GetPlayerOwner(squadid)
+			return player
+		end
+	end
+	local eg_temp = EGroup_CreateIfNotFound("eg_temp")
+	EGroup_Clear(eg_temp)
+	Misc_GetSelectedEntities(eg_temp, false)
+	if (EGroup_IsEmpty("eg_temp") == false) then
+		local entityid = EGroup_GetSpawnedEntityAt("eg_temp", 1)
+		if (World_OwnsEntity(entityid) == false) then
+			player = Entity_GetPlayerOwner(entityid)
+		end
+	end
+	return player
+end
+
+local function Util_MergeSelectedSquads()
+	local array_sgroups = {}
+	
+	-- check if squad with same blueprint is already in array_sgroups:
+	local Squad_In_Array = function(squadid)
+		local idx = 0
+		local key, value
+		for key, value in pairs(array_sgroups) do
+			if (Squad_GetBaseUnitName(SGroup_GetSpawnedSquadAt(value, 1)) == Squad_GetBaseUnitName(squadid)) then
+				idx = key
+				break
+			end
+		end
+		return idx
+	end
+	
+	-- put each squad in the right squad group:
+	local Group_Sort_Squad = function(groupid, index, sid)
+		local idx = Squad_In_Array(sid)
+		if (idx ~= 0) then
+			SGroup_Add(array_sgroups[idx], sid)
+		else
+			local sgroup = SGroup_Create("")
+			SGroup_Add(sgroup, sid)
+			array_sgroups[table.getn(array_sgroups) + 1] = sgroup  
+		end
+	end
+	
+	-- merge all squads in squad group into one squad:
+	local Merge_Group = function(groupid)
+		-- nothing to merge with fewer than 2 squads in group:
+		if (SGroup_Count(groupid) < 2) then return end
+		local dest_squad = SGroup_GetSpawnedSquadAt(groupid, 1)
+		local i
+		for i = 2, SGroup_Count(groupid) do
+			Squad_Merge(dest_squad, SGroup_GetSpawnedSquadAt(groupid, 2))
+		end
+	end
+	
+	-- destroy sgroups:
+	local CleanUp = function()
+		local key,value
+		for key, value in pairs(array_sgroups) do
+			SGroup_Destroy(value)
+		end
+	end
+	
+	local sg_temp = SGroup_CreateIfNotFound("sg_temp")
+	SGroup_Clear(sg_temp)
+	Misc_GetSelectedSquads(sg_temp, false)
+	SGroup_ForEach(sg_temp, Group_Sort_Squad)
+	local key,value
+	for key, value in pairs(array_sgroups) do
+		Merge_Group(value)
+	end
+	CleanUp()
+end
+
+
+
+local function Util_UseAbilityAtMouse(abilityid, player)
+	Command_PlayerPosAbility(player, player, Misc_GetMouseOnTerrain(), abilityid, true)
+end
+
+local function Util_SpawnEntityAtMouse(blueprint, player)	
+	if (scartype(blueprint) ~= ST_PBG) then fatal("Util_CreateEntityAtMouse: Blueprint is invalid") end
+	local entityid
+	local pos = Misc_GetMouseOnTerrain()
+	if player == nil then
+		entityid = Entity_CreateENV(blueprint, pos, pos)-- create the entity as a world object
+	else
+		entityid = Entity_Create(blueprint, player, pos, pos)
+		Entity_Spawn(entityid)
+	end
+	
+	if (Entity_IsBuilding(entityid) == true) then -- if it's a building then make it fully constructed
+		Entity_ForceConstruct(entityid)
+	end
+end
+
+--[[
+function Util_SpawnEntitiesAtMouse(blueprint_table, player, spacing)
+	local key, value
+	if spacing == nil then
+		spacing = 0
+	end
+	local pos = 0
+	for key,value in pairs(blueprint_table) do
+		Util_SpawnEntityAtMouse(EBP[value], player, pos)
+		pos = pos + spacing
+	end
+end
+]]
+
+local function Util_SpawnSquadAtMouse(squadblueprint, player)
+	if (scartype(squadblueprint) ~= ST_PBG) then fatal("Util_SpawnSquadAtMouse: Blueprint is invalid") end
+	if (scartype(player) ~= ST_PLAYER) then fatal("Util_SpawnSquadAtMouse: Player is invalid") end
+	
+	local squad = Squad_CreateAndSpawnToward(squadblueprint, player, 0, Misc_GetMouseOnTerrain(), World_Pos(0, 0, 1))
+	return squad
+end
+
+local function Util_ParadropSquadAtMouse(squadblueprint, player)
+	if (scartype(squadblueprint) ~= ST_PBG) then fatal("Util_ParadropSquadAtMouse: Blueprint is invalid") end
+	if (scartype(player) ~= ST_PLAYER) then fatal("Util_ParadropSquadAtMouse: Player is invalid") end
+
+	local sg = SGroup_Create("")
+	Player_DoParadrop(player, sg, Misc_GetMouseOnTerrain(), 100, 20, squadblueprint, 0, 0)
+	SGroup_Destroy(sg)
+end
+
+
+
+
+
+
+function _CheatMod_ClearText()
+	dr_clear("view")
+end
+
+local function _DisplayText(text, seconds)	
+	if (seconds == nil) then
+		seconds = 10
+	end
+	if (Rule_Exists(_CheatMod_ClearText)) then
+		TimeRule_Remove(_CheatMod_ClearText)
+		_CheatMod_ClearText()	
+	end
+	dr_text2d("view", 0.01, 0.02, text, 0, 255, 0)
+	Rule_AddOneShot(_CheatMod_ClearText, seconds)
+end
+
+local function _GetPlayerText(player)
+	local text
+	if (player ~= nil) then
+		local playeridx = World_GetPlayerIndex(player)
+		if (Player_GetID(player) == Player_GetID(g_cheatmod_localPlayer)) then
+			text = "local player ".. playeridx
+		elseif (Player_GetTeam(player) == Player_GetTeam(g_cheatmod_localPlayer)) then
+			text = "friendly player ".. playeridx
+		else
+			text = "enemy player ".. playeridx
+		end
+	else
+		text = "World"
+	end
+	return text
+end
+
+function _CheatMod_DestroySelection()
+	local sg_temp = SGroup_CreateIfNotFound("sg_temp")
+	local eg_temp = EGroup_CreateIfNotFound("eg_temp")
+	SGroup_Clear(sg_temp)
+	Misc_GetSelectedSquads(sg_temp, false)
+	if (SGroup_IsEmpty("sg_temp") == false) then
+		SGroup_DestroyAllSquads(sg_temp)
+		_DisplayText("Squad(s) destroyed")
+		return
+	end
+	EGroup_Clear(eg_temp)
+	Misc_GetSelectedEntities(eg_temp, false)
+	if (EGroup_IsEmpty("eg_temp") == false) then
+		EGroup_DestroyAllEntities(eg_temp)
+		_DisplayText("Entity destroyed")
+		return
+	end
+end
+
+function _CheatMod_UseAbilityAtMouse(table_index, race)
+	if (race == nil) then
+		race = g_cheatmod_selected_race
+	end
+	local player = Util_GetPlayerFromSelection()
+	local table_abilities
+	if (race == RACE_ALLIES) then
+		table_abilities = g_cheatmod_table_allies_abilities
+	elseif (race == RACE_AXIS) then
+		table_abilities = g_cheatmod_table_axis_abilities
+	elseif (race == RACE_CW) then
+		table_abilities = g_cheatmod_table_cw_abilities
+	elseif (race == RACE_ELITE) then
+		table_abilities = g_cheatmod_table_elite_abilities
+	end
+	if (table_index <= table.getn(table_abilities)) then
+		local abilityid = table_abilities[table_index]
+		Util_UseAbilityAtMouse(abilityid, player)
+		_DisplayText("Ability used: ".. BP_GetName(abilityid).. " (".. _GetPlayerText(player).. ")")
+	end
+end
+
+function _CheatMod_SpawnBuildingAtMouse(table_index, race)
+	if (race == nil) then
+		race = g_cheatmod_selected_race
+	end
+	local player = Util_GetPlayerFromSelection(true)
+	local table_buildings
+	if (race == RACE_ALLIES) then
+		table_buildings = g_cheatmod_table_allies_buildings
+	elseif (race == RACE_AXIS) then
+		table_buildings = g_cheatmod_table_axis_buildings
+	elseif (race == RACE_CW) then
+		table_buildings = g_cheatmod_table_cw_buildings
+	elseif (race == RACE_ELITE) then
+		table_buildings = g_cheatmod_table_elite_buildings
+	end
+	if (table_index <= table.getn(table_buildings)) then
+		local blueprint = table_buildings[table_index]
+		Util_SpawnEntityAtMouse(blueprint, player)
+		_DisplayText("Building spawned: ".. BP_GetName(blueprint).. " (".. _GetPlayerText(player).. ")")
+	end
+end
+
+function _CheatMod_SpawnSquadAtMouse(table_index, race)
+	if (race == nil) then
+		race = g_cheatmod_selected_race
+	end
+	local player = Util_GetPlayerFromSelection()
+	local table_squads
+	if (race == RACE_ALLIES) then
+		table_squads = g_cheatmod_table_allies_squads
+	elseif (race == RACE_AXIS) then
+		table_squads = g_cheatmod_table_axis_squads
+	elseif (race == RACE_CW) then
+		table_squads = g_cheatmod_table_cw_squads
+	elseif (race == RACE_ELITE) then
+		table_squads = g_cheatmod_table_elite_squads
+	end
+	if (table_index <= table.getn(table_squads)) then
+		local blueprint = table_squads[table_index]
+		local paradrop = false
+		local state_machine
+		local state
+		if (blueprint.blueprint ~= nil) then
+			paradrop = blueprint.paradrop
+			state_machine = blueprint.state_machine
+			state = blueprint.state
+			blueprint = blueprint.blueprint
+		end
+		if (paradrop) then
+			Util_ParadropSquadAtMouse(blueprint, player)
+			_DisplayText("Squad paradropped: ".. BP_GetName(blueprint).. " (".. _GetPlayerText(player).. ")")
+		else
+			local squad = Util_SpawnSquadAtMouse(blueprint, player)
+			if (state_machine ~= nil and state ~= nil) then
+				Squad_SetAnimatorState(squad, state_machine, state)
+			end	
+			_DisplayText("Squad spawned: ".. BP_GetName(blueprint).. " (".. _GetPlayerText(player).. ")")
+		end
+	end
+end
+
+function _CheatMod_SpawnAllSquadsAtMouse()
+	local player = Util_GetPlayerFromSelection()
+	local table_squads
+	if (g_cheatmod_selected_race == RACE_ALLIES) then
+		table_squads = g_cheatmod_table_allies_squads
+	elseif (g_cheatmod_selected_race == RACE_AXIS) then
+		table_squads = g_cheatmod_table_axis_squads
+	elseif (g_cheatmod_selected_race == RACE_CW) then
+		table_squads = g_cheatmod_table_cw_squads
+	elseif (g_cheatmod_selected_race == RACE_ELITE) then
+		table_squads = g_cheatmod_table_elite_squads
+	end
+	local key, value
+	for key, value in pairs(table_squads) do
+		_CheatMod_SpawnSquadAtMouse(key, g_cheatmod_selected_race)
+	end
+	_DisplayText("Squads spawned: ".. g_cheatmod_table_races[g_cheatmod_selected_race].. " (".. _GetPlayerText(player).. ")")
+end
+
+--[[
+function _CheatMod_PlayerUpgrades()
+	local player = Util_GetPlayerFromSelection()
+	local key, value
+	for key,value in pairs(g_cheatmod_table_global_abilities) do
+		Player_SetAbilityAvailability(player, ABILITY[value], ITEM_UNLOCKED)
+	end
+	for key,value in pairs(g_cheatmod_table_global_upgrades) do
+		Player_SetUpgradeAvailability(player, UPG[value], ITEM_REMOVED)
+	end
+	for key,value in pairs(g_cheatmod_table_global_upgrades) do
+		Cmd_InstantPlayerUpgrade(player, UPG[value])
+	end
+	_DisplayText("Global upgrades and abilities unlocked (".. _GetPlayerText(player).. ")")
+end
+]]
+
+
+function _CheatMod_Increase_Veterancy_Selection()
+	local sg_temp = SGroup_Create("")
+	Misc_GetSelectedSquads(sg_temp, false)
+	SGroup_IncreaseVeterancyRank(sg_temp)
+	SGroup_Destroy(sg_temp)
+	_DisplayText("Veterancy Rank of selected squads increased")
+end
+
+function _CheatMod_ChangeOwnerSelection()
+	local sg_temp = SGroup_CreateIfNotFound("sg_temp")
+	SGroup_Clear(sg_temp)
+	Misc_GetSelectedSquads(sg_temp, false)
+	if (SGroup_IsEmpty("sg_temp") == false) then
+		local squadid = SGroup_GetSpawnedSquadAt("sg_temp", 1)
+		if (World_OwnsSquad(squadid) == false) then
+			local player = Squad_GetPlayerOwner(squadid)
+			if (Player_GetID(player) == Player_GetID(g_cheatmod_localPlayer)) then
+				SGroup_SetPlayerOwner("sg_temp", g_cheatmod_enemyPlayer)
+				_DisplayText("Squad(s) owner changed to ".. _GetPlayerText(g_cheatmod_enemyPlayer))
+			else
+				SGroup_SetPlayerOwner("sg_temp", g_cheatmod_localPlayer)
+				_DisplayText("Squad(s) owner changed to ".. _GetPlayerText(g_cheatmod_localPlayer))
+			end
+		end
+	end
+	
+	local eg_temp = EGroup_CreateIfNotFound("eg_temp")
+	EGroup_Clear(eg_temp)
+	Misc_GetSelectedEntities(eg_temp, false)
+	if (EGroup_IsEmpty("eg_temp") == false) then
+		local entityid = EGroup_GetSpawnedEntityAt("eg_temp", 1)
+		if (World_OwnsEntity(entityid) == false) then
+			local player = Entity_GetPlayerOwner(entityid)
+			if (Player_GetID(player) == Player_GetID(g_cheatmod_localPlayer)) then
+				EGroup_SetPlayerOwner("eg_temp", g_cheatmod_enemyPlayer)
+				_DisplayText("Building owner changed to ".. _GetPlayerText(g_cheatmod_enemyPlayer))
+			else
+				EGroup_SetPlayerOwner("eg_temp", g_cheatmod_localPlayer)
+				_DisplayText("Building owner changed to ".. _GetPlayerText(g_cheatmod_localPlayer))
+			end
+		end
+	end
+end
+
+function _CheatMod_Toggle_Instant_Production()
+	local player = Util_GetPlayerFromSelection()
+	local playeridx = World_GetPlayerIndex(player)
+	if (g_cheatmod_table_players[playeridx].modifiers.production_rate == nil) then
+		g_cheatmod_table_players[playeridx].modifiers.production_rate = Modify_PlayerProductionRate(player, 10000)
+		_DisplayText("Instant Production: ON (".. _GetPlayerText(player).. ")")
+	else
+		Modifier_Remove(g_cheatmod_table_players[playeridx].modifiers.production_rate)
+		g_cheatmod_table_players[playeridx].modifiers.production_rate = nil
+		_DisplayText("Instant Production: OFF (".. _GetPlayerText(player).. ")")
+	end
+end
+
+function _CheatMod_Toggle_Instant_Build()
+	local player = Util_GetPlayerFromSelection()
+	local playeridx = World_GetPlayerIndex(player)
+	if (g_cheatmod_table_players[playeridx].modifiers.build_time == nil) then
+		g_cheatmod_table_players[playeridx].modifiers.build_time = {}
+		local j
+		for j = 1, table.getn(g_cheatmod_table_allies_buildings) do
+			local table_modid = Modify_EntityBuildTime(player, g_cheatmod_table_allies_buildings[j], 0.01)
+			Table_Merge(g_cheatmod_table_players[playeridx].modifiers.build_time, table_modid)
+		end
+		for j = 1, table.getn(g_cheatmod_table_axis_buildings) do
+			local table_modid = Modify_EntityBuildTime(player, g_cheatmod_table_axis_buildings[j], 0.01)
+			Table_Merge(g_cheatmod_table_players[playeridx].modifiers.build_time, table_modid)
+		end
+		for j = 1, table.getn(g_cheatmod_table_cw_buildings) do
+			local table_modid = Modify_EntityBuildTime(player, g_cheatmod_table_cw_buildings[j], 0.01)
+			Table_Merge(g_cheatmod_table_players[playeridx].modifiers.build_time, table_modid)
+		end
+		for j = 1, table.getn(g_cheatmod_table_elite_buildings) do
+			local table_modid = Modify_EntityBuildTime(player, g_cheatmod_table_elite_buildings[j], 0.01)
+			Table_Merge(g_cheatmod_table_players[playeridx].modifiers.build_time, table_modid)
+		end
+		_DisplayText("Instant Build: ON (".. _GetPlayerText(player).. ")")
+	else
+		Modifier_Remove(g_cheatmod_table_players[playeridx].modifiers.build_time)
+		g_cheatmod_table_players[playeridx].modifiers.build_time = nil
+		_DisplayText("Instant Build: OFF (".. _GetPlayerText(player).. ")")
+	end
+end
+
+function _CheatMod_Toggle_Instant_AbilityRecharge()
+	local player = Util_GetPlayerFromSelection()
+	local playeridx = World_GetPlayerIndex(player)
+	if (g_cheatmod_table_players[playeridx].modifiers.ability_recharge_time == nil) then
+		g_cheatmod_table_players[playeridx].modifiers.ability_recharge_time = {}
+		for j = 1, table.getn(g_cheatmod_table_all_abilities) do
+			local ability_blueprint = g_cheatmod_table_all_abilities[j]
+			local factor = 0.0001
+			-- fix bug with gliders:
+			if (
+				ability_blueprint == ABILITY.COMMANDER_TREE.CW.GLIDER_COMMANDOS or
+				ability_blueprint == ABILITY.COMMANDER_TREE.CW.GLIDER_TETRARCH or
+				ability_blueprint == ABILITY.COMMANDER_TREE.CW.GLIDER_HQ
+			)
+			then
+				factor = 0.1
+			end
+			local table_modid = Modify_AbilityRechargeTime(player, ability_blueprint, factor)
+			Table_Merge(g_cheatmod_table_players[playeridx].modifiers.ability_recharge_time, table_modid)
+		end
+		_DisplayText("Instant Ability Recharge: ON (".. _GetPlayerText(player).. ")")
+	else
+		Modifier_Remove(g_cheatmod_table_players[playeridx].modifiers.ability_recharge_time)
+		g_cheatmod_table_players[playeridx].modifiers.ability_recharge_time = nil
+		_DisplayText("Instant Ability Recharge: OFF (".. _GetPlayerText(player).. ")")
+	end
+end
+
+function _CheatMod_Toggle_AutoTarget_Selection()
+	local function _Toggle_AutoTarget_Squad(gid, idx, sid)
+		local sg_temp2 = SGroup_Create("")
+		SGroup_Add(sg_temp2, sid)
+		if (_ModifiersSquadTable[Squad_GetGameID(sid)] == nil) then
+			Modify_WeaponAutoTarget(sg_temp2, false)
+		else
+			Modifier_Remove(_ModifiersSquadTable[Squad_GetGameID(sid)])
+		end
+		SGroup_Destroy(sg_temp2)
+	end
+	local function _Toggle_AutoTarget_Entity(gid, idx, eid)
+		if (World_OwnsEntity(eid)) then return end
+		local eg_temp2 = EGroup_Create("")
+		EGroup_Add(eg_temp2, eid)
+		if (_ModifiersEntityTable[Entity_GetGameID(eid)] == nil) then
+			Modify_WeaponAutoTarget(eg_temp2, false)
+		else
+			Modifier_Remove(_ModifiersEntityTable[Entity_GetGameID(eid)])
+		end
+		EGroup_Destroy(eg_temp2)
+	end
+	
+	local sg_temp = SGroup_Create("")
+	SGroup_Clear(sg_temp)
+	Misc_GetSelectedSquads(sg_temp, false)
+	if (SGroup_Count(sg_temp) > 0) then
+		SGroup_ForEachEx(sg_temp, _Toggle_AutoTarget_Squad, true, true)
+		_DisplayText("Squad(s) Weapon Auto Target toggled")
+	end
+	SGroup_Destroy(sg_temp)
+	
+	local eg_temp = EGroup_Create("")
+	EGroup_Clear(eg_temp)
+	Misc_GetSelectedEntities(eg_temp, false)
+	if (EGroup_Count(eg_temp) > 0) then
+		EGroup_ForEachEx(eg_temp, _Toggle_AutoTarget_Entity, true, true)
+		_DisplayText("Building(s) Weapon Auto Target toggled")
+	end
+	EGroup_Destroy(eg_temp)
+end
+
+function _CheatMod_ToggleAI()
+	if (g_cheatmod_ai_enabled) then
+		AI_EnableAll(false)
+		g_cheatmod_ai_enabled = false;
+		_DisplayText("AI: OFF")
+	else
+		AI_EnableAll(true)
+		g_cheatmod_ai_enabled = true;
+		_DisplayText("AI: ON")
+	end
+end
+
+function _CheatMod_Toggle_Lock_Selected_AI_Squads_and_Entities()
+	local Toggle_Lock_AI_Squad = function(sgroup, idx, squad)
+		if (World_OwnsSquad(squad)) then return end
+		local player = Squad_GetPlayerOwner(squad)
+		if (not AI_IsAIPlayer(player) or not AI_IsEnabled(player)) then return end
+		local squad_gameid = Squad_GetGameID(squad)
+		if (g_cheatmod_locked_ai_squads[squad_gameid] ~= nil) then
+			AI_UnlockSquad(player, squad)
+			g_cheatmod_locked_ai_squads[squad_gameid] = nil
+		else
+			AI_LockSquad(player, squad)
+			local sg_temp2 = SGroup_Create("")
+			SGroup_Add(sg_temp2, squad)
+			Command_Squad(player, sg_temp2, SCMD_Stop, false)
+			SGroup_Destroy(sg_temp2)
+			g_cheatmod_locked_ai_squads[squad_gameid] = true
+		end
+	end
+	
+	local Toggle_Lock_AI_Entity = function(egroup, idx, entity)
+		if (World_OwnsEntity(entity)) then return end
+		local player = Entity_GetPlayerOwner(entity)
+		if (not AI_IsAIPlayer(player) or not AI_IsEnabled(player)) then return end
+		local entity_gameid = Entity_GetGameID(entity)
+		if (g_cheatmod_locked_ai_entities[entity_gameid] ~= nil) then
+			AI_UnlockEntity(player, entity)
+			g_cheatmod_locked_ai_entities[entity_gameid] = nil
+		else
+			AI_LockEntity(player, entity)
+			g_cheatmod_locked_ai_entities[entity_gameid] = true
+		end
+	end
+
+	local sg_temp = SGroup_Create("")
+	Misc_GetSelectedSquads(sg_temp, false)
+	SGroup_ForEach(sg_temp, Toggle_Lock_AI_Squad)
+	SGroup_Destroy(sg_temp)
+	
+	local eg_temp = EGroup_Create("")
+	Misc_GetSelectedEntities(eg_temp, false)
+	EGroup_ForEach(eg_temp, Toggle_Lock_AI_Entity)
+	EGroup_Destroy(eg_temp)
+	
+	_DisplayText("(Un)Locked Selected AI Squads or Entities")
+end
+
+-- toggle selected AI player on/off (off means: AI player will not issue any more commands)
+function _CheatMod_ToggleSelectedAI()
+	local player = Util_GetPlayerFromSelection()
+	if (AI_IsEnabled(player)) then
+		AI_Enable(player, false)
+		_DisplayText("AI: OFF (".. _GetPlayerText(player).. ")")
+	else
+		AI_Enable(player, true)
+		if (Player_GetID(player) == Player_GetID(g_cheatmod_localPlayer)) then
+			Misc_AIControlLocalPlayer()
+		end
+		_DisplayText("AI: ON (".. _GetPlayerText(player).. ")")
+	end
+end
+
+function _CheatMod_ToggleFOW()
+	if (g_cheatmod_fow == true) then
+		FOW_RevealAll()
+		g_cheatmod_fow = false
+		_DisplayText("Fog of War: OFF")
+	else
+		FOW_UnRevealAll()
+		g_cheatmod_fow = true
+		_DisplayText("Fog of War: ON")
+	end
+end
+
+function _CheatMod_ToggleTaskbar()
+	if (Taskbar_IsVisible() == true) then
+		Taskbar_SetVisibility(false)
+		_DisplayText("Taskbar: OFF")		
+	else
+		Taskbar_SetVisibility(true)
+		_DisplayText("Taskbar: ON")
+	end
+end
+
+function _CheatMod_ToggleScreenSaver()
+	if (g_cheatmod_screensaver == true) then
+		startScreensaver(false, false)
+		g_cheatmod_screensaver = false
+		_DisplayText("Screensaver: OFF")
+	else
+		startScreensaver(true, false)
+		g_cheatmod_screensaver = true
+		_DisplayText("Screensaver: ON")
+	end
+end
+
+function _CheatMod_LoadAtmosphere()
+	if (g_cheatmod_atmosphere == nil) then
+		g_cheatmod_atmosphere = 0
+	end
+	g_cheatmod_atmosphere = g_cheatmod_atmosphere + 1
+	if (g_cheatmod_atmosphere > table.getn(g_cheatmod_table_atmosphere)) then
+		g_cheatmod_atmosphere = 1
+	end
+	Game_LoadAtmosphere("data:art/scenarios/presets/atmosphere/".. g_cheatmod_table_atmosphere[g_cheatmod_atmosphere], 1) -- 1 second fade time between different atmospheres
+	_DisplayText("Atmosphere loaded: ".. g_cheatmod_table_atmosphere[g_cheatmod_atmosphere])
+end
+
+function _CheatMod_AddResources(player)
+	if (player == nil) then
+		player = Util_GetPlayerFromSelection()
+	end
+	Player_AddResource(player, RT_Manpower, 99999)
+	Player_AddResource(player, RT_Fuel, 99999)
+	Player_AddResource(player, RT_Munition, 99999)
+	Player_AddResource(player, RT_Action, 2000)
+	Player_SetPopCapOverride(player, 9999)
+	_DisplayText("Resources added (".. _GetPlayerText(player).. ")")
+end
+
+function _CheatMod_Revert_Chosen_Commander_Tree()
+	local player = Util_GetPlayerFromSelection()
+	local commander_points = Player_GetResource(player, RT_Command)
+	local action_points = Player_GetResource(player, RT_Action)
+	Player_RevertChosenCommanderTree(player)
+	Player_ResetResource(player, RT_Action)
+	Player_ResetResource(player, RT_Command)
+	Player_SetResource(player, RT_Action, action_points)
+	Player_SetResource(player, RT_Command, commander_points)
+	_DisplayText("Chosen Commander Tree reverted (".. _GetPlayerText(player).. ")")
+end
+
+function _CheatMod_Change_Selected_Army()
+	g_cheatmod_selected_race = g_cheatmod_selected_race % table.getn(g_cheatmod_table_races) + 1
+	_DisplayText("Selected Army: ".. g_cheatmod_table_races[g_cheatmod_selected_race])
+end
+
+function _CheatMod_ReloadScript()
+	Util_ReloadScript()
+	_DisplayText("SCAR scripts reloaded (check console (CTRL-SHIFT-~) for errors)")
+end
+
+function _CheatMod_DisplayHelpText()
+	_DisplayText(
+		  "Shift + F1 = Toggle Fog of War"..
+		"\nShift + F2 = Toggle Taskbar"..
+		"\nShift + F3 = Spawn all units of selected army"..
+		"\nShift + F4 = Toggle Instant Production"..
+		"\nShift + F5 = Toggle Instant Build"..
+		"\nShift + F6 = Toggle Instant Ability Recharge"..
+		"\nShift + F7 = Toggle AI"..
+		"\nShift + F8 = Toggle selected AI"..
+		"\nShift + F9 = Change Atmosphere"..
+		"\nShift + F10 = Add Resources"..
+		"\nShift + F11 = Toggle Screensaver"..
+		"\nShift + F12 = Reload scripts"..
+		"\nShift + Control + F1 = This Help"..
+		"\nShift + Control + F2 = Squad Hotkey List"..
+		"\nShift + Control + F3 = Ability Hotkey List"..
+		"\nShift + Control + F4 = Entity Hotkey List"..
+		"\nShift + Control + F5 = Revert Chosen Commander Tree"..
+		"\nShift + Spacebar = Change Selected Army"..
+		"\nShift + / = Switch Control to other player"..
+		"\nShift + Insert = Change owner selection"..
+		"\nShift + Delete = Destroy selection"..
+		"\nShift + \\ = Toggle Auto Target selection"..
+		"\nShift + . = Toggle AI Lock selection"..
+		"\nShift + ; = Increase Veterancy selection"..
+		"\nShift + ~ = Print Blueprint of selected unit"..
+		"\nShift + [ = Copy (store selected squads or entity)"..
+		"\nShift + - = Special Copy (store entity at mouse cursor)"..
+		"\nShift + ] = Paste (spawn stored squads or entity)"..
+		"\nShift + Numpad[0-9] = Set game speed"..
+		"\nShift + [0-9][A-Z] = Spawn Units of selected army"..
+		"\nShift + Control + [1-9][A-Z] = Spawn Abilities of selected army"..
+		"\nShift + Alt + [0-9][A-Z] = Spawn Entities of selected army"..
+		"\nF9 = Toggle Taskbar (Playback)"..
+		"\nF11 = Toggle Cursor"
+	,30)
+end
+
+function _CheatMod_DisplaySquadKeys_Text()
+	local table_squads
+	if (g_cheatmod_selected_race == RACE_ALLIES) then
+		table_squads = g_cheatmod_table_allies_squads
+	elseif (g_cheatmod_selected_race == RACE_AXIS) then
+		table_squads = g_cheatmod_table_axis_squads
+	elseif (g_cheatmod_selected_race == RACE_CW) then
+		table_squads = g_cheatmod_table_cw_squads
+	elseif (g_cheatmod_selected_race == RACE_ELITE) then
+		table_squads = g_cheatmod_table_elite_squads
+	end
+	local squadkeys_text = ""
+	local hotkeys = {
+		"1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
+		"q", "w", "e", "r", "t", "y", "u", "i", "o", "p",
+		"a", "s", "d", "f", "g", "h", "j", "k", "l", "z",
+		"x", "c", "v", "b", "n", "m"
+	}
+	
+	local key, value
+	for key,value in pairs(table_squads) do
+		if (value.blueprint ~= nil) then
+			value = value.blueprint
+		end
+		squadkeys_text = squadkeys_text .. ((key > 1) and "\n" or "").. "Shift + ".. hotkeys[key].. " = ".. BP_GetName2(value)
+	end
+	_DisplayText(squadkeys_text, 30)
+end
+
+function _CheatMod_DisplayAbilityKeys_Text()
+	local table_abilities
+	if (g_cheatmod_selected_race == RACE_ALLIES) then
+		table_abilities = g_cheatmod_table_allies_abilities
+	elseif (g_cheatmod_selected_race == RACE_AXIS) then
+		table_abilities = g_cheatmod_table_axis_abilities
+	elseif (g_cheatmod_selected_race == RACE_CW) then
+		table_abilities = g_cheatmod_table_cw_abilities
+	elseif (g_cheatmod_selected_race == RACE_ELITE) then
+		table_abilities = g_cheatmod_table_elite_abilities
+	end
+	local abilitykeys_text = ""
+	local hotkeys = {
+		"1", "2", "3", "4", "5", "6", "7", "8", "9", -- disabled "0" because ctrl+shift+0 is already in use
+		"q", "w", "e", "r", "t", "y", "u", "i", "o", "p",
+		"a", "s", "d", "f", "g", "h", "j", "k", "l", "z",
+		"x", "c", "v", "b", "n", "m"
+	}
+	
+	local key, value
+	for key,value in pairs(table_abilities) do
+		abilitykeys_text = abilitykeys_text .. ((key > 1) and "\n" or "").. "Shift + Ctrl + ".. hotkeys[key].. " = ".. BP_GetName2(value)
+	end
+	_DisplayText(abilitykeys_text, 30)
+end
+
+function _CheatMod_DisplayEntityKeys_Text()
+	local table_entities
+	if (g_cheatmod_selected_race == RACE_ALLIES) then
+		table_entities = g_cheatmod_table_allies_buildings
+	elseif (g_cheatmod_selected_race == RACE_AXIS) then
+		table_entities = g_cheatmod_table_axis_buildings
+	elseif (g_cheatmod_selected_race == RACE_CW) then
+		table_entities = g_cheatmod_table_cw_buildings
+	elseif (g_cheatmod_selected_race == RACE_ELITE) then
+		table_entities = g_cheatmod_table_elite_buildings
+	end
+	local entitykeys_text = ""
+	local hotkeys = {
+		"1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
+		"q", "w", "e", "r", "t", "y", "u", "i", "o", "p",
+		"a", "s", "d", "f", "g", "h", "j", "k", "l", "z",
+		"x", "c", "v", "b", "n", "m"
+	}
+	
+	local key, value
+	for key,value in pairs(table_entities) do
+		entitykeys_text = entitykeys_text .. ((key > 1) and "\n" or "").. "Shift + Alt + ".. hotkeys[key].. " = ".. BP_GetName2(value)
+	end
+	_DisplayText(entitykeys_text, 30)
+end
+
+function _CheatMod_Switch_Local_Player()
+	if (g_cheatmod_ai_enabled) then
+		AI_Enable(g_cheatmod_localPlayer, true)
+		Misc_AIControlLocalPlayer()
+	end
+	local old_idx = World_GetPlayerIndex(g_cheatmod_localPlayer)
+	local new_idx = old_idx % World_GetPlayerCount() + 1
+	g_cheatmod_localPlayer = World_GetPlayerAt(new_idx)
+	Game_SetLocalPlayer(g_cheatmod_localPlayer)
+	AI_Enable(g_cheatmod_localPlayer, false)
+	
+	-- set g_cheatmod_enemyPlayer:
+	local teamlocalPlayer = Player_GetTeam(g_cheatmod_localPlayer)
+	for i = 1, World_GetPlayerCount() do
+		local playerid = World_GetPlayerAt(i)
+		local tempTeam = Player_GetTeam(playerid)
+		if (tempTeam ~= teamlocalPlayer) then
+			g_cheatmod_enemyPlayer = playerid
+		end
+	end
+	_DisplayText("Switched control to player ".. new_idx)
+end
+
+function _CheatMod_Print_Selected_Unit()
+	local sg_temp = SGroup_Create("")
+	Misc_GetSelectedSquads(sg_temp, false)
+	if (not SGroup_IsEmpty(sg_temp)) then
+		local squad = SGroup_GetSpawnedSquadAt(sg_temp, 1)
+		_DisplayText("Selected Squad = ".. BP_GetName(Squad_GetBlueprint(squad)))
+	end
+	SGroup_Destroy(sg_temp)
+
+	local eg_temp = EGroup_Create("")
+	Misc_GetSelectedEntities(eg_temp, false)
+	if (not EGroup_IsEmpty(eg_temp)) then
+		local entity = EGroup_GetSpawnedEntityAt(eg_temp, 1)
+		_DisplayText("Selected Entity = ".. BP_GetName(Entity_GetBlueprint(entity)))
+	end
+	EGroup_Destroy(eg_temp)	
+end
+
+function _CheatMod_Copy()
+	local sg_temp = SGroup_Create("")
+	Misc_GetSelectedSquads(sg_temp, false)
+	g_cheatmod_copy.squads = {}
+	for i = 1, SGroup_CountSpawned(sg_temp) do
+		local squad = SGroup_GetSpawnedSquadAt(sg_temp, i)
+		local squad_info = {
+			blueprint = Squad_GetBlueprint(squad),
+			heading = Squad_GetHeading(squad),
+		}
+		table.insert(g_cheatmod_copy.squads, squad_info)
+	end
+	SGroup_Destroy(sg_temp)
+	
+	local eg_temp = EGroup_Create("")
+	Misc_GetSelectedEntities(eg_temp, false)
+	g_cheatmod_copy.entities = {}
+	for i = 1, EGroup_CountSpawned(eg_temp) do
+		local entity = EGroup_GetSpawnedEntityAt(eg_temp, i)
+		local entity_info = {
+			blueprint = Entity_GetBlueprint(entity),
+			heading = Entity_GetHeading(entity),
+			is_world = World_OwnsEntity(entity),
+		}
+		table.insert(g_cheatmod_copy.entities, entity_info)
+	end
+	EGroup_Destroy(eg_temp)
+	local text = ""
+	if (#g_cheatmod_copy.squads > 1) then
+		text = text.. #g_cheatmod_copy.squads.. " squads"
+	elseif (#g_cheatmod_copy.squads == 1) then
+		text = "squad: ".. BP_GetName(g_cheatmod_copy.squads[1].blueprint)
+	elseif (#g_cheatmod_copy.entities > 0) then
+		text = "entity: ".. BP_GetName(g_cheatmod_copy.entities[1].blueprint)
+	else
+		text = "empty"
+	end
+	_DisplayText("Copy (".. text.. ")")
+end
+
+function _CheatMod_Copy_AtMouse()
+	g_cheatmod_copy.squads = {}
+	g_cheatmod_copy.entities = {}
+	local pos = Misc_GetMouseOnTerrain()
+	local eg_temp = EGroup_Create("")
+	World_GetNeutralEntitiesNearPoint(eg_temp, pos, 4)
+	if (EGroup_CountSpawned(eg_temp) > 0) then
+		local shortest_distance = 9999
+		local closest_entity = nil
+		for i = 1, EGroup_CountSpawned(eg_temp) do
+			local entity = EGroup_GetSpawnedEntityAt(eg_temp, i)
+			if (not Entity_IsOfType(entity, "ambient_building")) then
+				local distance = World_DistancePointToPoint(pos, Entity_GetPosition(entity))
+				if (distance < shortest_distance) then
+					closest_entity = entity
+					shortest_distance = distance
+				end
+			end
+		end
+		if (closest_entity ~= nil) then
+			local entity_info = {
+				blueprint = Entity_GetBlueprint(closest_entity),
+				heading = Entity_GetHeading(closest_entity),
+				is_world = World_OwnsEntity(closest_entity),
+			}
+			table.insert(g_cheatmod_copy.entities, entity_info)
+		end
+	end
+	EGroup_Destroy(eg_temp)
+	
+	local text = ""
+	if (#g_cheatmod_copy.entities > 0) then
+		text = "entity: ".. BP_GetName(g_cheatmod_copy.entities[1].blueprint)
+	else
+		text = "empty"
+	end
+	_DisplayText("Copy (".. text.. ")")
+end
+
+function _CheatMod_Paste()
+	local player = Util_GetPlayerFromSelection()
+	local pos = Misc_GetMouseOnTerrain()
+	for idx, squad_info in ipairs(g_cheatmod_copy.squads) do
+		Squad_CreateAndSpawnToward(squad_info.blueprint, player, 0, pos, Util_GetFacing(pos, squad_info.heading))
+	end
+	if (#g_cheatmod_copy.entities > 0) then
+		local entity_info = g_cheatmod_copy.entities[1]
+		local entity
+		if (entity_info.is_world) then
+			entity = Entity_CreateENV(entity_info.blueprint, pos, Util_GetFacing(pos, entity_info.heading))
+		else
+			entity = Entity_Create(entity_info.blueprint, player, pos, Util_GetFacing(pos, entity_info.heading))
+			Entity_Spawn(entity)
+		end
+		if (Entity_IsBuilding(entity)) then
+			Entity_ForceConstruct(entity)
+		end
+	end
+	_DisplayText("Paste")
+end
+
+local function _Init_Players()
+	g_cheatmod_localPlayer = Game_GetLocalPlayer()
+	local teamlocalPlayer = Player_GetTeam(g_cheatmod_localPlayer)
+	for i = 1, World_GetPlayerCount() do
+		local playerid = World_GetPlayerAt(i)
+		local tempTeam = Player_GetTeam(playerid)
+		if (tempTeam ~= teamlocalPlayer) then
+			g_cheatmod_enemyPlayer = playerid
+		end
+		g_cheatmod_table_players[i] = {
+			id = playerid,
+			ai = AI_IsAIPlayer(playerid),
+			race = Player_GetRace(playerid),
+			modifiers = {
+				build_time = nil,
+				production_rate = nil,
+				ability_recharge_time = nil
+			}
+		}
+	end
+end
+
+local function _Init_Globals()
+
+	RACE_ALLIES = 1
+	RACE_AXIS = 2
+	RACE_CW = 3
+	RACE_ELITE = 4
+	
+	g_cheatmod_fow = true -- Fog of War toggle
+	g_cheatmod_screensaver = false -- Screensaver toggle
+	g_cheatmod_ai_enabled = true -- AI players enabled / disabled toggle
+	g_cheatmod_locked_ai_squads = {}
+	g_cheatmod_locked_ai_entities = {}
+	g_cheatmod_table_players = {}
+	g_cheatmod_localPlayer = nil
+	g_cheatmod_enemyPlayer = nil
+	g_cheatmod_atmosphere = nil
+	g_cheatmod_copy = {
+		squads = {},
+		entities = {}
+	}
+	
+	local race_index = World_GetRaceIndex(Player_GetRaceName(Game_GetLocalPlayer()))
+	if (race_index == 0) then 
+		g_cheatmod_selected_race = RACE_CW
+	elseif (race_index == 1) then
+		g_cheatmod_selected_race = RACE_ALLIES
+	elseif (race_index == 2) then
+		g_cheatmod_selected_race = RACE_AXIS
+	elseif (race_index == 3) then
+		g_cheatmod_selected_race = RACE_ELITE
+	else
+		fatal("race index unknown")
+	end
+	
+	g_cheatmod_table_races = {
+		"American", "Wehrmacht", "British", "Panzer Elite"
+	}
+	
+	g_cheatmod_table_allies_squads = {
+		SBP.ALLIES.ENGINEER, SBP.ALLIES.RIFLEMEN, SBP.ALLIES.JEEP, SBP.ALLIES.HEAVYMG, SBP.ALLIES.MORTAR, 
+		SBP.ALLIES.SNIPER, SBP.ALLIES.HALFTRACK, SBP.ALLIES.GREYHOUND, SBP.ALLIES.AT_57MM, SBP.ALLIES.M10,
+		SBP.ALLIES.CROCODILE, SBP.ALLIES.SHERMAN, SBP.ALLIES.RANGER, SBP.ALLIES.HOWITZER, 
+		{blueprint = SBP.ALLIES.PARATROOPER, paradrop = true},
+		SBP.ALLIES.PERSHING, SBP.ALLIES.CALLIOPE, SBP.ALLIES.TRUCK, SBP.ALLIES.OFFICER, SBP.ALLIES.MEDIC_SP,
+		BP_GetSquadBlueprint2("sbps/races/allies/vehicles/m18_hellcat.lua"),
+		BP_GetSquadBlueprint2("sbps/races/allies/vehicles/t17_armoured_car_squad.lua"),
+	}
+	g_cheatmod_table_axis_squads = {
+		SBP.AXIS.PIONEER, SBP.AXIS.MOTORCYCLE, SBP.AXIS.VOLKSGRENADIER, SBP.AXIS.HEAVYMG, SBP.AXIS.SNIPER,
+		SBP.AXIS.HALFTRACK, SBP.AXIS.HALFTRACK_FLAME, SBP.AXIS.HALFTRACK_STUKA, SBP.AXIS.GRENADIER, SBP.AXIS.MORTAR,
+		SBP.AXIS.PAK_38, SBP.AXIS.PUMA, SBP.AXIS.OFFICER, SBP.AXIS.NEBELWERFER, SBP.AXIS.STUG,
+		SBP.AXIS.KNIGHTSCROSS, SBP.AXIS.OSTWIND, SBP.AXIS.PANZER, SBP.AXIS.PANTHER, SBP.AXIS.GOLIATH,
+		SBP.AXIS.FLAK_88, SBP.AXIS.STORMTROOPER, SBP.AXIS.TIGER, SBP.AXIS.KING_TIGER, SBP.AXIS.OPELBLITZ,
+		SBP.AXIS.AA_20MM, nil,
+		--BP_GetSquadBlueprint2("sbps/races/axis/vehicles/eselschreck_squad.lua"),
+		BP_GetSquadBlueprint2("sbps/races/axis/vehicles/tiger_squad_spg_ace.lua"),
+		BP_GetSquadBlueprint2("sbps/races/axis/vehicles/axis_schwimmwagen.lua"),
+		BP_GetSquadBlueprint2("sbps/races/axis/vehicles/geschutzwagen_squad.lua"),
+		BP_GetSquadBlueprint2("sbps/races/axis/vehicles/howitzer_squad.lua"),
+		BP_GetSquadBlueprint2("sbps/races/axis/vehicles/tiger_voss_squad.lua"),
+	}
+	Table_Remove_Nil(g_cheatmod_table_axis_squads)
+	
+	g_cheatmod_table_cw_squads = {
+		SBP.CW.COMMANDOS_MG, SBP.CW.CAPTAIN, SBP.CW.LIEUTENANT, SBP.CW.COMMANDOS, SBP.CW.SAPPER,
+		SBP.CW.TOMMIES, SBP.CW.MORTAR, SBP.CW.VICKERSMG, SBP.CW.COMMANDOS_MORTAR, SBP.CW.COMMANDOS_PIAT,
+		SBP.CW.COMMANDOS_SNIPER, SBP.CW.BREN_CARRIER, SBP.CW.CHURCHILL_AVRE, SBP.CW.CHURCHILL_CROC, SBP.CW.CHURCHILL,
+		SBP.CW.COMMAND_CROMWELL, SBP.CW.STUART, SBP.CW.PRIEST, SBP.CW.FIREFLY, SBP.CW.TETRARCH,
+		SBP.CW.COMMANDOS_JEEP, SBP.CW.TOWED_AT, SBP.CW.ARTILLERY_25_POUNDER, SBP.CW.BOFORS_AA,
+		SBP.CW.HQ, SBP.CW.HQ_REINFORCEMENT, SBP.CW.ARMOUR_HQ, SBP.CW.INFANTRY_HQ, SBP.CW.CROMWELL,
+		{blueprint = BP_GetSquadBlueprint2("sbps/races/allies_commonwealth/soldiers/commando_paratrooper_squad_sp.lua"), paradrop = false, state_machine = "rolevariation", state = "airborne00"},
+		BP_GetSquadBlueprint2("sbps/races/allies_commonwealth/soldiers/infantry_piper_squad.lua"),
+		BP_GetSquadBlueprint2("sbps/races/allies_commonwealth/soldiers/tommy_squad_canadian.lua"),
+		BP_GetSquadBlueprint2("sbps/races/allies_commonwealth/soldiers/tommy_boys_at_squad.lua"),
+		BP_GetSquadBlueprint2("sbps/races/allies_commonwealth/vehicles/kangaroo_carrier_squad.lua"),
+		BP_GetSquadBlueprint2("sbps/races/allies_commonwealth/vehicles/staghound_armoured_car_squad.lua"),
+	}
+	Table_Remove_Nil(g_cheatmod_table_cw_squads)
+	
+	g_cheatmod_table_elite_squads = {
+		SBP.ELITE.HENSCHEL_TAKEOFF, SBP.ELITE.PANZERGRENADIER, SBP.ELITE.HEAVYMG, SBP.ELITE.MORTAR, SBP.ELITE.LUFTWAFFE,
+		SBP.ELITE.FALLSCHIRMJAGER, SBP.ELITE.ASSAULTGRENADIER, SBP.ELITE.TANKBUSTERS, SBP.ELITE.KETTENRAD, SBP.ELITE.ARMOURCAR_221,
+		SBP.ELITE.ARMOURCAR_222, SBP.ELITE.ARMOURCAR_223, SBP.ELITE.HALFTRACK_250, SBP.ELITE.HALFTRACK_MORTAR, SBP.ELITE.HALFTRACK_SNIPER,
+		SBP.ELITE.HALFTRACK_VAMPIRE, SBP.ELITE.HALFTRACK_251, SBP.ELITE.PANZER_SUPPORT, SBP.ELITE.HUMMEL, SBP.ELITE.HETZER,
+		SBP.ELITE.JAGDPANTHER, SBP.ELITE.MARDER, SBP.ELITE.WIRBLEWIND, SBP.ELITE.BERGETIGER, SBP.ELITE.PANTHER,
+		SBP.ELITE.GOLIATH, SBP.ELITE.FLAK_38, SBP.ELITE.KING_TIGER_ARNHEM,
+		BP_GetSquadBlueprint2("sbps/races/axis_panzer_elite/vehicles/hotchkiss_squad.lua"),
+		BP_GetSquadBlueprint2("sbps/races/axis_panzer_elite/vehicles/panzer_elite_schwimmwagen.lua"),
+	}
+	
+	g_cheatmod_table_allies_buildings = {
+		EBP.ALLIES.HQ, EBP.ALLIES.BARRACKS, EBP.ALLIES.ARMORY, EBP.ALLIES.MOTORPOOL, EBP.ALLIES.TANK_DEPOT,
+		EBP.ALLIES.QUARTER_MASTER, EBP.ALLIES.MEDIC_STATION, EBP.ALLIES.TRIAGE, EBP.ALLIES.MG_NEST, EBP.ALLIES.OBSERVATION_POST,
+		EBP.ALLIES.BARBED_WIRE, EBP.ALLIES.SANDBAG, EBP.ALLIES.TANK_TRAP, EBP.ALLIES.MINES, EBP.ALLIES.HOWITZER,
+		EBP.PICKUP.MANPOWER, EBP.PICKUP.MUNITIONS, EBP.PICKUP.FUEL, EBP.PICKUP.AIRDROP_FUEL, EBP.PICKUP.AIRDROP_MUNITIONS,
+		EBP.PICKUP.ALLIES.BAZOOKA, EBP.PICKUP.ALLIES.BAR, EBP.PICKUP.ALLIES.HMG, EBP.PICKUP.ALLIES.MORTAR,
+		BP_GetEntityBlueprint2("ebps/races/allies/vehicles/m1_57mm_towed_at_gun.lua"),
+		BP_GetEntityBlueprint2("ebps/races/allies/vehicles/m2a1_105mm_howitzer.lua"),
+		BP_GetEntityBlueprint2("ebps/races/allies/vehicles/p47_thunderbolt.lua"),
+		BP_GetEntityBlueprint2("ebps/environment/art_ambient/objects/vehicles/military/typhoon_aircraft_recon.lua"),
+		BP_GetEntityBlueprint2("ebps/gameplay/props/allied_m18_recoilless_rifle_item.lua"),
+		BP_GetEntityBlueprint2("ebps/gameplay/props/allied_m1_thompson_item.lua"),
+	}
+	Table_Remove_Nil(g_cheatmod_table_allies_buildings)
+	
+	g_cheatmod_table_axis_buildings = {
+		EBP.AXIS.HQ, EBP.AXIS.QUARTERS, EBP.AXIS.BARRACKS, EBP.AXIS.ARMORY, EBP.AXIS.COMMAND,
+		EBP.AXIS.KAMPFKRAFT, EBP.AXIS.BUNKER, EBP.AXIS.BARBED_WIRE, EBP.AXIS.OBSERVATION_POST, EBP.AXIS.MINES,
+		EBP.AXIS.SANDBAG, EBP.AXIS.TANK_TRAP, EBP.PICKUP.AXIS.HMG, EBP.PICKUP.AXIS.MORTAR, EBP.PICKUP.AXIS.LMG_42,
+		EBP.PICKUP.AXIS.LMG_44, EBP.PICKUP.AXIS.PANZERSCHRECK,
+		BP_GetEntityBlueprint2("ebps/races/axis/vehicles/88mm_flak_36_at.lua"),
+		BP_GetEntityBlueprint2("ebps/races/axis/vehicles/50mm_pak38.lua"),
+	}
+	Table_Remove_Nil(g_cheatmod_table_axis_buildings)
+	
+	g_cheatmod_table_cw_buildings = {
+		-- EBP.CW.HQ, EBP.CW.HQ_REINFORCEMENT, EBP.CW.ARMOUR_HQ, EBP.CW.INFANTRY_HQ --> crashes game!
+		EBP.CW.GLIDER_COMMANDOS,
+		EBP.CW.GLIDER_HQ, EBP.CW.GLIDER_TETRARCH, EBP.CW.MG_NEST, EBP.CW.HOWITZER_NEST, EBP.CW.ANTITANK_NEST,
+		EBP.CW.SLITTRENCH_NEST, EBP.CW.MORTAR_NEST, EBP.CW.BOFORS_NEST, EBP.CW.RADIO_BEACON, EBP.CW.BARBED_WIRE,
+		EBP.CW.SANDBAG, EBP.CW.CASUALTY_CLEARING, EBP.CW.MINES, EBP.CW.DEMOLITION_CHARGE,
+		BP_GetEntityBlueprint2("ebps/gameplay/props/commonwealth_bren_item.lua"),
+		BP_GetEntityBlueprint2("ebps/gameplay/props/commonwealth_piat_item.lua"),
+		BP_GetEntityBlueprint2("ebps/gameplay/props/cw_3inch_mortar.lua"),
+		-- can't pickup: BP_GetEntityBlueprint("ebps/gameplay/props/cw_bren_light_mg.lua"),
+		BP_GetEntityBlueprint2("ebps/gameplay/props/cw_vickers_303_mg.lua"),
+	}
+	Table_Remove_Nil(g_cheatmod_table_cw_buildings)
+	
+	g_cheatmod_table_elite_buildings = {
+		EBP.ELITE.HQ, EBP.ELITE.PANZERJAGER, EBP.ELITE.LOGISTIK, EBP.ELITE.KAMPFGRUPPE, EBP.ELITE.PANZER_ARTILLERIE,
+		EBP.ELITE.BARBED_WIRE, EBP.ELITE.MINE_TELLER, EBP.ELITE.MINE_AIR_DROPPED, EBP.ELITE.SANDBAG, EBP.ELITE.TANK_TRAP,
+		EBP.SYNC_WEAPON.FLAK_38, EBP.SYNC_WEAPON.FLAK_88_PE,
+		BP_GetEntityBlueprint2("ebps/races/axis_panzer_elite/buildings/barbed_wire_scorched_earth"),
+	}
+	Table_Remove_Nil(g_cheatmod_table_elite_buildings)
+	
+	g_cheatmod_table_allies_abilities = {
+		ABILITY.COMMANDER_TREE.ALLIES.HOWITZER_SHOOT, ABILITY.COMMANDER_TREE.ALLIES.RECRUIT_COMBAT_GROUP, ABILITY.COMMANDER_TREE.ALLIES.RECRUIT_PARADROP, ABILITY.COMMANDER_TREE.ALLIES.RECRUIT_PARADROP_AT, ABILITY.COMMANDER_TREE.ALLIES.SUPPLY_DROP,
+		ABILITY.COMMANDER_TREE.ALLIES.RECON, ABILITY.COMMANDER_TREE.ALLIES.STRAFE_MG, ABILITY.COMMANDER_TREE.ALLIES.STRAFE_ROCKET, ABILITY.COMMANDER_TREE.ALLIES.RECRUIT_CALLIOPE, ABILITY.COMMANDER_TREE.ALLIES.RECRUIT_PERSHING,
+		ABILITY.COMMANDER_TREE.ALLIES.ARMOR_HEAL, ABILITY.COMMANDER_TREE.ALLIES.WAR_MACHINE,
+		BP_GetAbilityBlueprint2("abilities/ally_paradrop_engineer_reinforcement.lua") 
+	}
+	Table_Remove_Nil(g_cheatmod_table_allies_abilities)
+	
+	g_cheatmod_table_axis_abilities = {
+		ABILITY.COMMANDER_TREE.AXIS.FATHERLAND, ABILITY.COMMANDER_TREE.AXIS.DEFENSIVE_ARTILLERY, ABILITY.COMMANDER_TREE.AXIS.ROCKET_BARRAGE, ABILITY.COMMANDER_TREE.AXIS.RECRUIT_STORMTROOPERS, ABILITY.COMMANDER_TREE.AXIS.RECRUIT_STUG,
+		ABILITY.COMMANDER_TREE.AXIS.RECRUIT_TIGER, ABILITY.COMMANDER_TREE.AXIS.RESOURCE_BLITZ, ABILITY.COMMANDER_TREE.AXIS.ASSAULT, ABILITY.COMMANDER_TREE.AXIS.BLITZKRIEG, ABILITY.COMMANDER_TREE.AXIS.INSPIRED_ASSAULT,
+		ABILITY.COMMANDER_TREE.AXIS.PROPAGANDA_WAR, ABILITY.COMMANDER_TREE.AXIS.FIRESTORM, ABILITY.COMMANDER_TREE.AXIS.RECRUIT_TIGER_ACE,
+		BP_GetAbilityBlueprint2("abilities/axis_v1_weapon.lua"),
+		BP_GetAbilityBlueprint2("abilities/axis_pioneer_reinforcements_ability.lua")
+	}
+	Table_Remove_Nil(g_cheatmod_table_axis_abilities)
+	
+	g_cheatmod_table_cw_abilities = {
+		ABILITY.COMMANDER_TREE.CW.FORWARD_OBSERVATION, ABILITY.COMMANDER_TREE.CW.PDR_25_SUPERCHARGE, ABILITY.COMMANDER_TREE.CW.DECOY_ARTILLERY, ABILITY.COMMANDER_TREE.CW.REAL_ARTILLERY
+	}
+	g_cheatmod_table_elite_abilities = {
+		ABILITY.COMMANDER_TREE.ELITE.AIR_DROPPED_MINES, ABILITY.COMMANDER_TREE.ELITE.RECRUIT_LUFTWAFFE, ABILITY.COMMANDER_TREE.ELITE.RECRUIT_FALLSHIRMAJAGER, ABILITY.COMMANDER_TREE.ELITE.WIRBLE_WIND, ABILITY.COMMANDER_TREE.ELITE.BERGE_TIGER,
+		ABILITY.COMMANDER_TREE.ELITE.RECRUIT_JAGDPANTHER, ABILITY.COMMANDER_TREE.ELITE.RECRUIT_HETZER
+	}
+	
+	g_cheatmod_table_all_abilities = {
+		BP_GetAbilityBlueprint2("abilities/allied_armor_self_heal.lua"),
+BP_GetAbilityBlueprint2("abilities/allied_at_apc_shell.lua"),
+BP_GetAbilityBlueprint2("abilities/allied_hmg_armor_piercing_round.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_air_recon_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_air_strike_ability_rockets.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_air_strike_ability_strafe.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_air_strike_ability_strafe2.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_fireup_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_fireup_ability_sp_m01.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_fireup_ability_sp_m07.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_fire_calliope.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_heavy_crush_bulldozer_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_howitzer_barrage_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_leadership_officer.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_mortar_smoke_barrage.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_off_map_artillery_ability_sp_m01.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_off_map_battalion_shoot.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_off_map_battalion_shoot_sp.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_off_map_divisional_shoot.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_off_map_howitzer_shoot.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_paradrop_57mm_at.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_paradrop_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_paradrop_ability_airborne_infantry.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_paradrop_ability_airborne_infantry_anywhere.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_paradrop_ability_airborne_infantry_sp.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_paradrop_ability_airborne_infantry_sp_anywhere.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_paradrop_ability_supplies.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_paradrop_ability_supplies_fuel.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_paradrop_ability_supplies_munitions_sp.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_paradrop_engineer_reinforcement.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_paradrop_scar.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_reinforcements_ability_rangers.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_suppression_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_suppression_ability_rifle_squad_infantry.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_sync_mortar_barrage.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_sync_mortar_barrage_improved.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_throw_grenade.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_throw_grenade_fast.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_throw_grenade_no_requirements.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_throw_satchel_charge.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_throw_satchel_charge_no_requirements.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_throw_sticky_bombs.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_weapon_direct_hit_make_casualty.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_weapon_direct_hit_make_wreck.lua"),
+BP_GetAbilityBlueprint2("abilities/ally_weapon_direct_hit_stunned.lua"),
+BP_GetAbilityBlueprint2("abilities/ambush_camo_timed.lua"),
+BP_GetAbilityBlueprint2("abilities/ambush_camo_toggled.lua"),
+BP_GetAbilityBlueprint2("abilities/attrition_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_150mm_rocket_barrage.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_280mm_rocket_barrage.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_assault_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_at_guns_camouflage_toggled.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_fire_panzerfaust.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_for_the_fuhrer.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_heavy_crush_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_kch_assault_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_manpower_resource_push.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_mortar_smoke_barrage.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_nebelwerfer_barrage.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_nebelwerfer_barrage_improved.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_off_map_defensive_bombardment.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_off_map_defensive_bombardment_player_level.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_pe_air_dropped_mines.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_pioneer_antispam.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_pioneer_reinforcements_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_reinforcements_ability_tiger_ace.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_reinforcements_ability_tiger_ace_sp.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_stormtrooper_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_stormtrooper_ability_with_stug.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_stormtrooper_ability_with_tiger.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_stuka_zu_fuss_rocket_halftrack.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_sync_mortar_barrage.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_sync_mortar_bunker_barrage.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_territory_los_bonus.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_territory_los_bonus_hq.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_terror_bombardment.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_throw_grenade.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_throw_grenade_assault.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_throw_grenade_improved.lua"),
+BP_GetAbilityBlueprint2("abilities/axis_v1_weapon.lua"),
+BP_GetAbilityBlueprint2("abilities/blitzkrieg_tactics.lua"),
+BP_GetAbilityBlueprint2("abilities/booby_trap_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/bren_carrier_hmg_apr.lua"),
+BP_GetAbilityBlueprint2("abilities/bren_self_repair.lua"),
+BP_GetAbilityBlueprint2("abilities/building_healing_aura.lua"),
+BP_GetAbilityBlueprint2("abilities/building_healing_aura_commonwealth.lua"),
+BP_GetAbilityBlueprint2("abilities/button_enemy_vehicle.lua"),
+BP_GetAbilityBlueprint2("abilities/calliope_reinforce.lua"),
+BP_GetAbilityBlueprint2("abilities/camouflage_commando.lua"),
+BP_GetAbilityBlueprint2("abilities/camouflage_toggled.lua"),
+BP_GetAbilityBlueprint2("abilities/camouflage_toggled_hetzer.lua"),
+BP_GetAbilityBlueprint2("abilities/camouflage_toggled_knights_cross.lua"),
+BP_GetAbilityBlueprint2("abilities/camouflage_toggled_pe_bike.lua"),
+BP_GetAbilityBlueprint2("abilities/camouflage_toggled_sniper.lua"),
+BP_GetAbilityBlueprint2("abilities/camouflage_toggled_sniper_allied.lua"),
+BP_GetAbilityBlueprint2("abilities/captain_force_multiplier.lua"),
+BP_GetAbilityBlueprint2("abilities/captain_force_multiplier_vet2.lua"),
+BP_GetAbilityBlueprint2("abilities/command_tank_force_multiplier.lua"),
+BP_GetAbilityBlueprint2("abilities/command_tank_force_multiplier_vet2.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_25pounder_barrage_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_25pounder_barrage_ability_sp.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_25pounder_barrage_ability_takeover.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_25pounder_supercharge.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_apds_armour_piercing.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_armour_hq_reinforcements_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_bren_capture_enable.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_building_toggle.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_building_toggle_sp.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_captain_resource_multiplier.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_churchill_avre_reinforcement.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_churchill_crocodile_reinforcement.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_churchill_mine_clearing.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_churchill_tank_reinforcement.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_churchill_tank_shock.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_creeping_barrage_cover_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_decoy_artillery.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_decoy_artillery_real.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_fire_avre_petard.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_fire_canister_ammunition.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_flank_speed_bonus.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_foo_artillery.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_foo_command_tank_smoke_barrage.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_force_multipliers.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_hull_down.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_hull_down_croc.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_hull_down_medium.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_lt_heroic_charge_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_mark_strongpoint_sp.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_medical_kit.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_mobile_hq_reinforcements_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_piat.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_priest_barrage_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_priest_barrage_ability_supercharge.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_priest_reinforcement.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_recon_marksmen_shot.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_recon_squad.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_reinforcements_commandos.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_resource_multiplier.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_resource_multiplier_commander_tree.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_smoke_rifle_grenade_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_soldiers_hq_reinforcements_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_suppression_break.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_sync_mortar_barrage.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_sync_mortar_barrage_takeover.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_sync_mortar_supercharge.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_throw_grenade_commando.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_troop_movement.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_truck_armour_setup.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_truck_hq_setup.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_truck_infantry_setup.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_truck_setup.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_truck_setup_instant.lua"),
+BP_GetAbilityBlueprint2("abilities/commonwealth_truck_unsetup.lua"),
+BP_GetAbilityBlueprint2("abilities/counterbattery_barrage_25_pounder.lua"),
+BP_GetAbilityBlueprint2("abilities/counterbattery_barrage_3inch_mortar.lua"),
+BP_GetAbilityBlueprint2("abilities/counterbattery_barrage_priest_105mm.lua"),
+BP_GetAbilityBlueprint2("abilities/counterbattery_barrage_remove.lua"),
+BP_GetAbilityBlueprint2("abilities/counterbattery_barrage_remove_mortar.lua"),
+BP_GetAbilityBlueprint2("abilities/counter_battery.lua"),
+BP_GetAbilityBlueprint2("abilities/counter_battery_mortar.lua"),
+BP_GetAbilityBlueprint2("abilities/counter_battery_priest.lua"),
+BP_GetAbilityBlueprint2("abilities/counter_battery_sp.lua"),
+BP_GetAbilityBlueprint2("abilities/creeping_barrage.lua"),
+BP_GetAbilityBlueprint2("abilities/creeping_barrage_25_pounder.lua"),
+BP_GetAbilityBlueprint2("abilities/creeping_barrage_command_tank_smoke.lua"),
+BP_GetAbilityBlueprint2("abilities/creeping_barrage_king_tiger_smoke.lua"),
+BP_GetAbilityBlueprint2("abilities/cut_wires.lua"),
+BP_GetAbilityBlueprint2("abilities/cut_wires_axis.lua"),
+BP_GetAbilityBlueprint2("abilities/defensive_smokecloud.lua"),
+BP_GetAbilityBlueprint2("abilities/disable_capture_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/donkey_mines.lua"),
+BP_GetAbilityBlueprint2("abilities/donkey_sprint_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/donkey_stuka_zu_fuss_rocket.lua"),
+BP_GetAbilityBlueprint2("abilities/facing_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/facing_lock_down_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/fire_smoke_canister.lua"),
+BP_GetAbilityBlueprint2("abilities/first_aid_heal_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/follow_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/follow_ability_captain.lua"),
+BP_GetAbilityBlueprint2("abilities/follow_ability_command_tank.lua"),
+BP_GetAbilityBlueprint2("abilities/follow_ability_munitions_halftrack.lua"),
+BP_GetAbilityBlueprint2("abilities/for_the_fatherland.lua"),
+BP_GetAbilityBlueprint2("abilities/glider_hq_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/glider_tetrarch.lua"),
+BP_GetAbilityBlueprint2("abilities/glider_troops.lua"),
+BP_GetAbilityBlueprint2("abilities/goliath_detonate.lua"),
+BP_GetAbilityBlueprint2("abilities/greyhound_mines.lua"),
+BP_GetAbilityBlueprint2("abilities/hmg_armor_piercing_round.lua"),
+BP_GetAbilityBlueprint2("abilities/kch_zeal.lua"),
+BP_GetAbilityBlueprint2("abilities/king_tiger_tank_shock.lua"),
+BP_GetAbilityBlueprint2("abilities/king_tiger_tank_smoke_barrage.lua"),
+BP_GetAbilityBlueprint2("abilities/lieutenant_force_multiplier.lua"),
+BP_GetAbilityBlueprint2("abilities/lieutenant_force_multiplier_vet2.lua"),
+BP_GetAbilityBlueprint2("abilities/lieutenant_force_multiplier_vet3.lua"),
+BP_GetAbilityBlueprint2("abilities/medical_kit.lua"),
+BP_GetAbilityBlueprint2("abilities/medical_kit_field.lua"),
+BP_GetAbilityBlueprint2("abilities/medical_kit_field_weapon_capture_squad.lua"),
+BP_GetAbilityBlueprint2("abilities/medical_kit_weapon_capture_squad.lua"),
+BP_GetAbilityBlueprint2("abilities/mortar_hold_fire.lua"),
+BP_GetAbilityBlueprint2("abilities/necessary_player_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/non_commonwealth_slit_trench_modifiers.lua"),
+BP_GetAbilityBlueprint2("abilities/off_map_artillery_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/off_map_artillery_ability_sp_m04.lua"),
+BP_GetAbilityBlueprint2("abilities/overwatch_barrage.lua"),
+BP_GetAbilityBlueprint2("abilities/overwatch_barrage_25_pounder.lua"),
+BP_GetAbilityBlueprint2("abilities/overwatch_barrage_25_pounder_remove.lua"),
+BP_GetAbilityBlueprint2("abilities/overwatch_barrage_3inch_mortar.lua"),
+BP_GetAbilityBlueprint2("abilities/overwatch_barrage_3inch_mortar_remove.lua"),
+BP_GetAbilityBlueprint2("abilities/overwatch_barrage_priest_105mm.lua"),
+BP_GetAbilityBlueprint2("abilities/overwatch_barrage_priest_105mm_remove.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_223_setup.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_area_effects.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_bergetiger_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_building_booby_trap.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_car_setup.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_car_unsetup.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_fallschirmjager_camo.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_fallschirmjager_throw_incendiary_grenade.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_fire_panzerfaust.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_fire_panzerfaust_fallschirmjager.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_fire_panzerfaust_improved.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_focused_firing.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_henschel_all_targets.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_henschel_at_strike.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_howitzer_barrage_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_howitzer_barrage_ability_improved.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_hq_munitions_resupply.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_hummel_artillery.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_incendiary_mortar_barrage.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_infiltration_fallshirmjager_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_luftwaffe_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_medical_aura.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_munitions_resupply.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_point_booby_trap.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_point_booby_trap_improved.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_reinforcements_hetzer.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_reinforcements_jagdpanther.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_reinforcements_panther_battlegroup.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_sprint_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_sync_mortar_barrage.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_throw_incendiary_grenade.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_warning_shot.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_elite_wirblewind_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_grenadier_mob_bonuses.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_grenadier_reinforcements_ability_large_squads.lua"),
+BP_GetAbilityBlueprint2("abilities/panzer_grenadier_reinforcements_ability_small_squads.lua"),
+BP_GetAbilityBlueprint2("abilities/pershing_reinforce.lua"),
+BP_GetAbilityBlueprint2("abilities/pe_lockdown_hummel_rapidfire.lua"),
+BP_GetAbilityBlueprint2("abilities/pe_lockdown_marder_iii_at.lua"),
+BP_GetAbilityBlueprint2("abilities/pe_lockdown_panzeriv_rapid_fire.lua"),
+BP_GetAbilityBlueprint2("abilities/pe_munitionspanzer_goliath.lua"),
+BP_GetAbilityBlueprint2("abilities/pe_overdrive.lua"),
+BP_GetAbilityBlueprint2("abilities/pe_test_halftrack_sniper.lua"),
+BP_GetAbilityBlueprint2("abilities/recover_ability_bergtiger.lua"),
+BP_GetAbilityBlueprint2("abilities/reenable_capture_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/reinforcements_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/reinforcements_ability_new.lua"),
+BP_GetAbilityBlueprint2("abilities/reinforcements_ability_sp_m03.lua"),
+BP_GetAbilityBlueprint2("abilities/repair_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/repair_ability_bergtiger.lua"),
+BP_GetAbilityBlueprint2("abilities/repair_ability_over_repair.lua"),
+BP_GetAbilityBlueprint2("abilities/repair_ability_pe.lua"),
+BP_GetAbilityBlueprint2("abilities/repair_ability_pe_bike.lua"),
+BP_GetAbilityBlueprint2("abilities/repair_ability_pe_improved.lua"),
+BP_GetAbilityBlueprint2("abilities/repair_ability_pe_improved_bike.lua"),
+BP_GetAbilityBlueprint2("abilities/repair_ability_pioneer_vet_3.lua"),
+BP_GetAbilityBlueprint2("abilities/resource_commonwealth_set_up_hq.lua"),
+BP_GetAbilityBlueprint2("abilities/resource_manpower_commonwealth_default.lua"),
+BP_GetAbilityBlueprint2("abilities/resource_manpower_player_default.lua"),
+BP_GetAbilityBlueprint2("abilities/resource_manpower_upgrade.lua"),
+BP_GetAbilityBlueprint2("abilities/resource_manpower_upgrade_advanced.lua"),
+BP_GetAbilityBlueprint2("abilities/resource_manpower_upgrade_more_advanced.lua"),
+BP_GetAbilityBlueprint2("abilities/retreat_to_captain_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/rout_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/rout_officer_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/salvage_wreck_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/sector_artillery.lua"),
+BP_GetAbilityBlueprint2("abilities/secure_territory_on_and_off.lua"),
+BP_GetAbilityBlueprint2("abilities/sherman_crab_mine_clearing.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_ally_air_recon_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_ally_air_strike_ability_rockets.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_axis_mortar_smoke_barrage.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_axis_sync_mortar_barrage.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_caen_air_recon_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_caen_air_strike_ability_rockets.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_caen_air_strike_ability_strafe.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_caen_commonwealth_air_strike_ability_strafe.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_camouflage_toggled.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_commonwealth_air_recon_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_commonwealth_air_strike_ability_rockets.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_commonwealth_air_strike_ability_strafe.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_defensive_smokecloud.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_engineers_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_goodwood_scar_func.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_hells_highway_reinforcements_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_hmg_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_mortar_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_panzer_elite_infiltration_fallshirmjager_ability_building_only.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_panzer_elite_infiltration_fallshirmjager_ability_no_fow.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_paratroopers_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_riflemen_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_single_creepingbarrage_mortar.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_single_creepingbarrage_smoke.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_single_firestorm.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_single_howitzer.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_single_howitzer_altsound.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_single_mortar.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_single_mortar_smoke.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_single_mortar_smokeentrance.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_single_nebel_rocket.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_single_stuka_rocket.lua"),
+BP_GetAbilityBlueprint2("abilities/sp_sniper_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/stormtrooper_zeal.lua"),
+BP_GetAbilityBlueprint2("abilities/supervise_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/suppression_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/test_pe_plan_file.lua"),
+BP_GetAbilityBlueprint2("abilities/toggle_minesweeper_flamethrower.lua"),
+BP_GetAbilityBlueprint2("abilities/toggle_resource_stealing.lua"),
+BP_GetAbilityBlueprint2("abilities/v1_targeter.lua"),
+BP_GetAbilityBlueprint2("abilities/v1_target_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/vehicle_cover_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/victor_targeter.lua"),
+BP_GetAbilityBlueprint2("abilities/victor_target_ability.lua"),
+BP_GetAbilityBlueprint2("abilities/zz_panzer_elite_howitzer_barrage_ability_vet1.lua"),
+BP_GetAbilityBlueprint2("abilities/zz_panzer_elite_howitzer_barrage_ability_vet1_improved.lua"),
+BP_GetAbilityBlueprint2("abilities/zz_panzer_elite_howitzer_barrage_ability_vet2.lua"),
+BP_GetAbilityBlueprint2("abilities/zz_panzer_elite_howitzer_barrage_ability_vet2_improved.lua"),
+BP_GetAbilityBlueprint2("abilities/zz_panzer_elite_howitzer_barrage_ability_vet3.lua"),
+BP_GetAbilityBlueprint2("abilities/zz_panzer_elite_howitzer_barrage_ability_vet3_improved.lua")
+	}
+	Table_Remove_Nil(g_cheatmod_table_all_abilities)
+	
+	g_cheatmod_table_atmosphere = {
+		"best_local.aps",
+"caen_new_teal.aps",
+"cxp1_authie_lighting.aps",
+"cxp1_authie_midday_00.aps",
+"cxp1_authie_midday_00_end.aps",
+"cxp1_caen_dawn_00.aps",
+"cxp1_caen_dawn_01.aps",
+"cxp1_caen_dawn_02.aps",
+"cxp1_caen_dawn_03.aps",
+"cxp1_caen_midday_00.aps",
+"cxp1_caen_midday_00_nis.aps",
+"cxp1_caen_midday_01.aps",
+"cxp1_caen_night_00.aps",
+"cxp1_carentan_gfw_00.aps",
+"cxp1_carentan_gfw_01.aps",
+"cxp1_carpiquet_dawn_00.aps",
+"cxp1_carpiquet_dawn_01.aps",
+"cxp1_carpiquet_night_00.aps",
+"cxp1_carpiquet_night_01.aps",
+"cxp1_goodwood_midday_00.aps",
+"cxp1_goodwood_midday_01.aps",
+"cxp1_hill112_a_00.aps",
+"cxp1_hill112_midday_00.aps",
+"cxp1_hill112_midday_01.aps",
+"cxp1_hill112_night_00.aps",
+"cxp1_hill112_night_01.aps",
+"cxp2_arnhem.aps",
+"cxp2_arnhem_midday_00.aps",
+"cxp2_arnhem_midday_01.aps",
+"cxp2_best_night_00.aps",
+"cxp2_best_night_00_nis.aps",
+"cxp2_best_night_01.aps",
+"cxp2_best_night_01_wetmap.aps",
+"cxp2_best_night_norain_00.aps",
+"cxp2_best_night_rain_00.aps",
+"cxp2_hells_highway_dusk_00.aps",
+"cxp2_hells_highway_night_00.aps",
+"cxp2_hells_highway_stormy_00.aps",
+"cxp2_hells_highway_stormy_00_nis.aps",
+"cxp2_hells_highway_stormy_01.aps",
+"cxp2_hells_highway_stormy_nolightening_00.aps",
+"cxp2_oosterbeek_daybreak_00.aps",
+"cxp2_oosterbeek_daybreak_01.aps",
+"cxp2_oosterbeek_daybreak_rain_00.aps",
+"cxp2_oosterbeek_daybreak_stormyrain_00.aps",
+"cxp2_oosterbeek_night_00.aps",
+"cxp2_oosterbeek_night_01.aps",
+"cxp2_oosterbeek_night_nis_00.aps",
+"cxp2_oosterbeek_predawn_00.aps",
+"cxp2_wolfheze_afternoon_00.aps",
+"cxp2_wolfheze_afternoon_00_nis.aps",
+"cxp2_wolfheze_afternoon_01.aps",
+"cxp2_wolfheze_afternoon_bw_00.aps",
+"cxp2_wolfheze_midday_00.aps",
+"cxp2_wolfheze_midday_00_bw.aps",
+"cxp2_wolfheze_midday_00_colour.aps",
+"c_w.aps",
+"default.aps",
+"goodwood.aps",
+"m00_lighting.aps",
+"m01_lighting.aps",
+"m02_hill112_lighting.aps",
+"m02_lighting.aps",
+"m02_lighting_old.aps",
+"m03_lighting.aps",
+"m04_lighting.aps",
+"m05_lighting.aps",
+"m06_lighting.aps",
+"m07_lighting.aps",
+"m08_lighting.aps",
+"m08_lighting_tamas.aps",
+"m09_lighting.aps",
+"m10_lighting.aps",
+--"m10_lighting_night.aps", --> crashes game!
+"m10_lighting_old.aps",
+"m12_lighting.aps",
+"m12_lighting_new.aps",
+"m13_lighting.aps",
+"m13_nis13_01.aps",
+"m14_lighting.aps",
+"m15_lighting.aps",
+"m16_lighting.aps",
+"minimap.aps",
+"mp_2p_best_rain_00.aps",
+"mp_2p_hells_highway_dusk_00.aps",
+"mp_4p_bedum_night_00.aps",
+"mp_4p_etavaux_overcast_00.aps",
+"mp_4p_etavaux_sunny_00.aps",
+"mp_4p_linden_dawn_00.aps",
+"mp_4p_linden_midday_00.aps",
+"mp_4p_wolfheze_afternoon_00.aps",
+"mp_4p_wolfheze_dusknight_00.aps",
+"mp_6p_close_river_combat_hazy_00.aps",
+"mp_6p_close_river_combat_stormy_00.aps",
+"mp_8p_best_hazy_00.aps",
+"mp_angoville_farms.aps",
+"mp_angoville_farms_dusk_00.aps",
+"mp_bernieres-sure-mer.aps",
+"mp_bernieres-sure-mer_dawn_00.aps",
+"mp_bernieres-sure-mer_dawn_00_nowetmap.aps",
+"mp_bernieres-sure-mer_midday_00.aps",
+"mp_bernieres-sure-mer_stormy.aps",
+"mp_bernieres-sure-mer_stormy_00.aps",
+"mp_bernieres-sure-mer_stormy_00_demo.aps",
+"mp_bernieres-sure-mer_stormy_00_wetmap.aps",
+"mp_bernieres-sure-mer_stormy_02.aps",
+"mp_bernieres-sure-mer_stormy_03.aps",
+"mp_bernieres-sure-mer_stormy_new_rain_00.aps",
+"mp_coastal_harbour_dawn_00.aps",
+"mp_coastal_harbour_rainy_00.aps",
+"mp_docks01.aps",
+"mp_drekplaats_dusk_00.aps",
+"mp_drekplaats_rainy_00.aps",
+"mp_firefight.aps",
+"mp_hedgerow_siege_dawn_00.aps",
+"mp_hedgerow_siege_overcast_00.aps",
+"mp_hill331.aps",
+"mp_hill331_midday_00.aps",
+"mp_hinderdam_night_00.aps",
+"mp_hinderdam_rainy_00.aps",
+"mp_langres_midday_00.aps",
+"mp_loraineredux.aps",
+"mp_loraineredux_rainy_00.aps",
+"mp_lowlands.aps",
+"mp_lowlands_stormy_00.aps",
+"mp_lyon_dawn_00.aps",
+"mp_lyon_midday_00.aps",
+"mp_mcgechaens.aps",
+"mp_mcgechaens_sunny_00.aps",
+"mp_montargis_region_night_00.aps",
+"mp_montargis_region_stormy_00.aps",
+"mp_montherme.aps",
+"mp_montherme_afternoon_00.aps",
+"mp_pointe_du_hoc.aps",
+"mp_pointe_du_hoc_stormy_00.aps",
+"mp_railsnmetal.aps",
+"mp_railsnmetal_stormy_00.aps",
+"mp_routen13.aps",
+"mp_routen13_dawn_00.aps",
+"mp_seine_river_docks_00.aps",
+"mp_seine_river_docks_night_00.aps",
+"mp_semois.aps",
+"mp_semois_stormy_00.aps",
+"mp_streams_restamp.aps",
+"mp_stream_crossing.aps",
+"mp_sturzdorf.aps",
+"mp_sturzdorf_midday_00.aps",
+"mp_st_hilaire.aps",
+"mp_st_hilaire_raining_00.aps",
+"mp_vire.aps",
+"mp_vire_sunny_00.aps",
+"n13_01_m13_lighting.aps",
+"sample_cold_dawn.aps",
+"sample_dawn.aps",
+"sample_frosty_night.aps",
+"sample_moonlight.aps",
+"sample_overcast.aps",
+"sample_pre_dawn.aps",
+"sample_pre_dawn2.aps",
+"sample_rainy_day.aps",
+"sample_sunny.aps",
+"sample_sunny_morning.aps",
+"sample_sunset_01.aps",
+"sample_sunset_02.aps",
+"test_caen_m5.aps",
+"test_fullbright.aps",
+"test_halfsunlight_halfambient.aps",
+"test_lighting_00.aps",
+"test_lighting_01.aps",
+"test_nosunlight.aps",
+"test_structure_portrait_bofro.aps",
+"test_structure_portrait_lighting.aps",
+"test_sunlightonly.aps",
+"test_trees.aps",
+"tst5.aps",
+"tutorial.aps"
+	}
+
+end
+
+local function _Init_BuildingHotkeys()
+	local hotkeys = {
+		"1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
+		"q", "w", "e", "r", "t", "y", "u", "i", "o", "p",
+		"a", "s", "d", "f", "g", "h", "j", "k", "l", "z",
+		"x", "c", "v", "b", "n", "m"
+	}
+	
+	local key, value
+	for key,value in ipairs(hotkeys) do
+		local temp_string = "bind([[SHIFT+Alt+".. hotkeys[key] .. "]], [[Scar_DoString('_CheatMod_SpawnBuildingAtMouse(".. key.. ")')]])"
+		Scar_DebugConsoleExecute(temp_string)
+	end
+end
+
+
+local function _Init_SquadHotkeys()
+	local hotkeys = {
+		"1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
+		"q", "w", "e", "r", "t", "y", "u", "i", "o", "p",
+		"a", "s", "d", "f", "g", "h", "j", "k", "l", "z",
+		"x", "c", "v", "b", "n", "m"
+	}
+	
+	local key, value
+	for key,value in pairs(hotkeys) do
+		local temp_string = "bind([[SHIFT+".. hotkeys[key] .. "]], [[Scar_DoString('_CheatMod_SpawnSquadAtMouse(".. key.. ")')]])"
+		Scar_DebugConsoleExecute(temp_string)
+	end
+	
+end
+
+local function _Init_AbilityHotkeys()
+	local hotkeys = {
+		"1", "2", "3", "4", "5", "6", "7", "8", "9", -- disabled "0" because ctrl+shift+0 is already in use
+		"q", "w", "e", "r", "t", "y", "u", "i", "o", "p",
+		"a", "s", "d", "f", "g", "h", "j", "k", "l", "z",
+		"x", "c", "v", "b", "n", "m"
+	}
+	
+	local key, value
+	for key,value in pairs(hotkeys) do
+		local temp_string = "bind([[SHIFT+Control+".. hotkeys[key] .. "]], [[Scar_DoString('_CheatMod_UseAbilityAtMouse(".. key.. ")')]])"
+		Scar_DebugConsoleExecute(temp_string)
+	end
+end
+
+-- initialize ai table
+local function _Init_AI_Table()
+	g_cheatmod_table_ai_enabled = {}
+	local i
+	for i = 1, World_GetPlayerCount() do
+		g_cheatmod_table_ai_enabled[i] = AI_IsAIPlayer(World_GetPlayerAt(i))	
+	end
+end
+
+function _CheatMod_Init()
+	if (Scar_DebugConsoleExecute and (Game_HasLocalPlayer() == true)) then
+		_Init_Globals()
+		_Init_Players()
+		_Init_SquadHotkeys()
+		_Init_BuildingHotkeys()
+		_Init_AbilityHotkeys()
+		_Init_AI_Table()
+		Scar_DebugConsoleExecute("bind([[SHIFT+F1]], [[Scar_DoString('_CheatMod_ToggleFOW()')]])")
+		--Scar_DebugConsoleExecute("bind([[SHIFT+F2]], [[Scar_DoString('_CheatMod_ToggleTaskbar()')]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+F3]], [[Scar_DoString('_CheatMod_SpawnAllSquadsAtMouse()')]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+F4]], [[Scar_DoString('_CheatMod_Toggle_Instant_Production()')]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+F5]], [[Scar_DoString('_CheatMod_Toggle_Instant_Build()')]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+F6]], [[Scar_DoString('_CheatMod_Toggle_Instant_AbilityRecharge()')]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+F7]], [[Scar_DoString('_CheatMod_ToggleAI()')]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+F8]], [[Scar_DoString('_CheatMod_ToggleSelectedAI()')]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+F9]], [[Scar_DoString('_CheatMod_LoadAtmosphere()')]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+F10]], [[Scar_DoString('_CheatMod_AddResources()')]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+F11]], [[Scar_DoString('_CheatMod_ToggleScreenSaver()')]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+F12]], [[Scar_DoString('_CheatMod_ReloadScript()')]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+Control+F1]], [[Scar_DoString('_CheatMod_DisplayHelpText()')]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+Control+F2]], [[Scar_DoString('_CheatMod_DisplaySquadKeys_Text()')]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+Control+F3]], [[Scar_DoString('_CheatMod_DisplayAbilityKeys_Text()')]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+Control+F4]], [[Scar_DoString('_CheatMod_DisplayEntityKeys_Text()')]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+Control+F5]], [[Scar_DoString('_CheatMod_Revert_Chosen_Commander_Tree()')]])")
+
+		Scar_DebugConsoleExecute("bind([[SHIFT+Numpad0]], [[setsimrate(1)]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+Numpad1]], [[setsimrate(2)]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+Numpad2]], [[setsimrate(4)]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+Numpad3]], [[setsimrate(6)]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+Numpad4]], [[setsimrate(8)]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+Numpad5]], [[setsimrate(10)]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+Numpad6]], [[setsimrate(12)]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+Numpad7]], [[setsimrate(16)]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+Numpad8]], [[setsimrate(32)]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+Numpad9]], [[setsimrate(64)]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+Delete]], [[Scar_DoString('_CheatMod_DestroySelection()')]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+Insert]], [[Scar_DoString('_CheatMod_ChangeOwnerSelection()')]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+BackSlash]], [[Scar_DoString('_CheatMod_Toggle_AutoTarget_Selection()')]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+Space]], [[Scar_DoString('_CheatMod_Change_Selected_Army()')]])")
+		--Scar_DebugConsoleExecute("bind([[SHIFT+NumpadMultiply]], [[Scar_DoString('Util_MergeSelectedSquads()')]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+Period]], [[Scar_DoString('_CheatMod_Toggle_Lock_Selected_AI_Squads_and_Entities()')]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+Slash]], [[Scar_DoString('_CheatMod_Switch_Local_Player()')]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+Semicolon]], [[Scar_DoString('_CheatMod_Increase_Veterancy_Selection()')]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+Grave]], [[Scar_DoString('_CheatMod_Print_Selected_Unit()')]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+LBracket]], [[Scar_DoString('_CheatMod_Copy()')]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+RBracket]], [[Scar_DoString('_CheatMod_Paste()')]])")
+		Scar_DebugConsoleExecute("bind([[SHIFT+Minus]], [[Scar_DoString('_CheatMod_Copy_AtMouse()')]])")
+		Scar_DebugConsoleExecute("dofile([[PhoenixMod/Data/game/cheat.lua]])")
+	end
+end
+
+function display_mod()
+    UI_SetDisplayIngameScore(true, true)
+    UI_SetScoreSingle(Util_CreateLocString("Mode"), Util_CreateLocString("Cheat Mode") )
+end
+
+function CheatModOnInit()
+	Rule_AddOneShot(display_mod, 0.25)
+	Rule_AddOneShot(_CheatMod_Init, 0)
+end
+
+Scar_AddInit(CheatModOnInit)

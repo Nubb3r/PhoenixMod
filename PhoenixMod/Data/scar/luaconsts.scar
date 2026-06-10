@@ -1,0 +1,1438 @@
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--
+-- LUA CONSTANTS
+-- Defines variables to be used for important Lua defined contsants
+--
+-- 
+-- (c) 2007 Relic Entertainment
+--
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+TRACE_ALLIES = "allies"
+TRACE_ALLIES_COMMONWEALTH = "allies_commonwealth"
+TRACE_AXIS = "axis"
+TRACE_AXIS_PANZER_ELITE = "axis_panzer_elite"
+
+TSIDE_ALLIES = "allies"
+TSIDE_AXIS = "axis"  
+
+-- constants used for event priorities
+EVENT_NIS = 0
+EVENT_INTEL = 1
+EVENT_AMBIENT = 2
+
+-- constants used for overriding options
+OPTION_EVENT_CUES			= "SquadEventCues"
+OPTION_SQUAD_CONTROL		= "SquadControl"
+OPTION_STICKY_SELECTION		= "StickySelection"
+OPTION_MOUSE_SCROLL 		= "MouseScroll"
+
+CWHQ_MOBILE = true
+CWHQ_STATIC = false
+
+--[[ SBPS ]]
+-- example of use: SBP.AIRBOURNE
+SBP = {
+	__scardoc_enum = true,
+	
+	-- *** ALLIES SBPS ***
+	ALLIES = {
+		
+		--infantry
+		RIFLEMEN			= BP_GetSquadBlueprint("sbps/races/allies/soldiers/rifleman_squad.lua"),
+		SNIPER				= BP_GetSquadBlueprint("sbps/races/allies/soldiers/sniper_squad.lua"),
+		ENGINEER			= BP_GetSquadBlueprint("sbps/races/allies/soldiers/engineer_infantry.lua"),
+		PARATROOPER 			= BP_GetSquadBlueprint("sbps/races/allies/soldiers/airborne_infantry.lua"),
+		HEAVYMG			= BP_GetSquadBlueprint("sbps/races/allies/soldiers/heavy_machine_gun_section.lua"),
+		PARATROOPER_HEAVYMG_SP	= BP_GetSquadBlueprint("sbps/races/allies/soldiers/heavy_machine_gun_section_airborne_sp.lua"),
+		MORTAR				= BP_GetSquadBlueprint("sbps/races/allies/soldiers/mortar_section.lua"),
+		PARATROOPER_MORTAR_SP	= BP_GetSquadBlueprint("sbps/races/allies/soldiers/mortar_section_airborne_sp.lua"),
+		PARATROOPER_REINF_SP		= BP_GetSquadBlueprint("sbps/races/allies/soldiers/airborne_infantry_reinforcement_sp.lua"),
+		RANGER				= BP_GetSquadBlueprint("sbps/races/allies/soldiers/ranger_team.lua"),
+		RANGER_SP_BAZOOKA		= BP_GetSquadBlueprint("sbps/races/allies/soldiers/ranger_team_sp_bazooka.lua"),
+		PARATROOPER_AT_57MM 		= BP_GetSquadBlueprint("sbps/races/allies/vehicles/m1_57mm_at_squad_paradrop.lua"),
+		CAPTURE_AT			= BP_GetSquadBlueprint("sbps/races/allies/soldiers/heavy_weapon_capture_squad_at_gun.lua"),
+		CAPTURE_88			= BP_GetSquadBlueprint("sbps/races/allies/soldiers/heavy_weapon_capture_squad_88.lua"),
+		RIFLEMEN_TUTORIAL_SP		= BP_GetSquadBlueprint("sbps/races/allies/soldiers/rifleman_squad_sp_tutorial.lua"),
+		MEDIC_SP			= BP_GetSquadBlueprint("sbps/races/allies/soldiers/rifleman_squad_sp_medic.lua"),
+		OFFICER				= BP_GetSquadBlueprint("sbps/races/allies/soldiers/command_platoon.lua"),
+		
+		--vehicles
+		T17				= BP_GetSquadBlueprint("sbps/races/allies/vehicles/t17_armoured_car_squad.lua"),
+		JEEP				= BP_GetSquadBlueprint("sbps/races/allies/vehicles/jeep_squad.lua"),
+		AT_57MM			= BP_GetSquadBlueprint("sbps/races/allies/vehicles/m1_57mm_at_squad.lua"),
+		HOWITZER			= BP_GetSquadBlueprint("sbps/races/allies/vehicles/m2a1_105mm_howitzer_squad.lua"),
+		HALFTRACK			= BP_GetSquadBlueprint("sbps/races/allies/vehicles/m3_halftrack_squad.lua"),
+		SHERMAN			= BP_GetSquadBlueprint("sbps/races/allies/vehicles/m4_sherman_squad.lua"),
+		CROCODILE			= BP_GetSquadBlueprint("sbps/races/allies/vehicles/m4_sherman_squad_crocodile.lua"),
+		CALLIOPE			= BP_GetSquadBlueprint("sbps/races/allies/vehicles/m4_sherman_squad_calliope.lua"),
+		GREYHOUND			= BP_GetSquadBlueprint("sbps/races/allies/vehicles/m8_greyhound_squad.lua"),
+		M10				= BP_GetSquadBlueprint("sbps/races/allies/vehicles/m10_tank_destroyer.lua"),
+		HELLCAT				= BP_GetSquadBlueprint("sbps/races/allies/vehicles/m18_hellcat.lua"),
+		PERSHING			= BP_GetSquadBlueprint("sbps/races/allies/vehicles/m26_pershing_heavy_tank.lua"),
+		TRUCK				= BP_GetSquadBlueprint("sbps/races/allies/vehicles/deuce_and_a_half_cckw_squad.lua"),
+	},
+			
+	--*** AXIS SBPS ***
+	AXIS = {
+		--infantry
+		GRENADIER			= BP_GetSquadBlueprint("sbps/races/axis/soldiers/grenadier_squad.lua"),
+		VOLKSGRENADIER		= BP_GetSquadBlueprint("sbps/races/axis/soldiers/volksgrenadier_squad.lua"),
+		VOLKS_2PANZERF		= BP_GetSquadBlueprint("sbps/races/axis/soldiers/volksgrenadier_squad_2_panzerfausts_sp.lua"),
+		HEAVYMG			= BP_GetSquadBlueprint("sbps/races/axis/soldiers/heavy_machine_gun_section.lua"),
+		KNIGHTSCROSS			= BP_GetSquadBlueprint("sbps/races/axis/soldiers/knights_cross_holder.lua"),
+		MORTAR				= BP_GetSquadBlueprint("sbps/races/axis/soldiers/mortar_section.lua"),
+		OFFICER				= BP_GetSquadBlueprint("sbps/races/axis/soldiers/officer_squad.lua"),
+		PIONEER			= BP_GetSquadBlueprint("sbps/races/axis/soldiers/pioneer_squad.lua"),
+		SNIPER				= BP_GetSquadBlueprint("sbps/races/axis/soldiers/sniper.lua"),
+		STORMTROOPER			= BP_GetSquadBlueprint("sbps/races/axis/soldiers/stormtrooper_squad.lua"),
+		CAPTURE_88			= BP_GetSquadBlueprint("sbps/races/allies/soldiers/heavy_weapon_capture_squad_88.lua"),	-- VALIDATE
+		CAPTURE_88_AXIS		= BP_GetSquadBlueprint("sbps/races/axis/soldiers/heavy_weapon_capture_squad_88_axis.lua"),	
+		CAPTURE_AT_AXIS		= BP_GetSquadBlueprint("sbps/races/axis/soldiers/heavy_weapon_capture_squad_axis_at_gun_axis.lua"),
+		CAPTURE_QUAD_20_AXIS		= BP_GetSquadBlueprint("sbps/races/axis/soldiers/heavy_weapon_capture_squad_quad_20mm_axis.lua"),
+		CAPTURE_MORTAR_AXIS		= BP_GetSquadBlueprint("sbps/races/axis/soldiers/heavy_weapon_capture_squad_mortar_axis.lua"),	
+		HEAVYMG_SP_NOSUP		= BP_GetSquadBlueprint("sbps/races/axis/soldiers/sp/sp_gen_heavy_machine_gun_section_no_suppression.lua"),
+		HEAVYMG_M03			= BP_GetSquadBlueprint("sbps/races/axis/soldiers/heavy_machine_gun_section_sp_m03.lua"),		
+		GRENADIER_MG42_SP		= BP_GetSquadBlueprint("sbps/races/axis/soldiers/grenadier_squad_2_mg42_sp.lua"),
+	
+		--vehicles
+		PAK_38				= BP_GetSquadBlueprint("sbps/races/axis/vehicles/50mm_pak38.lua"),
+		FLAK_88				= BP_GetSquadBlueprint("sbps/races/axis/vehicles/88_flak_squad.lua"),
+		FLAK_88_SP			= BP_GetSquadBlueprint("sbps/races/axis/vehicles/88_flak_squad_sp_caen.lua"),
+		NEBELWERFER			= BP_GetSquadBlueprint("sbps/races/axis/vehicles/150mm_nebelwerfer.lua"),
+		AA_20MM			= BP_GetSquadBlueprint("sbps/races/axis/vehicles/flak38_quad20mm_aagun_squad.lua"),
+		GOLIATH				= BP_GetSquadBlueprint("sbps/races/axis/vehicles/goliath_remote_controlled_bomb_squad.lua"),
+		HALFTRACK			= BP_GetSquadBlueprint("sbps/races/axis/vehicles/halftrack_squad.lua"),
+		HALFTRACK_FLAME		= BP_GetSquadBlueprint("sbps/races/axis/vehicles/halftrack_squad_flammenwerfer.lua"),
+		HALFTRACK_STUKA		= BP_GetSquadBlueprint("sbps/races/axis/vehicles/halftrack_squad_stuka.lua"),
+		MOTORCYCLE			= BP_GetSquadBlueprint("sbps/races/axis/vehicles/motorcycle_squad.lua"),
+		OPELBLITZ			= BP_GetSquadBlueprint("sbps/races/axis/vehicles/opel_blitz_squad.lua"),
+		OSTWIND			= BP_GetSquadBlueprint("sbps/races/axis/vehicles/ostwind_flak_panzer_squad.lua"),
+		PANTHER			= BP_GetSquadBlueprint("sbps/races/axis/vehicles/panther_squad.lua"),
+		PANZER				= BP_GetSquadBlueprint("sbps/races/axis/vehicles/panzer_iv_squad.lua"),
+		PUMA				= BP_GetSquadBlueprint("sbps/races/axis/vehicles/sdkfz_234_armoured_car_squad.lua"),
+		STUG				= BP_GetSquadBlueprint("sbps/races/axis/vehicles/stug_iv_squad.lua"),
+		TIGER				= BP_GetSquadBlueprint("sbps/races/axis/vehicles/tiger_squad.lua"),
+		KING_TIGER			= BP_GetSquadBlueprint("sbps/races/axis/vehicles/tiger_ace_squad.lua"),
+		SCHWIMMWAGEN			= BP_GetSquadBlueprint("sbps/races/axis/vehicles/axis_schwimmwagen.lua"),
+	},
+	
+	--*** COMMON WEALTH ***
+	CW = {
+		
+		--infantry
+		COMMANDOS_MG			= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/soldiers/commando_hmg_squad.lua"),
+		CAPTAIN				= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/soldiers/captain.lua"),
+		LIEUTENANT			= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/soldiers/lieutenant.lua"),
+		COMMANDOS			= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/soldiers/commando_squad.lua"),
+		SAPPER				= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/soldiers/sapper_squad.lua"),
+		TOMMIES			= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/soldiers/tommy_squad.lua"),
+		TOMMIES_CANADIAN_SP		= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/soldiers/tommy_squad_canadian.lua"),
+		MORTAR				= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/soldiers/mortar_section.lua"),
+		VICKERSMG			= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/soldiers/heavy_machine_gun_section.lua"),
+		VICKERS_MG_SP			= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/soldiers/vickers_mmg_section_mobile.lua"),
+		COMMANDOS_MORTAR		= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/soldiers/commando_mortar_squad.lua"),
+		COMMANDOS_PIAT		= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/soldiers/commando_piat_squad.lua"),
+		COMMANDOS_MG42_SP		= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/soldiers/commando_squad_mg42_sp.lua"),
+		COMMANDOS_PARATROOPER_SP	= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/soldiers/commando_paratrooper_squad_sp.lua"),
+		COMMANDOS_NOVETRANCY_SP	= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/soldiers/commando_squad_no_veterancy_bonus.lua"),
+		PIONEER_LIEUT_SP		= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/soldiers/lieutenant_sp_m08.lua"),
+		COMMANDOS_SNIPER		= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/soldiers/commando_squad_sniper_sp.lua"),
+		
+		
+		--capture squads
+		CAPTURE_MG			= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/soldiers/heavy_weapon_capture_squad_mg.lua"),
+		CAPTURE_MORTAR		= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/soldiers/heavy_weapon_capture_squad_mortar.lua"),
+		CAPTURE_AXIS_ATGUN		= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/soldiers/heavy_weapon_capture_squad_axis_at_gun.lua"),
+		CAPTURE_ATGUN			= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/soldiers/heavy_weapon_capture_squad_at_gun.lua"),
+		
+		--vehicles
+		BREN_CARRIER			= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/vehicles/bren_carrier_squad.lua"),
+		KANGAROO			= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/vehicles/kangaroo_carrier_squad.lua"),
+		CHURCHILL_AVRE			= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/vehicles/churchill_avre_squad.lua"),
+		CHURCHILL_CROC		= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/vehicles/churchill_crocodile_squad.lua"),
+		CHURCHILL			= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/vehicles/churchill_squad.lua"),
+		CHURCHILL_SP_CAEN		= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/vehicles/churchill_squad_sp_caen.lua"),
+		COMMAND_CROMWELL		= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/vehicles/command_tank_squad.lua"),
+		CROMWELL			= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/vehicles/cromwell_squad.lua"),
+		STUART				= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/vehicles/stuart_squad.lua"),
+		PRIEST				= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/vehicles/priest_squad.lua"),
+		FIREFLY				= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/vehicles/sherman_firefly_squad.lua"),
+		TETRARCH			= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/vehicles/tetrarch_squad.lua"),
+		COMMANDOS_JEEP		= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/vehicles/commonwealth_jeep_sp.lua"),
+		SIXPOUNDER			= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/vehicles/cw_6_pounder.lua"),
+		STAGHOUND			= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/vehicles/staghound_armoured_car_squad.lua"),
+		
+		--emplacements
+		TOWED_AT			= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/vehicles/cw_towed_at_squad.lua"),
+		ARTILLERY_25_POUNDER		= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/vehicles/25_pounder_artillery_squad.lua"),
+		BOFORS_AA			= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/vehicles/bofors_aa_gun_squad.lua"),
+		COMMANDOS_PAK38_SP		= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/vehicles/commando_pak38_sp.lua"),
+		COMMANDOS_NEBEL_SP		= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/vehicles/commando_nebelwerfer_sp.lua"),
+		COMMANDOS_AT_57MM_SP	= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/soldiers/commando_squad_57mm_sp.lua"),
+		
+		--HQ
+		HQ				= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/vehicles/hq_squad.lua"),	
+		HQ_REINFORCEMENT		= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/vehicles/hq_squad_reinforcement.lua"),
+		ARMOUR_HQ			= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/vehicles/armoured_hq_squad.lua"),					
+		INFANTRY_HQ			= BP_GetSquadBlueprint("sbps/races/allies_commonwealth/vehicles/soldiers_hq_squad.lua"),
+		
+	},
+	
+	--*** PANZER ELITE ***
+	ELITE = {
+		--sp units
+		PIONEER_DEMO			= BP_GetSquadBlueprint("sbps/races/axis/soldiers/sp/pioneer_squad_sp.lua"),
+		KING_TIGER_ARNHEM		= BP_GetSquadBlueprint("sbps/races/axis/vehicles/tiger_ace_squad_campaign.lua"),
+		
+		
+		--Carp_B Henschel
+		HENSCHEL_TAKEOFF		= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/vehicles/henschel_ground_squad.lua"),
+		
+		--infantry
+		PANZERGRENADIER		= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/soldiers/panzer_grenadier_squad.lua"),
+		HEAVYMG			= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/soldiers/heavy_machine_gun_section.lua"),
+		MORTAR				= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/soldiers/mortar_section.lua"),
+		LUFTWAFFE			= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/soldiers/luftwaffe_squad.lua"),
+		FALLSCHIRMJAGER		= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/soldiers/panzer_falschirmjager.lua"),
+		ASSAULTGRENADIER		= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/soldiers/tankbuster_anti_infantry_squad.lua"),
+		TANKBUSTERS			= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/soldiers/tankbuster_anti_tank_squad.lua"),
+		
+		--vehicles
+		KETTENRAD			= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/vehicles/recon_squad.lua"),
+		ARMOURCAR_221			= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/vehicles/221_armoured_car_squad.lua"),
+		ARMOURCAR_222			= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/vehicles/222_armored_car_squad.lua"),
+		ARMOURCAR_223			= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/vehicles/223_armoured_car_squad.lua"),
+		HALFTRACK_250			= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/vehicles/250_light_halftrack_squad.lua"),
+		HALFTRACK_MORTAR		= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/vehicles/250_mortar_halftrack_squad.lua"),
+		HALFTRACK_SNIPER		= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/vehicles/250_sniper_halftrack_squad.lua"),
+		HALFTRACK_VAMPIRE		= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/vehicles/250_vampire_halftrack_squad.lua"),
+		HALFTRACK_251			= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/vehicles/251_heavy_halftrack_squad.lua"),
+		PANZER_SUPPORT		= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/vehicles/panzer_iv_squad_stubby.lua"),
+		HUMMEL				= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/vehicles/hummel_squad.lua"),
+		HETZER				= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/vehicles/hetzer_squad.lua"),
+		JAGDPANTHER			= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/vehicles/jagdpanther_squad.lua"),
+		MARDER				= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/vehicles/marderiii_squad.lua"),
+		WIRBLEWIND			= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/vehicles/wirblewind_flak_panzer_squad.lua"),
+		BERGETIGER			= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/vehicles/bergetiger_squad.lua"),
+		PANTHER			= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/vehicles/panther_squad.lua"),
+		GOLIATH				= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/vehicles/goliath_remote_controlled_bomb_squad.lua"),
+		SCHWIMMWAGEN			= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/vehicles/panzer_elite_schwimmwagen.lua"),
+		HOTCHKISS			= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/vehicles/hotchkiss_squad.lua"),
+		
+		
+		--emplacements
+		FLAK_38				= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/vehicles/flak38_quad20mm_aagun_squad.lua"),
+		FLAK_38_CAPTURED		= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/soldiers/heavy_weapon_capture_squad_quad_20mm_axis.lua"),
+		FLAK_38_SP			= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/vehicles/flak38_quad20mm_aagun_squad_caen_sp.lua"),
+		CAPTURE_88_ELITE		= BP_GetSquadBlueprint("sbps/races/axis_panzer_elite/soldiers/heavy_weapon_capture_squad_88_axis.lua"),
+		
+	},
+	
+
+
+}
+
+--[[ EBPS ]]
+-- example of use: EBP.BARRACKS
+EBP = {
+	__scardoc_enum = true,
+	
+	-- ebps specifically for single player missions
+	SP = {
+			
+		BOAT				= BP_GetEntityBlueprint("ebps/races/allies_commonwealth/buildings/boat.lua"), -- boat with paratroopers for Oosterbeek OMG Campaign
+		HELLS_HIGHWAY_CHURCH		= BP_GetEntityBlueprint("ebps/environment/art_ambient/buildings/normandy_rural/buildings/roughstone_3x5_churchold_02/roughstone_3x5_churchold_02.lua"),
+		HENSCHEL			= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/military/henschel_aircraft_parked.lua"), -- parked on ground
+		HENSCHEL_AIR			= BP_GetEntityBlueprint("ebps/races/axis_panzer_elite/vehicles/henschel_attack_aircraft_ability.lua"), -- flying
+		SP_SMOKE			= BP_GetEntityBlueprint("ebps/gameplay/sp_target_smoke_red.lua"),
+		HILL112_MORTAR_BUNKER		= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/defenses/concrete/buried_bunker.lua"),
+		BODENTURM			= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/defenses/pantherturm.lua"),
+		HILL112_MORTAR_BUNKER_WRECK	= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/defenses/concrete/buried_bunker_wreck.lua"),
+		BODENTURM_WRECK		= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/defenses/pantherturm_wreck.lua"),
+		SP_RIVERBARGE			= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/civilian/barge_sp.lua"),
+		-- CoH
+		ALLIED_HQ_SP_M06		= BP_GetEntityBlueprint([[ebps\races\allies\buildings\hq_sp_m06]]),
+		AXIS_HQ_SP_M08			= BP_GetEntityBlueprint("ebps/races/axis/buildings/hq_sp_m08"),
+	},
+	
+	--*** ALLIES EBPS ***
+	ALLIES = {
+	
+		-- hqs
+		HQ				= BP_GetEntityBlueprint("ebps/races/allies/buildings/hq"),
+		HQ2				= BP_GetEntityBlueprint("ebps/races/allies/buildings/hq_2"),
+		HQ3				= BP_GetEntityBlueprint("ebps/races/allies/buildings/hq_3"),
+		HQ4				= BP_GetEntityBlueprint("ebps/races/allies/buildings/hq_4"),
+		HQ5				= BP_GetEntityBlueprint("ebps/races/allies/buildings/hq_5"),
+		HQ6				= BP_GetEntityBlueprint("ebps/races/allies/buildings/hq_6"),
+		HQ7				= BP_GetEntityBlueprint("ebps/races/allies/buildings/hq_7"),
+		HQ8				= BP_GetEntityBlueprint("ebps/races/allies/buildings/hq_8"),		
+		HQ_WRECK			= BP_GetEntityBlueprint("ebps/races/allies/buildings/hq_wreck"),
+		
+		-- tech buildings
+		BARRACKS			= BP_GetEntityBlueprint("ebps/races/allies/buildings/barracks"),
+		ARMORY				= BP_GetEntityBlueprint("ebps/races/allies/buildings/support_weapons"),
+		MOTORPOOL			= BP_GetEntityBlueprint("ebps/races/allies/buildings/motorpool"),
+		TANK_DEPOT			= BP_GetEntityBlueprint("ebps/races/allies/buildings/2nd_motorpool"),
+		QUARTER_MASTER		= BP_GetEntityBlueprint("ebps/races/allies/buildings/quarter_master"),
+		MEDIC_STATION			= BP_GetEntityBlueprint("ebps/races/allies/buildings/checkpoint.lua"),
+		TRIAGE				= BP_GetEntityBlueprint("ebps/races/allies/buildings/triage_center.lua"),
+		MG_NEST			= BP_GetEntityBlueprint("ebps/races/allies/buildings/machine_gun_nest"),
+		
+		-- miscellaneous
+		OBSERVATION_POST		= BP_GetEntityBlueprint("ebps/races/allies/buildings/secure_structure"),
+		BARBED_WIRE 			= BP_GetEntityBlueprint("ebps/races/allies/buildings/barbed_wire.lua"),
+		BARBED_WIRE_RIFLEMEN		= BP_GetEntityBlueprint("ebps/races/allies/buildings/barbed_wire_rifleman.lua"),
+		SANDBAG	 		= BP_GetEntityBlueprint("ebps/races/allies/buildings/sand_bag.lua"),
+		SANDBAG_RIFLEMEN		= BP_GetEntityBlueprint("ebps/races/allies/buildings/sand_bag_rifleman.lua"),
+		TANK_TRAP 			= BP_GetEntityBlueprint("ebps/races/allies/buildings/tank_traps.lua"),
+		TANK_TRAP_RIFLEMEN 		= BP_GetEntityBlueprint("ebps/races/allies/buildings/tank_traps_rifleman.lua"),
+		MINES				= BP_GetEntityBlueprint("ebps/races/allies/mines/allies_mine.lua"),
+		MINES_RIFLEMEN			= BP_GetEntityBlueprint("ebps/races/allies/mines/allies_mine_rifleman.lua"),
+		HOWITZER			= BP_GetEntityBlueprint("ebps/races/allies/vehicles/m2a1_105mm_howitzer.lua")
+
+	},
+	
+	--*** AXIS EBPS ***
+	AXIS = {
+		HQ				= BP_GetEntityBlueprint("ebps/races/axis/buildings/hq"),
+		HQ2				= BP_GetEntityBlueprint("ebps/races/axis/buildings/hq_2"),
+		HQ3				= BP_GetEntityBlueprint("ebps/races/axis/buildings/hq_3"),
+		HQ4				= BP_GetEntityBlueprint("ebps/races/axis/buildings/hq_4"),
+		HQ5				= BP_GetEntityBlueprint("ebps/races/axis/buildings/hq_5"),
+		HQ6				= BP_GetEntityBlueprint("ebps/races/axis/buildings/hq_6"),
+		HQ7				= BP_GetEntityBlueprint("ebps/races/axis/buildings/hq_7"),
+		HQ8				= BP_GetEntityBlueprint("ebps/races/axis/buildings/hq_8"),
+		HQ_WRECK			= BP_GetEntityBlueprint("ebps/races/axis/buildings/hq_wreck"),
+		
+		--tech buildings
+		QUARTERS			= BP_GetEntityBlueprint("ebps/races/axis/buildings/basic_support"),
+		BARRACKS			= BP_GetEntityBlueprint("ebps/races/axis/buildings/platoon_support_building"), 
+		ARMORY				= BP_GetEntityBlueprint("ebps/races/axis/buildings/company_support_building"),
+		COMMAND			= BP_GetEntityBlueprint("ebps/races/axis/buildings/battalion_support_building"), 
+		KAMPFKRAFT			= BP_GetEntityBlueprint("ebps/races/axis/buildings/quarter_master"), 
+		BUNKER				= BP_GetEntityBlueprint("ebps/races/axis/buildings/axis_bunker"),
+		
+		-- miscellaneous
+		BARBED_WIRE			= BP_GetEntityBlueprint("ebps/races/axis/buildings/barbed_wire.lua"),
+		OBSERVATION_POST		= BP_GetEntityBlueprint("ebps/races/axis/buildings/axis_bunker_lite"),
+		MINES				= BP_GetEntityBlueprint("ebps/races/axis/axis_mine.lua"),
+		SANDBAG			= BP_GetEntityBlueprint("ebps/races/axis/buildings/sand_bag.lua"),
+		TANK_TRAP			= BP_GetEntityBlueprint("ebps/races/axis/buildings/tank_traps.lua"),
+	},
+	
+	--*** COMMON WEALTH ***
+	CW = {
+		
+		--HQ
+		HQ				= BP_GetEntityBlueprint("ebps/races/allies_commonwealth/vehicles/hq.lua"),	
+		HQ_REINFORCEMENT		= BP_GetEntityBlueprint("ebps/races/allies_commonwealth/vehicles/hq_reinforcement.lua"),
+		ARMOUR_HQ			= BP_GetEntityBlueprint("ebps/races/allies_commonwealth/vehicles/armoured_hq.lua"),					
+		INFANTRY_HQ			= BP_GetEntityBlueprint("ebps/races/allies_commonwealth/vehicles/soldiers_hq.lua"),
+		
+		-- emplacements
+		MG_NEST			= BP_GetEntityBlueprint("ebps/races/allies_commonwealth/buildings/machine_gun_nest"),					
+		HOWITZER_NEST			= BP_GetEntityBlueprint("ebps/races/allies_commonwealth/buildings/howitzer_gun_nest"),					
+		ANTITANK_NEST			= BP_GetEntityBlueprint("ebps/races/allies_commonwealth/buildings/anti_tank_gun_nest.lua"),					
+		SLITTRENCH_NEST		= BP_GetEntityBlueprint("ebps/races/allies_commonwealth/buildings/slit_trench.lua"),					
+		MORTAR_NEST			= BP_GetEntityBlueprint("ebps/races/allies_commonwealth/buildings/mortar_gun_nest.lua"),
+		BOFORS_NEST			= BP_GetEntityBlueprint("ebps/races/allies_commonwealth/buildings/bofors_gun_nest.lua"),
+		
+		-- miscellaneous
+		RADIO_BEACON			= BP_GetEntityBlueprint("ebps/races/allies_commonwealth/buildings/detector_radio.lua"),
+		BARBED_WIRE			= BP_GetEntityBlueprint("ebps/races/allies_commonwealth/buildings/barbed_wire.lua"),
+		SANDBAG			= BP_GetEntityBlueprint("ebps/races/allies_commonwealth/buildings/sand_bag.lua"),
+		CASUALTY_CLEARING		= BP_GetEntityBlueprint("ebps/races/allies_commonwealth/buildings/casualty_clearing_station.lua"),
+		MINES				= BP_GetEntityBlueprint("ebps/races/allies_commonwealth/buildings/commonwealth_mine.lua"),
+		DEMOLITION_CHARGE		= BP_GetEntityBlueprint("ebps/gameplay/props/demo_charge_commando"),
+		
+		--gliders
+		GLIDER_COMMANDOS		= BP_GetEntityBlueprint("ebps/races/allies_commonwealth/buildings/glider.lua"),
+		GLIDER_HQ			= BP_GetEntityBlueprint("ebps/races/allies_commonwealth/buildings/glider_hq.lua"),
+		GLIDER_TETRARCH		= BP_GetEntityBlueprint("ebps/races/allies_commonwealth/buildings/glider_tetrarch.lua"),
+		
+	},
+	
+	--*** PANZER ELITE ***
+	ELITE = {
+		-- hqs
+		HQ				= BP_GetEntityBlueprint("ebps/races/axis_panzer_elite/buildings/hq"),
+		HQ2				= BP_GetEntityBlueprint("ebps/races/axis_panzer_elite/buildings/hq_2"),
+		HQ3				= BP_GetEntityBlueprint("ebps/races/axis_panzer_elite/buildings/hq_3"),
+		HQ4				= BP_GetEntityBlueprint("ebps/races/axis_panzer_elite/buildings/hq_4"),
+		HQ5				= BP_GetEntityBlueprint("ebps/races/axis_panzer_elite/buildings/hq_5"),
+		HQ6				= BP_GetEntityBlueprint("ebps/races/axis_panzer_elite/buildings/hq_6"),
+		HQ7				= BP_GetEntityBlueprint("ebps/races/axis_panzer_elite/buildings/hq_7"),
+		HQ8				= BP_GetEntityBlueprint("ebps/races/axis_panzer_elite/buildings/hq_8"),		
+		HQ_WRECK			= BP_GetEntityBlueprint("ebps/races/axis_panzer_elite/buildings/hq_wreck"),
+		
+		-- tech buildings
+		PANZERJAGER			= BP_GetEntityBlueprint("ebps/races/axis_panzer_elite/buildings/panzerjager_kommand"),
+		LOGISTIK			= BP_GetEntityBlueprint("ebps/races/axis_panzer_elite/buildings/logistik_kompanie"),
+		KAMPFGRUPPE			= BP_GetEntityBlueprint("ebps/races/axis_panzer_elite/buildings/kampfgruppe_kompanie"),
+		PANZER_ARTILLERIE		= BP_GetEntityBlueprint("ebps/races/axis_panzer_elite/buildings/panzer_artillerie_kommand"),
+		
+		-- miscellaneous
+		BARBED_WIRE			= BP_GetEntityBlueprint("ebps/races/axis_panzer_elite/buildings/barbed_wire"),
+		MINE_TELLER			= BP_GetEntityBlueprint("ebps/races/axis_panzer_elite/mines/pe_teller_mine"),
+		MINE_AIR_DROPPED      		= BP_GetEntityBlueprint("ebps/races/axis_panzer_elite/mines/pe_air_dropped_mine"),
+		SANDBAG			= BP_GetEntityBlueprint("ebps/races/axis_panzer_elite/buildings/sand_bag"),
+		TANK_TRAP			= BP_GetEntityBlueprint("ebps/races/axis_panzer_elite/buildings/tank_traps"),
+		
+	},
+	
+	SYNC_WEAPON = {
+		FLAK_88 			= BP_GetEntityBlueprint("ebps/races/axis/vehicles/88mm_flak_36_at.lua"),
+		AT_57MM			= BP_GetEntityBlueprint("ebps/races/allies/vehicles/m1_57mm_towed_at_gun.lua"),
+		AT_PAK_38			= BP_GetEntityBlueprint("ebps/races/axis/vehicles/50mm_pak38.lua"),
+		HOWITZER			= BP_GetEntityBlueprint("ebps/races/allies/vehicles/m2a1_105mm_howitzer.lua"),
+		FLAK_38				= BP_GetEntityBlueprint("ebps/races/axis_panzer_elite/vehicles/flakvierling38_quad20mm_aagun.lua"),
+		FLAK_88_PE			= BP_GetEntityBlueprint("ebps/races/axis_panzer_elite/vehicles/88mm_flak_36_at.lua")
+	},
+	
+	-- *** PICKUPS that the player can either occupy (like an 88) or that they can grab (like a bazooka)
+	PICKUP = {
+		
+		MANPOWER			= BP_GetEntityBlueprint("ebps/gameplay/props/lucky_strikes.lua"), 
+		MUNITIONS			= BP_GetEntityBlueprint("ebps/gameplay/Props/generic_instantuse_munitions_ammobox_item.lua"),
+		FUEL				= BP_GetEntityBlueprint("ebps/gameplay/Props/generic_instantuse_fuel_fuelcan_item.lua"),
+		AIRDROP_FUEL			= BP_GetEntityBlueprint("ebps/props/supply_drop_fuel_resource.lua"),
+		AIRDROP_MUNITIONS		= BP_GetEntityBlueprint("ebps/props/supply_drop_ammunition_resource.lua"),
+		
+		ALLIES = {
+			BAZOOKA		= BP_GetEntityBlueprint("ebps/gameplay/props/allied_m9bazooka_item.lua"),
+			BAR			= BP_GetEntityBlueprint("ebps/gameplay/props/allied_m1918_bar_item.lua"),
+			HMG			= BP_GetEntityBlueprint("ebps/gameplay/props/m1917_30cal_hmg.lua"),
+			MORTAR			= BP_GetEntityBlueprint("ebps/props/m2_60mm_mortar.lua"),
+		},
+		
+		AXIS = {
+			HMG			= BP_GetEntityBlueprint("ebps/props/mg42_hmg"),
+			MORTAR			= BP_GetEntityBlueprint("ebps/props/granatewerfer_34_81mm_mortar"),
+			LMG_42			= BP_GetEntityBlueprint("ebps/gameplay/props/axis_mg42_item"),
+			LMG_44			= BP_GetEntityBlueprint("ebps/gameplay/props/axis_mp44_item"),
+			PANZERSCHRECK 	= BP_GetEntityBlueprint("ebps/gameplay/props/axis_panzerschreck_item.lua"),
+		},
+		
+		--*** COMMON WEALTH ***
+		CW = {
+			--infantry
+			LMG_BREN 		= BP_GetEntityBlueprint("ebps/gameplay/props/commonwealth_bren_item"),
+			PIAT	 		= BP_GetEntityBlueprint("ebps/gameplay/props/commonwealth_piat_item"),
+		},
+		
+		--*** PANZER ELITE ***
+		ELITE = {
+			FLAKVIERLING38		= BP_GetEntityBlueprint("ebps/races/axis_panzer_elite/vehicles/flakvierling38_quad20mm_aagun.lua"),
+			--infantry
+			-- INSERT_ELITE_ITEM					= nil,		
+		
+		},
+	},
+	
+	AIRCRAFT = {
+		ALLIES = {
+			THUNDERBOLT		= BP_GetEntityBlueprint("ebps/races/allies/vehicles/p47_thunderbolt.lua"),
+			THUNDERBOLT_ROCKETS	= BP_GetEntityBlueprint("ebps/races/allies/vehicles/p47_thunderbolt_rockets.lua"),
+			THUNDERBOLT_RECON	= BP_GetEntityBlueprint("ebps/races/allies/vehicles/p47_thunderbolt_recon.lua"),
+			TYPHOON_RECON		= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/military/typhoon_aircraft_recon.lua"),
+			TYPHOON_STRAFING	= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/military/typhoon_aircraft_strafing.lua"),
+			TYPHOON_ROCKET	= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/military/typhoon_aircraft_rockets.lua"),
+		},
+		
+	},
+
+	--[[ NEUTRAL ITEMS ]]
+	NEUTRAL = {
+		-- ??,
+	
+	},
+	
+	STRAT_POINT = {
+		CONTROL_STRUCTURE_SP		= BP_GetEntityBlueprint("ebps/gameplay/sp_invisible_control_structure.lua"),
+		VICTORY				= BP_GetEntityBlueprint("ebps/gameplay/victory_point"),
+		VICTORY_SP			= BP_GetEntityBlueprint("ebps/gameplay/sp_victorypoint.lua"),
+		ENTRY				= BP_GetEntityBlueprint("ebps/gameplay/map_entry_point.lua"),
+		AI_LOW				= BP_GetEntityBlueprint("ebps/gameplay/ai_military_low.lua"),
+		AI_MEDIUM			= BP_GetEntityBlueprint("ebps/gameplay/ai_military_med.lua"),
+		AI_HIGH				= BP_GetEntityBlueprint("ebps/gameplay/ai_military_high.lua"),
+		FUEL_HIGH			= BP_GetEntityBlueprint("ebps/gameplay/fuel_point_high.lua"),
+		FUEL_MED			= BP_GetEntityBlueprint("ebps/gameplay/fuel_point_medium.lua"),
+		FUEL_LOW			= BP_GetEntityBlueprint("ebps/gameplay/fuel_point.lua"),
+		MUN_HIGH			= BP_GetEntityBlueprint("ebps/gameplay/munition_point_high.lua"),
+		MUN_MED			= BP_GetEntityBlueprint("ebps/gameplay/munition_point_medium.lua"),
+		MUN_LOW			= BP_GetEntityBlueprint("ebps/gameplay/munition_point.lua"),
+		NO_RESOURCE			= BP_GetEntityBlueprint("ebps/gameplay/no_resource_point.lua"),
+		INVISIBLE_NO_RESOURCE		= BP_GetEntityBlueprint("ebps/gameplay/invisible_no_resource_point.lua"),
+	},
+	
+	-- WRECKS (useful lists for clearing out any wrecks from a NIS zone)
+	-- usage: EBP.WRECKS.SHERMAN
+	WRECKS = {
+		GREYHOUND			= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_greyhound.lua"),
+		HOWITZER			= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_howitzer.lua"),
+		JEEP				= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_jeep.lua"),
+		P47				= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_p47.lua"),
+		SHERMAN			= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_sherman.lua"),
+		PAK_38				= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_50mm_pak38.lua"),
+		MOTORCYCLE			= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_bmwr75.lua"),
+		FLAK38AAGUN			= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_flak_38_aa_gun.lua"),
+		NEBELWERFER			= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_nebelwerfer.lua"),
+		PANTHER			= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_panther.lua"),
+		PANZER				= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_panzeriv.lua"),
+		STUG				= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_stugiv.lua"),
+		TIGER				= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_tiger.lua"),
+		
+		-- panzer elite wrecks
+		MARDER				= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_panzer_elite_marder_iii.lua"),
+		HUMMEL				= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_panzer_elite_hummel.lua"),
+		ARMOURCAR_221			= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_panzer_elite_221.lua"),
+		ARMOURCAR_222			= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_panzer_elite_222.lua"),
+		ARMOURCAR_223			= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_panzer_elite_223.lua"),
+		HALFTRACK_250			= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_panzer_elite_250.lua"),
+		HALFTRACK_MORTAR		= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_panzer_elite_250_mortar.lua"),
+		HALFTRACK_SNIPER		= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_panzer_elite_250_sniper.lua"),
+		HALFTRACK_VAMPIRE		= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_panzer_elite_250_vampire.lua"),
+		HALFTRACK_251			= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_panzer_elite_251.lua"),
+		BERGETIGER			= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_panzer_elite_bergetiger.lua"),
+		HENSCHEL			= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_panzer_elite_henschel.lua"),
+		HETZER				= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_panzer_elite_hetzer.lua"),
+		JAGDPANTHER			= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_panzer_elite_jagdpanther.lua"),
+		PANZER_SUPPORT		= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_panzer_elite_panzer_iv.lua"),
+		WIRBLEWIND			= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_panzer_elite_wirblewind.lua"),
+		HOTCHKISS			= BP_GetEntityBlueprint("ebps/environment/art_ambient/objects/vehicles/wrecked_vehicles/wrecked_panzer_elite_hotchkiss.lua"),
+	},
+	
+	-- BRIDGES (useful for rebuilding groups, as bridges change entity when wrecked/rebuilt and drop out of any existing groups)
+	BRIDGE_25 = {
+		NORMAL				= BP_GetEntityBlueprint("ebps/environment/art_ambient/bridges/bridge_25_01.lua"),
+		WRECKED			= BP_GetEntityBlueprint("ebps/environment/art_ambient/bridges/bridge_25_01_wrecked.lua"),
+		REBUILT				= BP_GetEntityBlueprint("ebps/environment/art_ambient/bridges/bridge_25_01_rebuilt.lua"),
+	}, 
+	
+	BRIDGE_35 = {
+		NORMAL				= BP_GetEntityBlueprint("ebps/environment/art_ambient/bridges/bridge_35_01.lua"),
+		WRECKED			= BP_GetEntityBlueprint("ebps/environment/art_ambient/bridges/bridge_35_01_wrecked.lua"),
+		REBUILT				= BP_GetEntityBlueprint("ebps/environment/art_ambient/bridges/bridge_35_01_rebuilt.lua"),
+	}, 
+	
+	BRIDGE_BAILEY_25 = {
+		NORMAL				= BP_GetEntityBlueprint("ebps/environment/art_ambient/bridges/bailey_bridge_25_01.lua"),
+		WRECKED			= BP_GetEntityBlueprint("ebps/environment/art_ambient/bridges/bailey_bridge_25_01_wrecked.lua"),
+	}, 
+	
+	BRIDGE_M6_PONT_TOURANT = {
+		NORMAL				= BP_GetEntityBlueprint("ebps/environment/art_ambient/bridges/bridge_m6_pont_tourant.lua"),
+		WRECKED			= BP_GetEntityBlueprint("ebps/environment/art_ambient/bridges/bridge_m6_pont_tourant_wrecked.lua"),
+		REBUILT				= BP_GetEntityBlueprint("ebps/environment/art_ambient/bridges/bridge_m6_pont_tourant_rebuilt.lua"),
+	},
+}
+
+
+--[[ CRITICAL BUILDINGS ]]
+-- this is a set of buildings identified as critical for the player to be considered still "alive."
+--  this table has been set up to be used in conjunction with the Player_HasLost function when
+--  check to see if the player is still alive.
+--  e.g. Player_HasLost(player1, CRITICAL_BUILDINGS)	
+CRITICAL_BUILDINGS = {
+	__scardoc_enum = true,
+
+	AXIS = {
+		
+		EBP.AXIS.HQ,			
+		EBP.AXIS.HQ2,		
+		EBP.AXIS.HQ3,		
+		EBP.AXIS.HQ4,		
+		EBP.AXIS.HQ5,		
+		EBP.AXIS.HQ6,
+		EBP.AXIS.QUARTERS,		
+		EBP.AXIS.BARRACKS,	
+		EBP.AXIS.ARMORY,	
+		EBP.AXIS.COMMAND,	
+		EBP.AXIS.KAMPFKRAFT,	
+			
+	},
+	
+	ALLIES = {
+		EBP.ALLIES.BARRACKS,
+		EBP.ALLIES.ARMORY,
+		EBP.ALLIES.HQ,
+		EBP.ALLIES.HQ2,
+		EBP.ALLIES.HQ3,
+		EBP.ALLIES.HQ4,
+		EBP.ALLIES.HQ5,
+		EBP.ALLIES.HQ6,
+		EBP.SP.ALLIED_HQ_SP_M06,
+		EBP.ALLIES.MOTORPOOL,
+		EBP.ALLIES.TANK_DEPOT,
+	},
+	
+	--*** COMMON WEALTH ***
+	CW = {
+--~ 			INSERT_CW_ITEM						= nil,
+	
+	},
+	
+	--*** PANZER ELITE ***
+	ELITE = {
+		EBP.ELITE.HQ,
+		EBP.ELITE.HQ2,
+		EBP.ELITE.HQ3,
+		EBP.ELITE.HQ4,
+		EBP.ELITE.HQ5,
+		EBP.ELITE.HQ6,
+		
+		EBP.ELITE.PANZERJAGER,
+		EBP.ELITE.PANZER_ARTILLERIE,
+		EBP.ELITE.KAMPFGRUPPE,
+		EBP.ELITE.LOGISTIK,
+	},
+}
+
+
+--[[ UPGRADES ]]
+-- example of use: UPG.BAZOOKA
+UPG = {
+	__scardoc_enum = true,
+	
+	--[[ COMMON ]]
+	
+	SP = {
+		-- this ability is for Commonwealth officers to mark the strongpoints in Caen Assault
+		MARK_STRONGPOINT				= BP_GetUpgradeBlueprint("upgrade/sp_caen_unlock_mark_strongpoint.lua"),
+		CAEN_BOMBING_RUNS				= BP_GetUpgradeBlueprint("upgrade/sp_cxp1_caen_unlock_bombingruns.lua"),
+		HILL112_WALKINGBARRAGE			= BP_GetUpgradeBlueprint("upgrade/sp_cxp1_hill112_unlock_barragebuttons.lua"),
+		FALLSCHIRMJAGER_NO_FOW			= BP_GetUpgradeBlueprint("upgrade/sp_fallschirmjager_no_fow.lua"), -- used to unlock the Fallschirmjager ability that cannot be used in the FOW.
+		FALLSCHIRMJAGER_BUILDING			= BP_GetUpgradeBlueprint("upgrade/sp_fallschirmjager_building_only.lua"), -- used to unlock the Fallschirmjager ability that cannot be used in the buidling only
+		HENSCHEL_ALL_UNLOCK				= BP_GetUpgradeBlueprint("upgrade/sp_henschel.lua"), 					-- SP only Henschel unlock
+		HELLS_AMBIENT_BUILDING			= BP_GetUpgradeBlueprint("upgrade/convert_ambient_building_sp_church.lua"), 
+		CONVERT_AMBIENT_BUILDING_CHURCH		= BP_GetUpgradeBlueprint("upgrade/convert_ambient_building_sp_church.lua"),
+		UNLOCK_CANADIAN				= BP_GetUpgradeBlueprint("upgrade/sp_unlock_canadian.lua"), -- unlocks Canadian Tommies
+		JAGDPANTHER					= BP_GetUpgradeBlueprint("upgrade/sp_unlock_jagdpanther.lua"),
+		KING_TIGER					= BP_GetUpgradeBlueprint("upgrade/sp_tiger_ace.lua"),
+		GLIDER_UNLOCK					= BP_GetUpgradeBlueprint("upgrade/sp_glider_unlock"),		-- unlocks the sp glider ability
+		
+		-- CoH
+		AIRBORNE_BASIC_DEFENSES			= BP_GetUpgradeBlueprint("upgrade/allies/sp_airborne_basic_defenses.lua"),
+		SP_M02_PARADROPS				= BP_GetUpgradeBlueprint("upgrade/sp_m02_unlock_paradrops.lua"),
+		SP_M08_IMPROVED_NEBELWERFER		= BP_GetUpgradeBlueprint("upgrade/sp_m08_improved_nebelwerfer.lua"),
+		SINGLEMG42					= BP_GetUpgradeBlueprint("upgrade/axis/items/sp/sp_gen_axis_squad_item_mg42_single.lua"),
+		ALLIES_DUMMY					= BP_GetUpgradeBlueprint("upgrade/allies/sp_dummy.lua"),	
+		
+	},
+	
+	ALLIES = {
+		
+		-- specific upgrades that appear directly on the units
+		SHERMAN_MG					= BP_GetUpgradeBlueprint("upgrade/allies/items/allies_50cal_sherman_turret_mount.lua"),
+		SHERMAN_CRAB 					= BP_GetUpgradeBlueprint("upgrade/allies/items/allies_sherman_crab.lua"),
+		GREYHOUND_MG					= BP_GetUpgradeBlueprint("upgrade/allies/items/allies_50cal_m8_greyhound.lua"),
+		GREYHOUND_ARMOR				= BP_GetUpgradeBlueprint("upgrade/allies/items/allies_m8_armour_upgrade.lua"),
+		CROCODILE_BULLDOZER				= BP_GetUpgradeBlueprint("upgrade/allies/items/allies_sherman_bulldozer.lua"),
+		PARATROOPER_AT				= BP_GetUpgradeBlueprint("upgrade/allies/items/allies_paratrooper_anti_tank_package.lua"),
+		ENGINEER_FLAMETHROWER			= BP_GetUpgradeBlueprint("upgrade/allies/items/allies_m2_flamethrower.lua"),
+		ENGINEER_MINESWEEPER				= BP_GetUpgradeBlueprint("upgrade/allies/items/allies_squad_item_minesweeper.lua"),
+		HALFTRACK_QUAD				= BP_GetUpgradeBlueprint("upgrade/allies/items/allies_quad_50cal_maxson_local.lua"),
+		HELLCAT_MG					= BP_GetUpgradeBlueprint("upgrade/allies/items/allies_50cal_hellcat_turret_mount.lua"),
+		CONVERT_AMBIENT_BUILDING			= BP_GetUpgradeBlueprint("upgrade/convert_ambient_building.lua"),
+		AID_STATION					= BP_GetUpgradeBlueprint("upgrade/allies/cp_aide_station_upgrade.lua"),
+		RIFLEMEN_AT					= BP_GetUpgradeBlueprint("upgrade/allies/items/allies_rifle_squad_anti_tank_package.lua"),
+		RIFLEMEN_SMG					= BP_GetUpgradeBlueprint("upgrade/allies/items/allies_rifle_squad_anti_infantry_package.lua"),
+		-- CoH
+		FLAMETHROWER_SP_M01				= BP_GetUpgradeBlueprint("upgrade/allies/items/allies_m2_flamethrower_sp_m01.lua"),
+		BAZOOKA_SP_M13				= BP_GetUpgradeBlueprint("upgrade/allies/items/sp_gen_allies_squad_item_single_bazooka.lua"),
+		
+		-- generic upgrades that specifically appear on the buildings
+		GRENADE 					= BP_GetUpgradeBlueprint("upgrade/allies/armory_throw_grenade.lua"),
+		WIRE_CUTTER					= BP_GetUpgradeBlueprint("upgrade/allies/armory_wire_cutters.lua"),
+		DEMOLITION					= BP_GetUpgradeBlueprint("upgrade/allies/armory_satchel_charge.lua"),
+		STICKY_BOMB					= BP_GetUpgradeBlueprint("upgrade/allies/armory_use_stickybomb.lua"),
+		SMOKE_SCREEN					= BP_GetUpgradeBlueprint("upgrade/allies/armory_upgrade_smoke_screen.lua"),
+		GUN_76MM					= BP_GetUpgradeBlueprint("upgrade/allies/armory_76mm_upgrade.lua"),
+		BAR						= BP_GetUpgradeBlueprint("upgrade/allies/weapon_package_bar.lua"),
+	},
+
+	
+	--*** AXIS ***
+	AXIS = {
+		
+		--*** PHASE RESEARCH ***
+		-- upgrades that are available on the Axis HQ - prereq to other upgrades
+		PHASE2						= BP_GetUpgradeBlueprint("upgrade/axis/research/phase_2.lua"), 
+		PHASE3						= BP_GetUpgradeBlueprint("upgrade/axis/research/phase_3.lua"), 
+		PHASE4						= BP_GetUpgradeBlueprint("upgrade/axis/research/phase_4.lua"),	
+		
+		-- specific upgrades that appear directly on the units
+		GREN_MG42					= BP_GetUpgradeBlueprint("upgrade/axis/items/axis_squad_item_mg42.lua"),
+		GREN_PANZERSCHRECK				= BP_GetUpgradeBlueprint("upgrade/axis/items/axis_squad_item_panzerschreck.lua"),
+		STORM_MG42					= BP_GetUpgradeBlueprint("upgrade/axis/items/axis_squad_item_mg42.lua"),
+		STORM_MP44					= BP_GetUpgradeBlueprint("upgrade/axis/items/axis_squad_item_mp44.lua"), -- stormtrooper
+		STORM_PANZERSCHRECK				= BP_GetUpgradeBlueprint("upgrade/axis/items/axis_squad_item_panzerschreck.lua"),
+		VOLKS_PANZERFAUST				= BP_GetUpgradeBlueprint("upgrade/axis/items/axis_squad_item_panzerfaust.lua"), -- VALIDATE
+		VOLKS_MP40					= BP_GetUpgradeBlueprint("upgrade/axis/items/axis_squad_item_volksgrenadier_smg.lua"), -- volksgren
+		PANZER_ARMOR					= BP_GetUpgradeBlueprint("upgrade/axis/items/axis_squad_item_panzer_iv_armour_skirts.lua"),
+		PANZER_MG42					= BP_GetUpgradeBlueprint("upgrade/axis/items/axis_squad_item_tank_top_mg42.lua"),
+		STUG_ARMOR					= BP_GetUpgradeBlueprint("upgrade/axis/items/axis_squad_item_stug_iv_armour_skirts.lua"),
+		STUG_MG42					= BP_GetUpgradeBlueprint("upgrade/axis/items/axis_squad_item_stug_iv_top_mg42.lua"),
+		PANTHER_ARMOR					= BP_GetUpgradeBlueprint("upgrade/axis/items/axis_squad_item_panther_armour_skirts.lua"),
+		PANTHER_MG42					= BP_GetUpgradeBlueprint("upgrade/axis/items/axis_squad_item_panther_armour_skirts.lua"),
+		PIONEER_MINESWEEPER				= BP_GetUpgradeBlueprint("upgrade/axis/items/axis_squad_item_minesweeper.lua"),
+		PIONEER_FLAMETHROWER			= BP_GetUpgradeBlueprint("upgrade/axis/items/axis_flammenwerfer42_flamethrower.lua"),
+		HALFTRACK_FLAMETHROWER			= BP_GetUpgradeBlueprint("upgrade/axis/items/axis_halftrack_flammenwerfer.lua"),
+		HALFTRACK_STUKA				= BP_GetUpgradeBlueprint("upgrade/axis/items/axis_halftrack_stuka.lua"),
+		BUNKER_MG42					= BP_GetUpgradeBlueprint("upgrade/axis/axis_bunker_mg42_addition.lua"),
+		BUNKER_REPAIR					= BP_GetUpgradeBlueprint("upgrade/axis/axis_bunker_to_repair_facility.lua"), 
+		BUNKER_MED					= BP_GetUpgradeBlueprint("upgrade/allies/cp_aide_station_upgrade_axis.lua"), 
+		CONVERT_AMBIENT_BUILDING			= BP_GetUpgradeBlueprint("upgrade/convert_ambient_building.lua"),
+
+		--misc
+		KING_TIGER_LOCKOUT				= BP_GetUpgradeBlueprint("upgrade/axis/axis_king_tiger_lockout.lua"),	
+		
+		
+		-- veterancy levels that can be researched
+		VETERANCY = {
+			INFANTRY1				= BP_GetUpgradeBlueprint("upgrade/axis/veteran_infantry_1.lua"),
+			INFANTRY2				= BP_GetUpgradeBlueprint("upgrade/axis/veteran_infantry_2.lua"),
+			INFANTRY3				= BP_GetUpgradeBlueprint("upgrade/axis/veteran_infantry_3.lua"),
+			SUPPORT_INF1				= BP_GetUpgradeBlueprint("upgrade/axis/veteran_support_1.lua"),
+			SUPPORT_INF2				= BP_GetUpgradeBlueprint("upgrade/axis/veteran_support_2.lua"),
+			SUPPORT_INF3				= BP_GetUpgradeBlueprint("upgrade/axis/veteran_support_3.lua"),
+			VEHICLE1				= BP_GetUpgradeBlueprint("upgrade/axis/veteran_vehicle_1.lua"),
+			VEHICLE2				= BP_GetUpgradeBlueprint("upgrade/axis/veteran_vehicle_2.lua"),
+			VEHICLE3				= BP_GetUpgradeBlueprint("upgrade/axis/veteran_vehicle_3.lua"),
+			TANK1					= BP_GetUpgradeBlueprint("upgrade/axis/veteran_tank_1.lua"),
+			TANK2					= BP_GetUpgradeBlueprint("upgrade/axis/veteran_tank_2.lua"),
+			TANK3					= BP_GetUpgradeBlueprint("upgrade/axis/veteran_tank_3.lua"),
+		},
+		
+	},
+	
+	--*** COMMON WEALTH ***
+	CW = {
+		-- SQUAD UPGRADES						= nil,
+		-- SAPPERS
+		PIAT  						= BP_GetUpgradeBlueprint("upgrade/allies_cw/items/commonwealth_sgt_piat_package.lua"),
+		EXPERT_ENGINEER				= BP_GetUpgradeBlueprint("upgrade/allies_cw/items/commonwealth_sgt_expert_engineer.lua"),
+		DEMOLITIONS					= BP_GetUpgradeBlueprint("upgrade/allies_cw/items/commonwealth_sgt_demolitions.lua"),
+		-- TOMMIES
+		RECON_TEAM					= BP_GetUpgradeBlueprint("upgrade/allies_cw/items/commonwealth_sgt_recon_team.lua"),
+		BREN 						= BP_GetUpgradeBlueprint("upgrade/allies_cw/items/commonwealth_sgt_bren_package.lua"),
+		RIFLE_GRENADE					= BP_GetUpgradeBlueprint("upgrade/allies_cw/items/commonwealth_sgt_rifle_grenade.lua"),
+		-- TANKS
+		TANKCOMMANDER				= BP_GetUpgradeBlueprint("upgrade/allies_cw/items/commonwealth_tank_commander.lua"),
+		CHURCHILL_MINE_PLOW				= BP_GetUpgradeBlueprint("upgrade/allies_cw/items/commonwealth_churchill_mine_plow.lua"),
+		BREN_CARRIER_MMG				= BP_GetUpgradeBlueprint("upgrade/allies_cw/items/commonwealth_bren_carrier_mmg_upgrade.lua"),
+		HULL_DOWN					= BP_GetUpgradeBlueprint("upgrade/allies_cw/items/commonwealth_hull_down.lua"),
+		-- MISC
+		MEDICAL					= BP_GetUpgradeBlueprint("upgrade/allies_cw/items/commonwealth_sgt_medical_package.lua"),
+		
+		-- HQ
+		HQ_SPEED  					= BP_GetUpgradeBlueprint("upgrade/allies_cw/commonwealth_building_speed_upgrade.lua"),
+		HQ_ECONOMY_BONUS				= BP_GetUpgradeBlueprint("upgrade/allies_cw/commonwealth_building_economy_upgrade.lua"),
+		MOBILEHQ  					= BP_GetUpgradeBlueprint("upgrade/allies_cw/commonwealth_building_enable_spawning.lua"),
+		ENABLE_MOBILE_HQ				= BP_GetUpgradeBlueprint("upgrade/allies_cw/commonwealth_building_enable_mobile.lua"),
+		CONVERT_AMBIENT_BUILDING			= BP_GetUpgradeBlueprint("upgrade/convert_ambient_building.lua"),
+		
+		-- To unlock stuart and armour hq without building a captain
+		CAPTAIN_TECH_UNLOCK				= BP_GetUpgradeBlueprint("upgrade/allies_cw/commonwealth_building_captain_upgrade.lua"), 
+	},
+
+	--*** PANZER ELITE ***
+	ELITE = {
+		
+		-- Tech Building upgrades
+		PANZER_ARTILLERIE				= BP_GetUpgradeBlueprint("upgrade/axis_pe/gebaude_heavy_arms_upgrade.lua"),
+		PANZERJAGER					= BP_GetUpgradeBlueprint("upgrade/axis_pe/gebaude_light_arms_upgrade.lua"),
+		LOGISTIK					= BP_GetUpgradeBlueprint("upgrade/axis_pe/struktur_capital_upgrade.lua"),
+		KAMPFGRUPPE					= BP_GetUpgradeBlueprint("upgrade/axis_pe/struktur_armaments_upgrade.lua"),
+		AT_GRENADE					= BP_GetUpgradeBlueprint("upgrade/axis_pe/upgrade_at_grenade.lua"),
+		ADVANCED_REPAIR				= BP_GetUpgradeBlueprint("upgrade/axis_pe/upgrade_advanced_repair.lua"),
+		INCENDIARY_GRENADE				= BP_GetUpgradeBlueprint("upgrade/axis_pe/upgrade_incendiary_grenade.lua"),
+		CAPTURE_RATE					= BP_GetUpgradeBlueprint("upgrade/axis_pe/upgrade_capture_rate.lua"),
+		SQUAD_SIZE					= BP_GetUpgradeBlueprint("upgrade/axis_pe/upgrade_squad_size.lua"),
+		DEFENSIVE_OPS					= BP_GetUpgradeBlueprint("upgrade/axis_pe/upgrade_regeneration.lua"),
+		GROUP_ZEAL					= BP_GetUpgradeBlueprint("upgrade/axis_pe/upgrade_mob_bonus.lua"),
+		VETERAN_SGT					= BP_GetUpgradeBlueprint("upgrade/axis_pe/upgrade_vet_sgt.lua"),
+		PANTHER_BATTLEGROUP				= BP_GetUpgradeBlueprint("upgrade/axis_pe/axis_pe_panther_battlegroup.lua"),
+		JAGDPANTHER_LOCKOUT				= BP_GetUpgradeBlueprint("upgrade/axis_pe/axis_pe_yagdpanther_lock_out.lua"),
+		
+		STUBBYMG42 					= BP_GetUpgradeBlueprint("upgrade/axis_pe/items/panzer_elite_pnze_iv_top_mg42.lua"),
+		STUBBYARMORSKIRTS 				= BP_GetUpgradeBlueprint("upgrade/axis_pe/items/panzer_elite_Panzer_iv_armour_skirts.lua"),
+		SECUREPKG221 					= BP_GetUpgradeBlueprint("upgrade/axis_pe/items/panzer_elite_221_secure_package.lua"),
+		
+		-- panzer grenadier slot items
+		PANZERSCHRECK					= BP_GetUpgradeBlueprint("upgrade/axis_pe/items/panzer_elite_squad_anti_tank_package.lua"),
+		MP44						= BP_GetUpgradeBlueprint("upgrade/axis_pe/items/panzer_elite_squad_mp44_package.lua"),
+		G43						= BP_GetUpgradeBlueprint("upgrade/axis_pe/items/panzer_elite_squad_g43_package.lua"),
+		CONVERT_AMBIENT_BUILDING			= BP_GetUpgradeBlueprint("upgrade/convert_ambient_building_panzer_elite.lua"),
+		
+		VETERANCY = {
+			INFANTRY = {
+				OFFENSIVE1			= BP_GetUpgradeBlueprint("upgrade/axis_pe/vet_infantry_offensive_1.lua"),
+				OFFENSIVE2			= BP_GetUpgradeBlueprint("upgrade/axis_pe/vet_infantry_offensive_2.lua"),
+				OFFENSIVE3			= BP_GetUpgradeBlueprint("upgrade/axis_pe/vet_infantry_offensive_3.lua"),
+				DEFENSIVE1			= BP_GetUpgradeBlueprint("upgrade/axis_pe/vet_infantry_defensive_1.lua"),
+				DEFENSIVE2			= BP_GetUpgradeBlueprint("upgrade/axis_pe/vet_infantry_defensive_2.lua"),
+				DEFENSIVE3			= BP_GetUpgradeBlueprint("upgrade/axis_pe/vet_infantry_defensive_3.lua"),			
+			},
+			
+			VEHICLE = {
+				OFFENSIVE1			= BP_GetUpgradeBlueprint("upgrade/axis_pe/vet_vehicle_offensive_1.lua"),
+				OFFENSIVE2			= BP_GetUpgradeBlueprint("upgrade/axis_pe/vet_vehicle_offensive_2.lua"),
+				OFFENSIVE3			= BP_GetUpgradeBlueprint("upgrade/axis_pe/vet_vehicle_offensive_3.lua"),
+				DEFENSIVE1			= BP_GetUpgradeBlueprint("upgrade/axis_pe/vet_vehicle_defensive_1.lua"),
+				DEFENSIVE2			= BP_GetUpgradeBlueprint("upgrade/axis_pe/vet_vehicle_defensive_2.lua"),
+				DEFENSIVE3			= BP_GetUpgradeBlueprint("upgrade/axis_pe/vet_vehicle_defensive_3.lua"),
+			},
+		},
+		
+		
+		
+		
+	},
+	
+	COMMANDER_TREE =
+	{
+		ALLIES =
+		{
+			AIRBORNE				= BP_GetUpgradeBlueprint("upgrade/allied_airborne"),
+			AIRBORNE_00 				= BP_GetUpgradeBlueprint("upgrade/allied_airborne_00"),		-- Paratroopers
+			AIRBORNE_01 				= BP_GetUpgradeBlueprint("upgrade/allied_airborne_01"),		-- Paradrop AT Gun
+			AIRBORNE_02 				= BP_GetUpgradeBlueprint("upgrade/allied_airborne_02"),		-- Supply Drops
+			AIRBORNE_10 				= BP_GetUpgradeBlueprint("upgrade/allied_airborne_10"),		-- Air Recon
+			AIRBORNE_11 				= BP_GetUpgradeBlueprint("upgrade/allied_airborne_11"),		-- Strafing Run
+			AIRBORNE_12 				= BP_GetUpgradeBlueprint("upgrade/allied_airborne_12"),		-- Rocket Strike
+			INFANTRY	 			= BP_GetUpgradeBlueprint("upgrade/allied_infantry"),
+			INFANTRY_00 				= BP_GetUpgradeBlueprint("upgrade/allied_infantry_00"),		-- Improved build times
+			INFANTRY_01 				= BP_GetUpgradeBlueprint("upgrade/allied_infantry_01"),		-- Rangers
+			INFANTRY_02 				= BP_GetUpgradeBlueprint("upgrade/allied_infantry_02"),		-- Off-Map Reinforcements
+			INFANTRY_10 				= BP_GetUpgradeBlueprint("upgrade/allied_infantry_10"),		-- Riflemen build defenses
+			INFANTRY_11 				= BP_GetUpgradeBlueprint("upgrade/allied_infantry_11"),		-- Off-Map Artillery
+			INFANTRY_12 				= BP_GetUpgradeBlueprint("upgrade/allied_infantry_12"),		-- Howitzer
+			ARMOR	 				= BP_GetUpgradeBlueprint("upgrade/allied_armor"),
+			ARMOR_00 				= BP_GetUpgradeBlueprint("upgrade/allied_armor_00"),		-- Vehicles Capture Points
+			ARMOR_01 				= BP_GetUpgradeBlueprint("upgrade/allied_armor_01"),		-- Calliope
+			ARMOR_02 				= BP_GetUpgradeBlueprint("upgrade/allied_armor_02"),		-- Pershing
+			ARMOR_10 				= BP_GetUpgradeBlueprint("upgrade/allied_armor_10"),		-- Improved production
+			ARMOR_11 				= BP_GetUpgradeBlueprint("upgrade/allied_armor_11"),		-- Vehicle Self Repair
+			ARMOR_12 				= BP_GetUpgradeBlueprint("upgrade/allied_armor_12"),		-- Strength of Production
+		},  
+		
+		AXIS =
+		{
+			DEFENSE 				= BP_GetUpgradeBlueprint("upgrade/axis_defense"),
+			DEFENSE_00 				= BP_GetUpgradeBlueprint("upgrade/axis_defense_00"),		-- for the fatherland
+			DEFENSE_01 				= BP_GetUpgradeBlueprint("upgrade/axis_defense_01"),		-- building defenses
+			DEFENSE_02 				= BP_GetUpgradeBlueprint("upgrade/axis_defense_02"),		-- flak 88
+			DEFENSE_10 				= BP_GetUpgradeBlueprint("upgrade/axis_defense_10"),		-- los around strat points
+			DEFENSE_11 				= BP_GetUpgradeBlueprint("upgrade/axis_defense_11"),		-- registered artillery
+			DEFENSE_12 				= BP_GetUpgradeBlueprint("upgrade/axis_defense_12"),		-- standard off map rocket strike
+			PROPAGANDA 				= BP_GetUpgradeBlueprint("upgrade/axis_propaganda"),		
+			PROPAGANDA_00 			= BP_GetUpgradeBlueprint("upgrade/axis_propaganda_00"),	-- zeal
+			PROPAGANDA_01 			= BP_GetUpgradeBlueprint("upgrade/axis_propaganda_01"),	-- firestorm
+			PROPAGANDA_02 			= BP_GetUpgradeBlueprint("upgrade/axis_propaganda_02"),	-- tiger ace
+			PROPAGANDA_10 			= BP_GetUpgradeBlueprint("upgrade/axis_propaganda_10"),	-- inspired assault
+			PROPAGANDA_11 				= BP_GetUpgradeBlueprint("upgrade/axis_propaganda_11"),	-- propaganda war
+			PROPAGANDA_12 			= BP_GetUpgradeBlueprint("upgrade/axis_propaganda_12"),	-- V1 Rocket
+			BLITZKRIEG 				= BP_GetUpgradeBlueprint("upgrade/axis_blitzkrieg"),	
+			BLITZKRIEG_00 				= BP_GetUpgradeBlueprint("upgrade/axis_blitzkrieg_00"),	-- stormtroopers
+			BLITZKRIEG_01 				= BP_GetUpgradeBlueprint("upgrade/axis_blitzkrieg_01"),	-- stormtroopers with stug
+			BLITZKRIEG_02 				= BP_GetUpgradeBlueprint("upgrade/axis_blitzkrieg_02"),	-- stormtroopers with tiger
+			BLITZKRIEG_10 				= BP_GetUpgradeBlueprint("upgrade/axis_blitzkrieg_10"),	-- assault grenadiers
+			BLITZKRIEG_11 				= BP_GetUpgradeBlueprint("upgrade/axis_blitzkrieg_11"),	-- resource blitz
+			BLITZKRIEG_12 				= BP_GetUpgradeBlueprint("upgrade/axis_blitzkrieg_12"),	-- blitzkrieg assault
+		},
+
+		--*** COMMON WEALTH -- COMMANDER TREE ***
+		CW = {
+			CANADIAN_ARTILLERY			= BP_GetUpgradeBlueprint("upgrade/royal_canadian_artillery"),			-- ROYAL CANADIAN ARTILLERY
+			CANADIAN_ARTILLERY_00			= BP_GetUpgradeBlueprint("upgrade/royal_canadian_artillery_00"),		-- Forward Observation Officers
+			CANADIAN_ARTILLERY_01			= BP_GetUpgradeBlueprint("upgrade/royal_canadian_artillery_01"),		-- Creeping Barrage
+			CANADIAN_ARTILLERY_02			= BP_GetUpgradeBlueprint("upgrade/royal_canadian_artillery_02"),		-- Priest 105mm SPG
+			CANADIAN_ARTILLERY_10			= BP_GetUpgradeBlueprint("upgrade/royal_canadian_artillery_10"),		-- Supercharge Artillery (25 pdr)
+			CANADIAN_ARTILLERY_11			= BP_GetUpgradeBlueprint("upgrade/royal_canadian_artillery_11"),		-- Overwatch (25 pdr)
+			CANADIAN_ARTILLERY_12			= BP_GetUpgradeBlueprint("upgrade/royal_canadian_artillery_12"),		-- Victor Target
+			
+			COMMANDOS				= BP_GetUpgradeBlueprint("upgrade/royal_commandos"),		-- ROYAL COMMANDOS
+			COMMANDOS_00				= BP_GetUpgradeBlueprint("upgrade/royal_commandos_00"),		-- Commandos by Glider
+			COMMANDOS_01				= BP_GetUpgradeBlueprint("upgrade/royal_commandos_01"),		-- Tetrarch by Glider
+			COMMANDOS_02				= BP_GetUpgradeBlueprint("upgrade/royal_commandos_02"),		-- Glider HQ
+			COMMANDOS_10				= BP_GetUpgradeBlueprint("upgrade/royal_commandos_10"),		-- Radio Triangulation
+			COMMANDOS_11				= BP_GetUpgradeBlueprint("upgrade/royal_commandos_11"),		-- Ultra Decryption
+			COMMANDOS_12				= BP_GetUpgradeBlueprint("upgrade/royal_commandos_12"),		-- Decoy 
+			
+			ENGINEERS				= BP_GetUpgradeBlueprint("upgrade/royal_engineers"),		-- ROYAL ENGINEERS
+			ENGINEERS_00				= BP_GetUpgradeBlueprint("upgrade/royal_engineers_00"),		-- Improve emplacements
+			ENGINEERS_01				= BP_GetUpgradeBlueprint("upgrade/royal_engineers_01"),		-- Hull Down Tactics
+			ENGINEERS_02				= BP_GetUpgradeBlueprint("upgrade/royal_engineers_02"),		-- Improved HQ Vehicles
+			ENGINEERS_10				= BP_GetUpgradeBlueprint("upgrade/royal_engineers_10"),		-- Churchill Infantry Tank
+			ENGINEERS_11				= BP_GetUpgradeBlueprint("upgrade/royal_engineers_11"),		-- Churchill AVRE
+			ENGINEERS_12				= BP_GetUpgradeBlueprint("upgrade/royal_engineers_12"),		-- Churchill Crocodile
+		},
+		
+		--*** PANZER ELITE -- COMMANDER TREE ***
+		ELITE = {
+			LUFTWAFFE 				= BP_GetUpgradeBlueprint("upgrade/pe_luftwaffe_support"),			-- LUFTWAFFE SUPPORT
+			LUFTWAFFE_00				= BP_GetUpgradeBlueprint("upgrade/pe_luftwaffe_support_00"),		-- Fallshirmjager infiltration
+			LUFTWAFFE_01				= BP_GetUpgradeBlueprint("upgrade/pe_luftwaffe_support_01"),		-- Air Dropped Mines
+			LUFTWAFFE_02				= BP_GetUpgradeBlueprint("upgrade/pe_luftwaffe_support_02"),		-- Henschel AT
+			LUFTWAFFE_10				= BP_GetUpgradeBlueprint("upgrade/pe_luftwaffe_support_10"),		-- Luftwaffe Defenses
+			LUFTWAFFE_11				= BP_GetUpgradeBlueprint("upgrade/pe_luftwaffe_support_11"),		-- Wirblewind Flak Panzer
+			LUFTWAFFE_12				= BP_GetUpgradeBlueprint("upgrade/pe_luftwaffe_support_12"),		-- Flak 88
+			
+			SCORCHED_EARTH			= BP_GetUpgradeBlueprint("upgrade/pe_scorched_earth"),				-- SCORCHED EARTH
+			SCORCHED_EARTH_00			= BP_GetUpgradeBlueprint("upgrade/pe_scorched_earth_00"),			-- Booby Trap Building
+			SCORCHED_EARTH_01			= BP_GetUpgradeBlueprint("upgrade/pe_scorched_earth_01"),			-- Booby trap strat point
+			SCORCHED_EARTH_02			= BP_GetUpgradeBlueprint("upgrade/pe_scorched_earth_02"),			-- Sector Artillery
+			SCORCHED_EARTH_10			= BP_GetUpgradeBlueprint("upgrade/pe_scorched_earth_10"),			-- Road blocks
+			SCORCHED_EARTH_11			= BP_GetUpgradeBlueprint("upgrade/pe_scorched_earth_11"),			-- Scorched Earth
+			SCORCHED_EARTH_12			= BP_GetUpgradeBlueprint("upgrade/pe_scorched_earth_12"),			-- Bergetiger Tank Recovery
+			
+			TANK_DESTROYER			= BP_GetUpgradeBlueprint("upgrade/pe_tank_destroyer"),				-- TANK DESTROYER
+			TANK_DESTROYER_00			= BP_GetUpgradeBlueprint("upgrade/pe_tank_destroyer_00"),			-- Teller Mines
+			TANK_DESTROYER_01			= BP_GetUpgradeBlueprint("upgrade/pe_tank_destroyer_01"),			-- Hetzer Tank
+			TANK_DESTROYER_02			= BP_GetUpgradeBlueprint("upgrade/pe_tank_destroyer_02"),			-- APCR Roads
+			TANK_DESTROYER_10			= BP_GetUpgradeBlueprint("upgrade/pe_tank_destroyer_10"),			-- Tank Awareness
+			TANK_DESTROYER_11			= BP_GetUpgradeBlueprint("upgrade/pe_tank_destroyer_11"),			-- Double Infantry AT
+			TANK_DESTROYER_12			= BP_GetUpgradeBlueprint("upgrade/pe_tank_destroyer_12"),			-- Jagdpanther
+			
+		},
+	},
+}
+
+
+--*** ABILITIES ***
+-- example of use: ABILITY.ALLIES.STICKY_BOMB
+ABILITY = {
+	__scardoc_enum = true,
+	
+	--[[ COMMON ]]
+	REPAIR							= BP_GetAbilityBlueprint("abilities/repair_ability.lua"),
+	REENABLE_CAPTURE					= BP_GetAbilityBlueprint("abilities/reenable_capture_ability.lua"), -- an ability that counteracts the scorched earth ability of the panzer el
+	MINESWEEPER						= BP_GetAbilityBlueprint("abilities/toggle_minesweeper_flamethrower.lua"), -- VALIDATE
+	
+	SP = {
+		
+		SINGLE_FIRESTORM           			= BP_GetAbilityBlueprint("abilities/sp_single_firestorm.lua"),
+		SINGLE_HOWITZER           				= BP_GetAbilityBlueprint("abilities/sp_single_howitzer.lua"),
+		SINGLE_HOWITZER_ALTSOUND   			= BP_GetAbilityBlueprint("abilities/sp_single_howitzer_altsound.lua"),
+		SINGLE_MORTAR           				= BP_GetAbilityBlueprint("abilities/sp_single_mortar.lua"),
+		SINGLE_MORTAR_SMOKE        			= BP_GetAbilityBlueprint("abilities/sp_single_mortar_smoke.lua"),
+		SINGLE_MORTAR_SMOKEENTRANCE		= BP_GetAbilityBlueprint("abilities/sp_single_mortar_smokeentrance.lua"),
+		SINGLE_NEBEL_ROCKET        			= BP_GetAbilityBlueprint("abilities/sp_single_nebel_rocket.lua"),
+		SINGLE_STUKA_ROCKET        			= BP_GetAbilityBlueprint("abilities/sp_single_stuka_rocket.lua"),
+		SINGLE_CREEPING_MORTAR     			= BP_GetAbilityBlueprint("abilities/sp_single_creepingbarrage_mortar.lua"),
+		SINGLE_CREEPING_SMOKE      			= BP_GetAbilityBlueprint("abilities/sp_single_creepingbarrage_smoke.lua"),
+		GOODWOOD_SCAR_FUNC				= BP_GetAbilityBlueprint("abilities/sp_goodwood_scar_func.lua"),
+		CAEN_BOMBING_RUN            			= BP_GetAbilityBlueprint("abilities/sp_caen_air_strike_ability_rockets.lua"), 	-- bombing run that ignores the rule to use the longest distance
+		CAEN_STRAFING_RUN            			= BP_GetAbilityBlueprint("abilities/sp_caen_air_strike_ability_strafe.lua"),	 -- STRAFING run that ignores the rule to use the longest distance
+		TYPHOON_STRAFE_CAEN 				= BP_GetAbilityBlueprint("abilities/sp_caen_commonwealth_air_strike_ability_strafe.lua"), -- strafing run used in caen assault m06
+		CAEN_RECON_RUN            				= BP_GetAbilityBlueprint("abilities/sp_caen_air_recon_ability.lua"),	 -- RECON run that ignores the rule to use the longest distance
+		CAEN_START_BOMBING_RUNS    	 		= BP_GetAbilityBlueprint("abilities/sp/sp_cxp1_caen_bombingruns.lua"),			 -- starts the end of mission bombing runs in Caen Assault
+		CAEN_MARK_STRONGPOINT      			= BP_GetAbilityBlueprint("abilities/commonwealth_mark_strongpoint_sp.lua"),   -- officer ability to mark the defensive positions in Caen Assault
+		HILL112_WALKINGBARRAGE			= BP_GetAbilityBlueprint("abilities/sp/sp_cxp1_hill112_walkingbarrage.lua"),
+		MOVE_BOAT					= BP_GetAbilityBlueprint("abilities/sp/boat_sp_ability.lua"),			-- ability to move the boats for Oosterbeek in OMG campaign
+		DROP_WEAPONS					= BP_GetAbilityBlueprint("abilities/sp/sp_drop_weapons.lua"),			-- use this force a squad to drop their slot items
+		KING_TIGER					= BP_GetAbilityBlueprint("abilities/axis_reinforcements_ability_tiger_ace_sp.lua"),			-- Tiger Ace Reinforcement Ability for Arnhem
+		HELLS_PANZER_GRENADIERS  			= BP_GetAbilityBlueprint("abilities/sp_hells_highway_reinforcements_ability.lua"),			-- Panzer Grenadier Reinforcement Ability for Hell's Highway Ambush
+		FALLSHIRMJAGER_BUILDINGONLY  			= BP_GetAbilityBlueprint("abilities/sp_panzer_elite_infiltration_fallshirmjager_ability_building_only.lua"),			-- Detects if fallshmjager building only ability 
+		FALLSHIRMJAGER_FOWONLY  			= BP_GetAbilityBlueprint("abilities/sp_panzer_elite_infiltration_fallshirmjager_ability_no_fow.lua"),			-- Detects if fallshmjager fow only ability
+		TOUCH_OF_DEATH				= BP_GetAbilityBlueprint("abilities/sp/sp_touch_of_death.lua"),		-- Slowly destroy an entity (that is NOT part of a squad), but uses the blowtorch animation for pioneers
+		HENSCHEL_ALL					= BP_GetAbilityBlueprint("abilities/panzer_elite_henschel_all_targets.lua"), -- SP specific Henschel strike that attacks all kinds of units, not just armour.
+		PARADROP_ANYWHERE				= BP_GetAbilityBlueprint("abilities/ally_paradrop_ability_airborne_infantry_sp_anywhere.lua"),
+		DEFENSIVE_SMOKE				= BP_GetAbilityBlueprint("abilities/sp_defensive_smokecloud.lua"),
+		MORTARSTRIKE					= BP_GetAbilityBlueprint("abilities/sp/sp_gen_single_mortar_strike.lua"),
+		MORTARSTRIKE_OFFMAP				= BP_GetAbilityBlueprint("abilities/sp/sp_gen_single_off_map_artillery_strike.lua"),
+		M07_PARADROP					= BP_GetAbilityBlueprint("abilities/ally_paradrop_ability_airborne_infantry_sp_anywhere.lua"),
+		
+		-- special SP versions to ensure that you can drop Gliders anywhere
+		GLIDER_COMMANDOS				= BP_GetAbilityBlueprint("abilities/glider_troops_sp.lua"),
+		GLIDER_TETRARCH				= BP_GetAbilityBlueprint("abilities/glider_tetrarch_sp.lua"),
+		GLIDER_HQ					= BP_GetAbilityBlueprint("abilities/glider_hq_ability_sp.lua"),	
+		
+		-- CoH
+		M02_PARADROP_A				= BP_GetAbilityBlueprint("abilities/sp/sp_m02_paradrop_a.lua"),
+		M02_PARADROP_B				= BP_GetAbilityBlueprint("abilities/sp/sp_m02_paradrop_b.lua"),
+		M02_PARADROP_C				= BP_GetAbilityBlueprint("abilities/sp/sp_m02_paradrop_c.lua"),
+		M02_PARADROP_D				= BP_GetAbilityBlueprint("abilities/sp/sp_m02_paradrop_d.lua"),
+		M02_PARADROP_E				= BP_GetAbilityBlueprint("abilities/sp/sp_m02_paradrop_e.lua"),
+		M02_PARADROP_GUYS				= BP_GetAbilityBlueprint("abilities/sp/sp_m02_paradrop_paratroopers.lua"),
+		M02_PARADROP_GUYSAT				= BP_GetAbilityBlueprint("abilities/sp/sp_m02_paradrop_paratroopers_antitank.lua"),
+		SP_FIRENEBELWERFER				= BP_GetAbilityBlueprint("abilities/axis_nebelwerfer_barrage_improved.lua"),
+		SP_DROP_MUNITION				= BP_GetAbilityBlueprint("abilities/ally_paradrop_ability_supplies_munitions_sp.lua"),
+		AIRBORNE_MORTAR				= BP_GetAbilityBlueprint("abilities/ally_paradrop_ability_airborne_mortar.lua"),
+		
+	},
+	
+	ALLIES = {
+	
+		STICKY_BOMB             				= BP_GetAbilityBlueprint("abilities/ally_throw_sticky_bombs.lua"),
+		CUT_WIRES					= BP_GetAbilityBlueprint("abilities/cut_wires.lua"),
+		SATCHEL_CHARGE				= BP_GetAbilityBlueprint("abilities/ally_throw_satchel_charge.lua"),
+		SATCHEL_CHARGE_NOREQS			= BP_GetAbilityBlueprint("abilities/ally_throw_satchel_charge_no_requirements.lua"),
+		GRENADE					= BP_GetAbilityBlueprint("abilities/ally_throw_grenade.lua"),
+		GRENADE_NOREQS 				= BP_GetAbilityBlueprint("abilities/ally_throw_grenade_no_requirements.lua"),
+		FIREUP						= BP_GetAbilityBlueprint("abilities/ally_fireup_ability.lua"),
+		SHERMAN_BULLDOZER				= BP_GetAbilityBlueprint("abilities/ally_heavy_crush_bulldozer_ability.lua"), -- moves bulldozer up and down
+		MORTAR_BARRAGE				= BP_GetAbilityBlueprint("abilities/ally_sync_mortar_barrage.lua"), -- normal mortar barrage
+		MORTAR_SMOKE					= BP_GetAbilityBlueprint("abilities/ally_mortar_smoke_barrage.lua"),
+		HOWITZER_BARRAGE				= BP_GetAbilityBlueprint("abilities/ally_howitzer_barrage_ability.lua"),
+		SHERMAN_SMOKE				= BP_GetAbilityBlueprint("abilities/defensive_smokecloud.lua"),
+		BAR_SUPPRESSION				= BP_GetAbilityBlueprint("abilities/ally_suppression_ability_rifle_squad_infantry.lua"),
+		CALLIOPE					= BP_GetAbilityBlueprint("abilities/ally_fire_calliope.lua"),
+			
+		MANPOWER1 					= BP_GetAbilityBlueprint("abilities/resource_manpower_upgrade.lua"), -- ability? only use the upgrade?
+		MANPOWER2 					= BP_GetAbilityBlueprint("abilities/resource_manpower_upgrade_advanced.lua"), -- ability? only use the upgrade?
+	},
+	
+	AXIS = {
+		GRENADE					= BP_GetAbilityBlueprint("abilities/axis_throw_grenade.lua"),
+		NEB_BARRAGE					= BP_GetAbilityBlueprint("abilities/axis_nebelwerfer_barrage.lua"),
+		MORTAR_BARRAGE				= BP_GetAbilityBlueprint("abilities/axis_sync_mortar_barrage.lua"),
+		MORTAR_SMOKE					= BP_GetAbilityBlueprint("abilities/axis_mortar_smoke_barrage.lua"), 
+		CUT_WIRES					= BP_GetAbilityBlueprint("abilities/cut_wires_axis.lua"),
+		GOLIATH_DETONATE				= BP_GetAbilityBlueprint("abilities/goliath_detonate.lua"),
+		CAMOUFLAGE					= BP_GetAbilityBlueprint("abilities/camouflage_toggled_knights_cross.lua"), -- really for stormtroopers & snipers
+		CAMOUFLAGE_AT					= BP_GetAbilityBlueprint("abilities/axis_at_guns_camouflage_toggled.lua"),
+		HALFTRACK_ROCKETS				= BP_GetAbilityBlueprint("abilities/axis_stuka_zu_fuss_rocket_halftrack.lua"),
+		MEDICAL_KIT					= BP_GetAbilityBlueprint("abilities/medical_kit.lua"),
+		MEDICAL_KIT_FIELD				= BP_GetAbilityBlueprint("abilities/medical_kit_field.lua"),
+		OFFICER_ROUT 					= BP_GetAbilityBlueprint("abilities/rout_officer_ability.lua"),
+		BUNKER_MORTAR					= BP_GetAbilityBlueprint("abilities/axis_sync_mortar_bunker_barrage.lua"),
+		HEAVY_CRUSH					= BP_GetAbilityBlueprint("abilities/axis_heavy_crush_ability.lua"),
+	},
+
+	--*** COMMON WEALTH ***
+	CW = {
+		PRIEST_BARRAGE				= BP_GetAbilityBlueprint("abilities/commonwealth_priest_barrage_ability.lua"),
+		HQ_REINFORCE 					= BP_GetAbilityBlueprint("abilities/commonwealth_mobile_hq_reinforcements_ability.lua"),
+		PDR_25_COUNTERBATTERY_SP			= BP_GetAbilityBlueprint("abilities/counter_battery_sp.lua"),
+		PDR_25_BARRAGE 				= BP_GetAbilityBlueprint("abilities/commonwealth_25pounder_barrage_ability.lua"),
+		PDR_25_BARRAGE_SUPERCHARGE			= BP_GetAbilityBlueprint("abilities/commonwealth_25pounder_supercharge.lua"),
+		PDR_25_OVERWATCH				= BP_GetAbilityBlueprint("abilities/overwatch_barrage_25_pounder.lua"),
+		PDR_25_OVERWATCH_REMOVE			= BP_GetAbilityBlueprint("abilities/overwatch_barrage_25_pounder_remove.lua"),
+		SUPPRESSION_BREAK				= BP_GetAbilityBlueprint("abilities/commonwealth_suppression_break.lua"),
+		GRENADE_COMMANDO				= BP_GetAbilityBlueprint("abilities/commonwealth_throw_grenade_commando.lua"),
+		RIFLE_GRENADE					= BP_GetAbilityBlueprint("abilities/commonwealth_smoke_rifle_grenade_ability.lua"),
+		SUPERCHARGE_BARRAGE				= BP_GetAbilityBlueprint("abilities/commonwealth_priest_barrage_ability_supercharge.lua"),
+		HQ_SETUP					= BP_GetAbilityBlueprint("abilities/commonwealth_truck_setup.lua"),
+		HQ_SETUP_MAINHQ				= BP_GetAbilityBlueprint("abilities/commonwealth_truck_hq_setup.lua"),
+		HQ_SETUP_INFANTRYHQ				= BP_GetAbilityBlueprint("abilities/commonwealth_truck_infantry_setup.lua"),
+		HQ_SETUP_ARMOURHQ				= BP_GetAbilityBlueprint("abilities/commonwealth_truck_armour_setup.lua"),
+		LIEUTENANT_FOLLOW				= BP_GetAbilityBlueprint("abilities/follow_ability.lua"),
+		ATGUN_ARMOURPIERCING				= BP_GetAbilityBlueprint("abilities/commonwealth_apds_armour_piercing.lua"),
+		TYPHOON_RECON 				= BP_GetAbilityBlueprint("abilities/sp_commonwealth_air_recon_ability.lua"),
+		TYPHOON_STRAFE 				= BP_GetAbilityBlueprint("abilities/sp_commonwealth_air_strike_ability_strafe.lua"),
+		TYPHOON_ROCKET 				= BP_GetAbilityBlueprint("abilities/sp_commonwealth_air_strike_ability_rockets.lua"),
+		FIRE_AVRE_PETARD 				= BP_GetAbilityBlueprint("abilities/commonwealth_fire_avre_petard.lua"),
+		BUTTON_ENEMY_VEHICLE				= BP_GetAbilityBlueprint("abilities/button_enemy_vehicle"),
+		TOMMY_MARKSMAN 				= BP_GetAbilityBlueprint("abilities/commonwealth_recon_marksmen_shot"),
+		FLANKING_SPEED 				= BP_GetAbilityBlueprint("abilities/commonwealth_flank_speed_bonus"),
+		CREEPING_BARRAGE 				= BP_GetAbilityBlueprint("abilities/creeping_barrage_25_pounder.lua"),
+		CANISTER_FIRE					= BP_GetAbilityBlueprint("abilities/commonwealth_fire_canister_ammunition.lua"),
+	},
+	
+	--*** PANZER ELITE ***
+	ELITE = {
+		HOWITZER_BARRAGE				= BP_GetAbilityBlueprint("abilities/panzer_elite_howitzer_barrage_ability.lua"),
+
+		HUMMEL_BARRAGE				= BP_GetAbilityBlueprint("abilities/panzer_elite_howitzer_barrage_ability.lua"),
+		MUNITIONPANZER_GOLIATH			= BP_GetAbilityBlueprint("abilities/pe_munitionspanzer_goliath.lua"),
+		MUNITIONPANZER_FOLLOW			= BP_GetAbilityBlueprint("abilities/follow_ability_munitions_halftrack.lua"),
+		MORTAR_BARRAGE				= BP_GetAbilityBlueprint("abilities/panzer_elite_sync_mortar_barrage.lua"),
+		INCENDIARY_MORTAR				= BP_GetAbilityBlueprint("abilities/panzer_elite_incendiary_mortar_barrage.lua"),
+		INCENDIARY_GRENADE_GREN			= BP_GetAbilityBlueprint("abilities/panzer_elite_throw_incendiary_grenade.lua"),
+		INCENDIARY_GRENADE_FALLSH			= BP_GetAbilityBlueprint("abilities/panzer_elite_fallschirmjager_throw_incendiary_grenade.lua"),
+		PANTHER_BATTLEGROUP				= BP_GetAbilityBlueprint("abilities/panzer_elite_reinforcements_panther_battlegroup.lua"),
+		PANZER_RAPIDFIRE				= BP_GetAbilityBlueprint("abilities/pe_lockdown_panzeriv_rapid_fire.lua"),
+		MARDER_LOCKDOWN				= BP_GetAbilityBlueprint("abilities/pe_lockdown_marder_iii_at.lua"),
+		REPAIRE_PE					= BP_GetAbilityBlueprint("abilities/repair_ability_pe.lua"),
+		REPAIRE_PE_IMPROVED				= BP_GetAbilityBlueprint("abilities/repair_ability_pe_improved.lua"),
+		SCOUT_CAR_SETUP				= BP_GetAbilityBlueprint("abilities/panzer_elite_car_setup.lua"),
+		SCOUT_CAR_UNSETUP				= BP_GetAbilityBlueprint("abilities/panzer_elite_car_unsetup.lua"),
+		HALFTRACK_TREAD_BREAKER			= BP_GetAbilityBlueprint("abilities/pe_test_halftrack_sniper.lua"),
+		
+	},
+	
+	COMMANDER_TREE = {
+	
+		ALLIES = {
+			-- airborne
+			SUPPLY_DROP				= BP_GetAbilityBlueprint("abilities/ally_paradrop_ability_supplies.lua"),
+			RECRUIT_PARADROP			= BP_GetAbilityBlueprint("abilities/ally_paradrop_ability.lua"),
+			RECRUIT_PARADROP_AT			= BP_GetAbilityBlueprint("abilities/ally_paradrop_57mm_at.lua"),
+			RECON					= BP_GetAbilityBlueprint("abilities/ally_air_recon_ability.lua"),
+			STRAFE_MG				= BP_GetAbilityBlueprint("abilities/ally_air_strike_ability_strafe.lua"),
+			STRAFE_ROCKET				= BP_GetAbilityBlueprint("abilities/ally_air_strike_ability_rockets.lua"),
+			
+			-- infantry (the rest of the abilities can be acquired through upgrades
+			RECRUIT_RANGERS 			= BP_GetAbilityBlueprint("abilities/ally_reinforcements_ability_rangers.lua"),
+			RECRUIT_COMBAT_GROUP 		= BP_GetAbilityBlueprint("abilities/reinforcements_ability.lua"),
+			HOWITZER_SHOOT			= BP_GetAbilityBlueprint("abilities/ally_off_map_howitzer_shoot.lua"),
+			
+			-- armor
+			RECRUIT_CALLIOPE			= BP_GetAbilityBlueprint("abilities/pershing_reinforce.lua"),
+			RECRUIT_PERSHING			= BP_GetAbilityBlueprint("abilities/calliope_reinforce.lua"),
+			ARMOR_HEAL				= BP_GetAbilityBlueprint("abilities/allied_armor_self_heal.lua"),
+			WAR_MACHINE				= BP_GetAbilityBlueprint("abilities/attrition_ability.lua"),
+		},
+		
+		AXIS = {
+			-- terror/propaganda
+			INSPIRED_ASSAULT			= BP_GetAbilityBlueprint("abilities/axis_for_the_fuhrer.lua"), 
+			PROPAGANDA_WAR 			= BP_GetAbilityBlueprint("abilities/rout_ability.lua"),
+			FIRESTORM				= BP_GetAbilityBlueprint("abilities/axis_terror_bombardment.lua"),
+			V1_ROCKET				= BP_GetAbilityBlueprint("abilities/V1_target_ability.lua"),
+			RECRUIT_TIGER_ACE			= BP_GetAbilityBlueprint("abilities/axis_reinforcements_ability_tiger_ace.lua"),
+			
+			-- blitzkrieg
+			RECRUIT_STORMTROOPERS 		= BP_GetAbilityBlueprint("abilities/axis_stormtrooper_ability.lua"),
+			RECRUIT_STUG				= BP_GetAbilityBlueprint("abilities/axis_stormtrooper_ability_with_stug.lua"), -- recruits stormtroopers and stug
+			RECRUIT_TIGER				= BP_GetAbilityBlueprint("abilities/axis_stormtrooper_ability_with_tiger.lua"), -- recruits stormtroopers and a tiger
+			RESOURCE_BLITZ				= BP_GetAbilityBlueprint("abilities/axis_manpower_resource_push.lua"),
+			ASSAULT				= BP_GetAbilityBlueprint("abilities/axis_assault_ability.lua"),
+			BLITZKRIEG				= BP_GetAbilityBlueprint("abilities/blitzkrieg_tactics.lua"),
+			
+			-- defense
+			FATHERLAND 				= BP_GetAbilityBlueprint("abilities/for_the_fatherland.lua"),
+			DEFENSIVE_ARTILLERY			= BP_GetAbilityBlueprint("abilities/axis_off_map_defensive_bombardment.lua"),
+			ROCKET_BARRAGE			= BP_GetAbilityBlueprint("abilities/axis_280mm_rocket_barrage.lua"),
+		},
+
+		--*** COMMON WEALTH ***
+		CW = {
+			-- royal canadian artillery
+			FORWARD_OBSERVATION			= BP_GetAbilityBlueprint("abilities/commonwealth_foo_artillery.lua"),
+			PDR_25_SUPERCHARGE			= BP_GetAbilityBlueprint("abilities/commonwealth_sync_mortar_supercharge.lua"),
+			PDR_25_CREEPING_BARRAGE		= BP_GetAbilityBlueprint("abilities/creeping_barrage_25_pounder.lua"),
+			PDR_25_OVERWATCH			= BP_GetAbilityBlueprint("abilities/overwatch_barrage_25_pounder.lua"),
+			RECRUIT_PRIEST				= BP_GetAbilityBlueprint("abilities/commonwealth_priest_reinforcement.lua"),
+			
+			-- royal commandos
+			GLIDER_COMMANDOS			= BP_GetAbilityBlueprint("abilities/glider_troops.lua"),
+			GLIDER_TETRARCH			= BP_GetAbilityBlueprint("abilities/glider_tetrarch.lua"),
+			GLIDER_HQ				= BP_GetAbilityBlueprint("abilities/glider_hq_ability.lua"),
+			DECOY_ARTILLERY			= BP_GetAbilityBlueprint("abilities/commonwealth_decoy_artillery.lua"),
+			REAL_ARTILLERY				= BP_GetAbilityBlueprint("abilities/commonwealth_decoy_artillery_real.lua"),
+			
+			-- royal engineers
+			RECRUIT_CHURCHILL			= BP_GetAbilityBlueprint("abilities/commonwealth_churchill_tank_reinforcement.lua"),
+			RECRUIT_CHURCHILL_AVRE		= BP_GetAbilityBlueprint("abilities/commonwealth_churchill_avre_reinforcement.lua"),
+			RECRUIT_CHURCHILL_CROC		= BP_GetAbilityBlueprint("abilities/commonwealth_churchill_crocodile_reinforcement.lua"),
+			HULL_DOWN				= BP_GetAbilityBlueprint("abilities/commonwealth_hull_down.lua"),
+		},
+		
+		--*** PANZER ELITE ***
+		ELITE = {
+
+			-- luftwaffe
+			AIR_DROPPED_MINES			= BP_GetAbilityBlueprint("abilities/axis_pe_air_dropped_mines.lua"),	-- munitions
+			RECRUIT_LUFTWAFFE			= BP_GetAbilityBlueprint("abilities/panzer_elite_luftwaffe_ability.lua"),	-- manpower
+			RECRUIT_FALLSHIRMAJAGER		= BP_GetAbilityBlueprint("abilities/panzer_elite_infiltration_fallshirmjager_ability.lua"),	-- manpower
+			HENSCHEL				= BP_GetAbilityBlueprint("abilities/panzer_elite_henschel_at_strike.lua"),	-- munitions
+			WIRBLE_WIND				= BP_GetAbilityBlueprint("abilities/panzer_elite_wirblewind_ability.lua"),	-- manpower
+			
+			
+			-- scorched earth
+			SECTOR_ARTILLERY			= BP_GetAbilityBlueprint("abilities/sector_artillery.lua"), -- munitions
+			BERGE_TIGER				= BP_GetAbilityBlueprint("abilities/panzer_elite_bergetiger_ability.lua"),	-- manpower
+			SCORCH_POINT				= BP_GetAbilityBlueprint("abilities/disable_capture_ability.lua"),
+			BOOBYTRAP_BUILDING			= BP_GetAbilityBlueprint("abilities/panzer_elite_building_booby_trap.lua"),
+			BOOBYTRAP				= BP_GetAbilityBlueprint("abilities/booby_trap_ability.lua"), -- note this overwrites the Booby Trap Building button since the same button is used.
+			RECRUIT_HUMMEL			= BP_GetAbilityBlueprint("abilities/panzer_elite_hummel_artillery.lua"),	-- manpower
+
+			
+			-- tank destroyer
+			RECRUIT_JAGDPANTHER			= BP_GetAbilityBlueprint("abilities/panzer_elite_reinforcements_jagdpanther.lua"), -- manpower
+			RECRUIT_HETZER				= BP_GetAbilityBlueprint("abilities/panzer_elite_reinforcements_hetzer.lua"), -- manpower
+		},
+		
+		
+		COHO = {
+		}
+		
+	}
+
+}
+
+
+--[[ STANCES 
+-- *no example of function in use yet*
+CAMOUFLAGE_OFF					= Util_GetCamouflageStanceID("camouflage_stance_type/attack_stance.lua"),
+CAMOUFLAGE_ON					= Util_GetCamouflageStanceID("camouflage_stance_type/hold_fire_stance.lua"),
+]]
+
+
+--*** SLOT ITEMS ***
+-- (not to be confused with the "gameplay prop" EBP that slot items actually use)
+SLOT_ITEM =	{
+	__scardoc_enum = true,
+	BAZOOKA						= BP_GetSlotItemBlueprint("slot_item/allies_m9bazooka.lua"),
+	LMG_42							= BP_GetSlotItemBlueprint("slot_item/axis_mg42.lua"),
+	PANZERSCHRECK 					= BP_GetSlotItemBlueprint("slot_item/axis_panzerschreck.lua"),
+	MP_44							= BP_GetSlotItemBlueprint("slot_item/axis_mp44.lua"),
+	HMG_42							= BP_GetSlotItemBlueprint("slot_item/axis_mg42_hmg_item.lua"),
+	AXIS_MORTAR						= BP_GetSlotItemBlueprint("slot_item/axis_grw34_81mm_mortar.lua"),
+	ALLIED_MORTAR						= BP_GetSlotItemBlueprint("slot_item/allies_m2_60mm_mortar.lua"),
+	
+	CW = {
+		LMG_BREN 					= BP_GetSlotItemBlueprint("slot_item/commonwealth_bren_mark_2.lua"),
+		PIAT 						= BP_GetSlotItemBlueprint("slot_item/commonwealth_piat.lua"),
+	},
+}
+
+
+--*** CRITICAL HIT TYPES ***
+-- example of use: CRIT.VEH_MOBILITY_MAJOR
+CRIT = {
+	__scardoc_enum = true,
+	-- damage types, which are always needed for critical hits
+	DAMAGE_RED 						= BP_GetDamageBlueprint("damage/damage_red.lua"),
+	DAMAGE_GREEN						= BP_GetDamageBlueprint("damage/damage_green.lua"),
+	DAMAGE_YELLOW					= BP_GetDamageBlueprint("damage/damage_yellow.lua"),
+	
+	BURN_DEATH_OOC					= BP_GetCriticalBlueprint("critical/burn_death_out_of_control.lua"),
+	
+	--*** VEHICLES ***
+	VEH = {
+		DAMAGE_ENGINE					= BP_GetCriticalBlueprint("critical/vehicle_damage_engine.lua"),
+		MOBILITY_MAJOR 				= BP_GetCriticalBlueprint("critical/vehicle_destroy_engine.lua"),
+		MAIN_WEAPON_DESTROYED 			= BP_GetCriticalBlueprint("critical/vehicle_destroy_maingun.lua"),
+		CONTROL_FAST					= BP_GetCriticalBlueprint("critical/vehicle_out_of_control_fast.lua"),
+		CONTROL_SLOW					= BP_GetCriticalBlueprint("critical/vehicle_out_of_control_slow.lua"),
+		AXIS_KILL_TOP_MG				= BP_GetCriticalBlueprint("critical/vehicle_kill_top_gunner_axis_tank.lua"),
+		IMMOBILIZE					= BP_GetCriticalBlueprint("critical/vehicle_lose_treads_or_wheels.lua"),
+	},
+	
+	SOLDIER = {
+		CASUALTY					= BP_GetCriticalBlueprint("critical/make_casualty.lua"), 
+	}
+}
+
+--*** EVENT CUE ICON & SOUNDS ***
+-- 					Icon Path:	Root\WW2\Data\Art\UI\InGame
+-- 					Sound Path:	Root\WW2\Data\Sound\UI\EventCues
+CUE = {
+	__scardoc_enum = true,
+	NORMAL 				= {icon = "events/event_cue", sound = "General_alert"},
+	NORMAL_REPEATING	= {icon = "events/event_cue", sound = "General_alert", class = "repeating"},
+	VEHICLE				= {icon = "events/event_cue", sound = "General_alert"},
+	ATTACKED 			= {icon = "events/event_cue_combat", sound = "General_alert"},
+	MAP 				= {icon = "events/event_cue_map", sound = "General_alert"},
+	UPGRADE				= {icon = "events/event_cue_upgrade", sound = "General_alert"},
+	NETWORK				= {icon = "events/event_cue_network", sound = "General_alert"},
+}
+
+MEDALS = {
+	__scardoc_enum = false,
+	
+	AIR_MEDAL					= BP_GetMedalBlueprint("medals/air_medal"),
+	AMERICAN_CAMPAIGN_MEDAL			= BP_GetMedalBlueprint("medals/american_campaign_medal"),
+	ARMY_EXPERT_BADGE				= BP_GetMedalBlueprint("medals/army_expert_badge"),
+	ARMY_RANGER_BADGE				= BP_GetMedalBlueprint("medals/army_ranger_badge"),
+	ARMY_SHARPSHOOTER_BADGE			= BP_GetMedalBlueprint("medals/army_sharpshooter_badge"),
+	BRONZE_STAR_M04				= BP_GetMedalBlueprint("medals/bronze_star_m04"),
+	BRONZE_STAR_M08				= BP_GetMedalBlueprint("medals/bronze_star_m08"),
+	DISTINGUISHED_SERVICE_CROSS			= BP_GetMedalBlueprint("medals/distinguished_service_cross"),
+	DISTINGUISHED_SERVICE_MEDAL			= BP_GetMedalBlueprint("medals/distinguished_service_medal"),
+	EXPERT_INFANTRYMAN_BADGE			= BP_GetMedalBlueprint("medals/expert_infantryman_badge"),
+	LEGION_OF_MERIT				= BP_GetMedalBlueprint("medals/legion_of_merit"),
+	MEDAL_OF_HONOR				= BP_GetMedalBlueprint("medals/medal_of_honor"),
+	PARACHUTIST_BADGE				= BP_GetMedalBlueprint("medals/parachutist_badge"),
+	SILVER_STAR_M06				= BP_GetMedalBlueprint("medals/silver_star_m06"),
+	SILVER_STAR_M14				= BP_GetMedalBlueprint("medals/silver_star_m14"),
+	SOLDIERS_MEDAL				= BP_GetMedalBlueprint("medals/soldiers_medal"),
+	SOLDIERS_MEDAL_M06				= BP_GetMedalBlueprint("medals/soldiers_medal_m06"),
+	
+	CXP1 = {
+		AUTHIE					= BP_GetMedalBlueprint("medals/authie.lua"),
+		HILL_112					= BP_GetMedalBlueprint("medals/hill_112.lua"),
+		CARPIQUET				= BP_GetMedalBlueprint("medals/carpiquet.lua"),
+		CARPIQUET_B				= BP_GetMedalBlueprint("medals/carpiquet_b.lua"),
+		HILL_112_DEFENSE			= BP_GetMedalBlueprint("medals/hill_112_defense.lua"),
+		CAEN_ASSAULT				= BP_GetMedalBlueprint("medals/caen_assault.lua"),
+		CAEN_CLEAR				= BP_GetMedalBlueprint("medals/caen_clear.lua"),
+		CAEN_COUNTER				= BP_GetMedalBlueprint("medals/caen_counter.lua"),
+		GOODWOOD				= BP_GetMedalBlueprint("medals/goodwood.lua"),
+	},
+	
+	CXP2 = {
+		WOLFHEZE_GLIDER			= BP_GetMedalBlueprint("medals/wolfheze_glider.lua"),
+		WOLFHEZE_ATTACK			= BP_GetMedalBlueprint("medals/wolfheze_attack.lua"),
+		OOSTERBEEK_DEFENSE			= BP_GetMedalBlueprint("medals/oosterbeek_defense.lua"),
+		HELLS_HIGHWAY_AMBUSH			= BP_GetMedalBlueprint("medals/hells_highway_ambush.lua"),
+		BEST					= BP_GetMedalBlueprint("medals/best.lua"),
+		ARNHEM					= BP_GetMedalBlueprint("medals/arnhem.lua"),
+		HELLS_HIGHWAY_HUNT			= BP_GetMedalBlueprint("medals/hells_highway_hunt.lua"),
+		OOSTERBEEK_CROSSING			= BP_GetMedalBlueprint("medals/oosterbeek_crossing.lua"),
+	},
+}
+
+
+
+MOVETYPE = {
+	__scardoc_enum = true,
+	SAFE						= BP_GetMoveTypeBlueprint("move_type/safe_move.lua"),
+	NORMAL						= BP_GetMoveTypeBlueprint("move_type/normal_move.lua"),
+	FAST						= BP_GetMoveTypeBlueprint("move_type/fast_move.lua"),
+	BEACH						= BP_GetMoveTypeBlueprint("move_type/beach_move_type.lua"),
+	VEHICLE_FORCE_MOVE				= BP_GetMoveTypeBlueprint("move_type/vehicle_force_move.lua"),
+	SURRENDER					= BP_GetMoveTypeBlueprint("move_type/surrender_move.lua"),
+}
+
+TYPE = {
+	__scardoc_enum = true,
+	
+	-- used to control access to various build menus
+	-- e.g. Player_SetConstructionMenuAvailability(player, TYPE.CONSTRUCT.AXIS.HQ, ITEM_LOCKED)
+	CONSTRUCT = {
+		
+		ALLIES = {
+			HQ						= "type_construction/tp_construction_allied_hq", 
+			ENGINEER_ADVANCED		= "type_construction/tp_construction_engineer_advanced",
+			ENGINEER_BASIC			= "type_construction/tp_construction_engineer_basic",
+			RIFLEMEN				= "type_construction/tp_construction_riflemen_basic",
+		},
+		
+		AXIS = {
+			HQ						= "type_construction/tp_construction_axis_hq", 
+			PIONEER_ADVANCED		= "type_construction/tp_construction_axis_engineer_advanced",
+			PIONEER_BASIC			= "type_construction/tp_construction_axis_engineer_basic",
+		},
+		
+		CW = {
+			HQ						= "type_construction/tp_construction_commonwealth_hq", 
+			COMMANDO				= "type_construction/tp_construction_commonwealth_commando",
+			SAPPER					= "type_construction/tp_construction_commonwealth_sapper",
+			TOMMIES					= "type_construction/tp_construction_commonwealth_infantry",
+		},
+		
+		ELITE = {
+			HQ						= "type_construction/tp_construction_panzer_elite_hq", 
+			BASIC					= "type_construction/tp_construction_panzer_elite_basic",
+			LUFTWAFFE				= "type_construction/tp_construction_panzer_elite_luftwaffe",
+		},
+	},
+
+}
+
+-- what are these and does anyone use them? brw 02/21/2007
+-- if not we'll be removing them soon...
+DROP = {
+	__scardoc_enum = true,
+	ITEM_ACTIONPOINTS			= SLOT_ITEM.ITEM_ACTIONPOINTS,
+	ITEM_MANPOWER				= SLOT_ITEM.ITEM_MANPOWER,
+	ITEM_MUNITIONS				= SLOT_ITEM.ITEM_MUNITIONS,
+	ITEM_FUEL					= SLOT_ITEM.ITEM_FUEL,
+	SUPPLY_DROP					= EBP.SUPPLY_DROP,
+	ALLIED_BAZOOKA				= EBP.ALLIED_BAZOOKA,
+	
+}
+
+
+
+
+
+-- This is a table of the all actors used in NISlet speech events.
+-- Each actor needs a blueprint and a speech icon associated with it.
+
+ACTOR = {
+	
+	__scardoc_enum = true,
+	
+	-- Generic
+	GenericAlly 		= "InGame\\portraits\\speech_allied_soldier",
+	GenericAxis 		= "InGame\\portraits\\speech_axis_soldier",
+	Intel 				= "InGame\\portraits\\tutorial_guy",
+	
+	-- Company of Heroes (Original) SP Characters
+	McKay  				= "InGame\\portraits\\speech_allied_mackay",
+	Conti  				= "InGame\\portraits\\speech_allied_conti",
+	Thompson  			= "InGame\\portraits\\speech_allied_thompson",
+	Carota 				= "InGame\\portraits\\speech_allied_carota",
+	Lewis 				= "InGame\\portraits\\speech_allied_lewis",
+	
+	-- CXP1 (Commonwealth Campaign)
+	CXP1 = {
+		
+		-- Generic
+		GenericAlly 		= "InGame\\portraits\\speech_allied_soldier",
+		GenericAxis 		= "InGame\\portraits\\speech_axis_soldier",
+		GenericPanzerElite	= "InGame\\portraits\\speech_pnze_generic", -- WARNING NO PORTRAIT YET
+		GenericCommonwealth	= "InGame\\portraits\\speech_cmnw_generic", -- WARNING NO PORTRAIT YET
+		Intel 				= "InGame\\portraits\\speech_cmnw_cutting",
+		GenericCommando		= "InGame\\portraits\\speech_cmnw_commando",
+		
+		-- SP Characters
+		Cutting  			= "InGame\\portraits\\speech_cmnw_cutting",
+		Seville  			= "InGame\\portraits\\speech_cmnw_generic", -- WARNING NO PORTRAIT YET
+		Wallis  			= "InGame\\portraits\\speech_cmnw_wallis",
+		Blackmore 	 		= "InGame\\portraits\\speech_cmnw_blackmore",
+		Dillingham 			= "InGame\\portraits\\speech_cmnw_dillingham",
+		Jones 				= "InGame\\portraits\\speech_cmnw_generic",
+		Degnan 				= "InGame\\portraits\\speech_cmnw_degnan",
+		Tennant 			= "InGame\\portraits\\speech_cmnw_generic", -- WARNING NO PORTRAIT YET
+		Gladstone 			= "InGame\\portraits\\speech_cmnw_generic", -- WARNING NO PORTRAIT YET
+		Bailey	 			= "InGame\\portraits\\speech_cmnw_generic", -- WARNING NO PORTRAIT YET
+		Hazard	 			= "InGame\\portraits\\speech_cmnw_commando", -- USING GENERIC COMMANDO HERE
+		Chubb	 			= "InGame\\portraits\\speech_cmnw_generic", -- WARNING NO PORTRAIT YET
+	},
+	
+	-- CXP2 (Panzer Elite Campaign)
+	CXP2 = {
+		
+		-- Generic
+		GenericAlly 		= "InGame\\portraits\\speech_allied_soldier",
+		GenericWehrmacht 	= "InGame\\portraits\\speech_axis_soldier",
+		GenericPanzerElite	= "InGame\\portraits\\speech_pnze_generic", -- WARNING NO PORTRAIT YET
+		GenericLuftwaffe	= "InGame\\portraits\\speech_pnze_generic", -- WARNING NO PORTRAIT YET
+		GenericCommonwealth	= "InGame\\portraits\\speech_cmnw_generic", -- WARNING NO PORTRAIT YET
+		WehrmachtSgt		= "InGame\\portraits\\speech_axis_soldier",
+		Intel 				= "InGame\\portraits\\speech_pnze_voss",
+		
+		-- SP Characters
+		Voss 				= "InGame\\portraits\\speech_pnze_voss",
+		Deinhard			= "InGame\\portraits\\speech_pnze_deinhard",
+		Aldrich				= "InGame\\portraits\\speech_pnze_aldric",
+		Wolfgang			= "InGame\\portraits\\speech_pnze_wolfgang",
+		Henze				= "InGame\\portraits\\speech_pnze_generic",
+	},
+	
+}
+
+
+
+-- set of offsets that are enumerated so that we don't have to memorize the numbers.
+-- numbers go CLOCKWISE around the circle.
+-- the orientation is in respect to the SGroup or object to which you desire an offeset; 
+-- here's a quick drawing for visualization
+--[[
+FRONT_LEFT  FRONT  	FRONT_RIGHT
+
+			 /\
+			/  \
+LEFT	   /_  _\        RIGHT
+			 ||
+			 ||
+			 ||
+			 
+BACK_LEFT   BACK	BACK_RIGHT
+
+]]
+OFFSET_FRONT = 0
+OFFSET_FRONT_RIGHT = 1
+OFFSET_FRONT_LEFT = 7
+OFFSET_BACK = 4
+OFFSET_BACK_RIGHT = 3
+OFFSET_BACK_LEFT = 5
+OFFSET_RIGHT = 2
+OFFSET_LEFT = 6
+
+-- use these as offsets in SGroup_IsUnderAttackFromDirection
+OFFSET_DIRECTION_FRONT = {OFFSET_FRONT_LEFT, OFFSET_FRONT, OFFSET_FRONT_RIGHT}
+OFFSET_DIRECTION_RIGHT = {OFFSET_FRONT_RIGHT, OFFSET_RIGHT, OFFSET_BACK_RIGHT}
+OFFSET_DIRECTION_BACK = {OFFSET_BACK_RIGHT, OFFSET_BACK, OFFSET_BACK_LEFT}
+OFFSET_DIRECTION_LEFT = {OFFSET_BACK_LEFT, OFFSET_LEFT, OFFSET_FRONT_LEFT}
